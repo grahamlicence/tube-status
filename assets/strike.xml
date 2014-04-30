@@ -1,0 +1,214 @@
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<ArrayOfLineStatus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://webservices.lul.co.uk/">
+<LineStatus ID="0" StatusDetails="Train service operating between Queen's Park and Elephant & Castle. No service on the rest of the line due to strike action.">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="72" Name="Elephant & Castle"/>
+<StationFrom ID="183" Name="Queen's Park"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="1" Name="Bakerloo"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="1" StatusDetails="Train service operating Epping to Leytonstone, Woodford to Hainault, Hainault to Marble Arch, and White City to Ealing Broadway/ West Ruislip. No service on the rest of the line due to strike action.">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="137" Name="Leytonstone"/>
+<StationFrom ID="75" Name="Epping"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="144" Name="Marble Arch"/>
+<StationFrom ID="94" Name="Hainault"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="61" Name="Ealing Broadway"/>
+<StationFrom ID="266" Name="White City"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="263" Name="West Ruislip"/>
+<StationFrom ID="266" Name="White City"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="2" Name="Central"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="10" StatusDetails="Train service operating between Hammersmith and Aldgate. No service operating on the rest of the line due to strike action.">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="2" Name="Aldgate"/>
+<StationFrom ID="96" Name="Hammersmith (H&C)"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="7" Name="Circle"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="2" StatusDetails="Train service operating between Upminster and Wimbledon, Ealing Broadway and High Street Kensington, Edgware Road and Kensington (Olympia). No service rest of the line due to strike action.">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="61" Name="Ealing Broadway"/>
+<StationFrom ID="107" Name="High Street Kensington"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="270" Name="Wimbledon"/>
+<StationFrom ID="240" Name="Upminster"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="122" Name="Kensington (Olympia)"/>
+<StationFrom ID="71" Name="Edgware Road"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="9" Name="District"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="8" StatusDetails="Special service operating between Edgware Road and Barking">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="14" Name="Barking"/>
+<StationFrom ID="71" Name="Edgware Road"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="8" Name="Hammersmith and City"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="4" StatusDetails="Train service operating on the whole line at a reduced frequency due to strike action.">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="224" Name="Stratford"/>
+<StationFrom ID="220" Name="Stanmore"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="4" Name="Jubilee"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="9" StatusDetails="Train service operating between Amersham to Baker Street, Uxbridge to Harrow-on-the-Hill, Harrow-on-the-Hill to Aldgate. No service on the rest of the line due to strike action.">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="10" Name="Baker Street"/>
+<StationFrom ID="5" Name="Amersham"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="101" Name="Harrow-on-the-Hill"/>
+<StationFrom ID="244" Name="Uxbridge"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="2" Name="Aldgate"/>
+<StationFrom ID="101" Name="Harrow-on-the-Hill"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="11" Name="Metropolitan"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="5" StatusDetails="">
+<BranchDisruptions/>
+<Line ID="5" Name="Northern"/>
+<Status ID="GS" CssClass="GoodService" Description="Good Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="6" StatusDetails="Train service operating between Hammersmith and Heathrow Airport T123, and between Arnos Grove and Cockfosters. No service on the rest of the line due to strike action.">
+<BranchDisruptions>
+<BranchDisruption>
+<StationTo ID="104" Name="Heathrow Terminals 123"/>
+<StationFrom ID="95" Name="Hammersmith"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+<BranchDisruption>
+<StationTo ID="52" Name="Cockfosters"/>
+<StationFrom ID="8" Name="Arnos Grove"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</BranchDisruption>
+</BranchDisruptions>
+<Line ID="6" Name="Piccadilly"/>
+<Status ID="SS" CssClass="DisruptedService" Description="Special Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="7" StatusDetails="">
+<BranchDisruptions/>
+<Line ID="3" Name="Victoria"/>
+<Status ID="GS" CssClass="GoodService" Description="Good Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="11" StatusDetails="No service due to strike action.">
+<BranchDisruptions/>
+<Line ID="12" Name="Waterloo and City"/>
+<Status ID="SC" CssClass="GoodService" Description="Service Closed" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="82" StatusDetails="">
+<BranchDisruptions/>
+<Line ID="82" Name="Overground"/>
+<Status ID="GS" CssClass="GoodService" Description="Good Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+<LineStatus ID="81" StatusDetails="">
+<BranchDisruptions/>
+<Line ID="81" Name="DLR"/>
+<Status ID="GS" CssClass="GoodService" Description="Good Service" IsActive="true">
+<StatusType ID="1" Description="Line"/>
+</Status>
+</LineStatus>
+</ArrayOfLineStatus>

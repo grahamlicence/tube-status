@@ -60,7 +60,7 @@ var Tube = (function () {
 			• Good Service 
 			*********************/
 			if (status !== 'Good Service') {
-				details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '<br />GOOD SERVICE').replace(/MINOR DELAYS/g, '<br />MINOR DELAYS').replace(/A Good Service/g, '<br />A Good Service').replace(/Good Service/g, '<br />Good Service');
+				details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '<br />GOOD SERVICE').replace(/MINOR DELAYS/g, '<br />MINOR DELAYS').replace(/A Good Service/g, '<br />A Good Service').replace(/Good Service/g, '<br />Good Service').replace(/No service/g, '<br />No service');
 			} else {
 				details = false;
 			}
@@ -152,10 +152,12 @@ var Tube = (function () {
 			plannedClosure = 0,
 			partSuspended = 0,
 			suspended = 0,
+			specialService = 0,
 			partSuspendedLine = '',
 			suspendedLine = '',
 			severeDelaysLine = '',
 			minorDelaysLine = '',
+			specialServiceLine = '',
 			divider = ' ';
 
 		for (var i = 0, l = items.length; i < l; i += 1) {
@@ -184,7 +186,13 @@ var Tube = (function () {
 					}
 					severeDelays += 1;
 					severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-				}  else if (description === 'Reduced Service') {
+				} else if (description === 'Special Service') {
+					if (specialService) {
+						divider = ', ';
+					}
+					specialService += 1;
+					specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+				} else if (description === 'Reduced Service') {
 					reducedService += 1;
 				} else if (description === 'Bus Service') {
 					busService += 1;
@@ -208,6 +216,9 @@ var Tube = (function () {
 		} else if (severeDelays > 0) { 
 			chrome.browserAction.setIcon({path: 'images/bad.png'}); //amber
 			chrome.browserAction.setTitle({title: severeDelaysLine + ' severe delays'});
+		} else if (specialService > 0) { 
+			chrome.browserAction.setIcon({path: 'images/delay.png'}); //alert
+			chrome.browserAction.setTitle({title: specialServiceLine + ' special service'});
 		} else if (minorDelays > 0) { 
 			chrome.browserAction.setIcon({path: 'images/delay.png'}); //yellow
 			chrome.browserAction.setTitle({title: minorDelaysLine + ' minor delays'});

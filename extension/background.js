@@ -55,10 +55,13 @@ service status can be:
 			plannedClosure = 0,
 			partSuspended = 0,
 			suspended = 0,
+			specialService = 0,
 			partSuspendedLine = '',
 			suspendedLine = '',
 			severeDelaysLine = '',
 			minorDelaysLine = '',
+			specialServiceLine = '',
+			plannedClosureLine = '',
 			divider = ' ';
 
 		for (var i = 0, l = items.length; i < l; i += 1) {
@@ -77,8 +80,12 @@ service status can be:
 					}
 					partSuspended += 1;
 					partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-				} else if (description === 'Planned Closure') {
+				} else if (description === 'Planned Closure' || description === 'Service Closed') {
+					if (plannedClosure) {
+						divider = ', ';
+					}
 					plannedClosure += 1;
+					plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
 				} else if (description === 'Part Closure') {
 					partClosure += 1;
 				} else if (description === 'Severe Delays') {
@@ -87,6 +94,12 @@ service status can be:
 					}
 					severeDelays += 1;
 					severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+				} else if (description === 'Special Service') {
+					if (specialService) {
+						divider = ', ';
+					}
+					specialService += 1;
+					specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
 				}  else if (description === 'Reduced Service') {
 					reducedService += 1;
 				} else if (description === 'Bus Service') {
@@ -102,7 +115,10 @@ service status can be:
 		}
 
 		// set icon
-		if (suspended > 0) { 
+		if (plannedClosure > 0) { 
+			chrome.browserAction.setIcon({path: 'images/bad.png'}); //red
+			chrome.browserAction.setTitle({title: plannedClosureLine + ' closed'});
+		} else if (suspended > 0) { 
 			chrome.browserAction.setIcon({path: 'images/bad.png'}); //red
 			chrome.browserAction.setTitle({title: suspendedLine + ' suspended'});
 		} else if (partSuspended > 0) { 
@@ -111,6 +127,9 @@ service status can be:
 		} else if (severeDelays > 0) { 
 			chrome.browserAction.setIcon({path: 'images/bad.png'}); //amber
 			chrome.browserAction.setTitle({title: severeDelaysLine + ' severe delays'});
+		} else if (specialService > 0) { 
+			chrome.browserAction.setIcon({path: 'images/delay.png'}); //alert
+			chrome.browserAction.setTitle({title: specialServiceLine + ' special service'});
 		} else if (minorDelays > 0) { 
 			chrome.browserAction.setIcon({path: 'images/delay.png'}); //yellow
 			chrome.browserAction.setTitle({title: minorDelaysLine + ' minor delays'});
