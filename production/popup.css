@@ -1,7 +1,8 @@
-
+html {overflow-y: auto;}
 body {
 	min-width:245px;
 	overflow-x:hidden;
+	overflow-y: auto;
 }
 
 h3 {

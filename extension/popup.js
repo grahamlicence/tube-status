@@ -73,9 +73,13 @@ var Tube = (function () {
 				}
 				html += ' <span class="details">' + details + '</span>';
 			}
-			html += '</p></div>';
 		}
-		document.getElementsByTagName('body')[0].innerHTML = html;
+		var contentContainer = document.createElement('div'),
+			bodyTag = document.getElementsByTagName('body')[0];
+		contentContainer.className = 'wrapper';
+		contentContainer.innerHTML = html; 
+		bodyTag.appendChild(contentContainer);
+		bodyTag.style.height = '100%';	
 		setIcon();
 
 		document.querySelector('.popupclosebtn').addEventListener('click', function () {
@@ -158,6 +162,7 @@ var Tube = (function () {
 			severeDelaysLine = '',
 			minorDelaysLine = '',
 			specialServiceLine = '',
+			plannedClosureLine = '',
 			divider = ' ';
 
 		for (var i = 0, l = items.length; i < l; i += 1) {
@@ -176,8 +181,12 @@ var Tube = (function () {
 					}
 					partSuspended += 1;
 					partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-				} else if (description === 'Planned Closure') {
+				} else if (description === 'Planned Closure' || description === 'Service Closed') {
+					if (plannedClosure) {
+						divider = ', ';
+					}
 					plannedClosure += 1;
+					plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
 				} else if (description === 'Part Closure') {
 					partClosure += 1;
 				} else if (description === 'Severe Delays') {
@@ -207,7 +216,10 @@ var Tube = (function () {
 		}
 
 		// set icon
-		if (suspended > 0) { 
+		if (plannedClosure > 0) { 
+			chrome.browserAction.setIcon({path: 'images/bad.png'}); //red
+			chrome.browserAction.setTitle({title: plannedClosureLine + ' closed'});
+		} else if (suspended > 0) { 
 			chrome.browserAction.setIcon({path: 'images/bad.png'}); //red
 			chrome.browserAction.setTitle({title: suspendedLine + ' suspended'});
 		} else if (partSuspended > 0) { 
