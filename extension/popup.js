@@ -76,25 +76,31 @@ var Tube = (function () {
 		}
 		var contentContainer = document.createElement('div'),
 			bodyTag = document.getElementsByTagName('body')[0];
-		contentContainer.className = 'wrapper';
-		contentContainer.innerHTML = html; 
-		bodyTag.appendChild(contentContainer);
-		bodyTag.style.height = '100%';	
+		// contentContainer.className = 'wrapper';
+		// contentContainer.innerHTML = html; 
+		// bodyTag.appendChild(contentContainer);
+		// bodyTag.style.height = '100%';	
+		bodyTag.innerHTML = html;
 		setIcon();
 
 		document.querySelector('.popupclosebtn').addEventListener('click', function () {
 			window.close();
 		});
+		settings();
 	};
 
 	var settings = function () {
 		var toggleButton = document.querySelector('.toggle');
 
-		var toggle = function () {
+		var toggle = function (e) {
+			e.preventDefault();
 			var setStatus = this.innerHTML,
 				rowClass = this.getAttribute('data-class'),
 				setTo = 0,
 				pos = parseInt(this.getAttribute('data-pos'), 10);
+
+			// console.log('toggle');
+			// console.log(setStatus)
 
 			if (setStatus === 'on') {
 				this.innerHTML = 'off';
@@ -108,22 +114,28 @@ var Tube = (function () {
 			storeOptions();
 		};
 
-		// create an observer instance
-		var observer = new WebKitMutationObserver(function(mutations) {
-			mutations.forEach(function(mutation) {
-				if (mutation.addedNodes) {
-					for (i = 0, l = mutation.addedNodes.length; i < l; i += 1) {
-						mutation.addedNodes[i].querySelector('.toggle').addEventListener('click', toggle);
-					}
-				} 
-			});    
-		});
+		var toggleBtns = document.querySelectorAll('.toggle');
 
-		// configuration of the observer:
-		var config = { attributes: true, childList: true, characterData: true };
+		for (var i = 0, l = toggleBtns.length; i < l; i += 1) {
+			toggleBtns[i].addEventListener('click', toggle);
+		}
+		// error in observers
+		// // create an observer instance
+		// var observer = new WebKitMutationObserver(function(mutations) {
+		// 	mutations.forEach(function(mutation) {
+		// 		if (mutation.addedNodes) {
+		// 			for (i = 0, l = mutation.addedNodes.length; i < l; i += 1) {
+		// 				mutation.addedNodes[i].querySelector('.toggle').addEventListener('click', toggle);
+		// 			}
+		// 		} 
+		// 	});    
+		// });
 
-		// pass in the target node, as well as the observer options
-		observer.observe(document.querySelector('body'), config);
+		// // configuration of the observer:
+		// var config = { attributes: true, childList: true, characterData: true };
+
+		// // pass in the target node, as well as the observer options
+		// observer.observe(document.querySelector('body'), config);
 	};
 
 	var storeOptions = function () {
@@ -258,7 +270,7 @@ var Tube = (function () {
 		init: function () {
 			getActiveLines();
 			requestFeed();
-			document.addEventListener('DOMContentLoaded', settings);
+			// document.addEventListener('DOMContentLoaded', settings);
 		}()
 	};
 
