@@ -70,6 +70,11 @@ strong {
 }
 .off .message {
 	display: inline-block;
+	opacity: 0.2;
+	transition: opacity 0.3s;
+}
+.off:hover .message {
+	opacity: 1;
 }
 .toggle {
 	cursor: pointer;
