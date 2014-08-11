@@ -1,6 +1,6 @@
 {
   "name": "Tube service status",
-  "version": "1.3.3",
+  "version": "1.3.2",
   "manifest_version": 2,
   "description": "Tube disruption alerts for the London Underground.",
   "icons": {
