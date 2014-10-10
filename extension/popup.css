@@ -1,6 +1,9 @@
-
+html {
+	font-size: 16px;
+}
+	
 body {
-	min-width:245px;
+	min-width:280px;
 	overflow-x:hidden;
 }
 .wrapper {
@@ -41,7 +44,7 @@ strong {
 	right: 5px;
 }
 .line {
-	width: 132px;
+	width: 140px;
 	display: inline-block;
 	padding: 2px;
 }
@@ -51,7 +54,7 @@ strong {
 	margin: 0 0 7px;
 }
 .off .line {
-	opacity: 0.1;
+	opacity: 0.3;
 }
 .off:hover .line {
 	opacity: 1;
@@ -62,7 +65,7 @@ strong {
 }
 .status, 
 .message {
-	width: 85px;
+	width: 100px;
 	display: inline-block;
 }
 .message {
@@ -71,13 +74,15 @@ strong {
 .off .message {
 	display: inline-block;
 	opacity: 0.2;
-	transition: opacity 0.3s;
+	transition: opacity 0.1s;
 }
 .off:hover .message {
 	opacity: 1;
 }
-.toggle {
+.toggleBtn {
 	cursor: pointer;
+}
+.toggle {
 	background: url(images/tick-on.png) no-repeat 0 0;
 	background-size: contain;
 	text-indent: -9999px;
@@ -85,14 +90,14 @@ strong {
 	width: 15px;
 	height: 15px;
 }
-.toggle:hover {
+.toggleBtn:hover .toggle {
 	background: url(images/close.png) no-repeat 0 0;
 	background-size: contain;
 }
 .off .toggle {
 	background: none;
 }
-.off:hover .toggle {
+.off .toggleBtn:hover .toggle {
 	background: url(images/tick.png) no-repeat 0 0;
 	background-size: contain;
 }

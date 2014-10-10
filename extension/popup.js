@@ -64,15 +64,16 @@ var Tube = (function () {
 			} else {
 				details = false;
 			}
-			html += '<p class="' + className + '">';
+			html += '<p class="' + className + '"><a class="toggleBtn" data-class="' + className.replace('off ', '') + '" data-pos="' + i + '">';
 			html += '<span class="line">' + lineName + '</span> ';
-			html += '<span class="status">' + status + '</span> ' + message + ' <a class="toggle on" data-class="' + className.replace('off ', '') + '" data-pos="' + i + '">' + buttonText + '</a>';
+			html += '<span class="status">' + status + '</span> ' + message + ' <span class="toggle on">' + buttonText + '</span>';
 			if (details) {
 				if (details.charAt(0) === '<') {
 					details = details.substring(6);
 				}
 				html += ' <span class="details">' + details + '</span>';
 			}
+			html += '</p>';
 		}
 		var contentContainer = document.createElement('div'),
 			bodyTag = document.getElementsByTagName('body')[0];
@@ -90,11 +91,12 @@ var Tube = (function () {
 	};
 
 	var settings = function () {
-		var toggleButton = document.querySelector('.toggle');
+		// var toggleButton = document.querySelector('.toggle');
+		// TODO: tidy up status settings
 
 		var toggle = function (e) {
 			e.preventDefault();
-			var setStatus = this.innerHTML,
+			var setStatus = this.querySelectorAll('.toggle')[0].innerHTML,
 				rowClass = this.getAttribute('data-class'),
 				setTo = 0,
 				pos = parseInt(this.getAttribute('data-pos'), 10);
@@ -103,10 +105,10 @@ var Tube = (function () {
 			// console.log(setStatus)
 
 			if (setStatus === 'on') {
-				this.innerHTML = 'off';
+				this.querySelectorAll('.toggle')[0].innerHTML = 'off';
 				document.querySelector('.' + rowClass).className = rowClass + ' off';
 			} else {
-				this.innerHTML = 'on';
+				this.querySelectorAll('.toggle')[0].innerHTML = 'on';
 				setTo = 1;
 				document.querySelector('.' + rowClass).className = rowClass;
 			}
@@ -114,7 +116,7 @@ var Tube = (function () {
 			storeOptions();
 		};
 
-		var toggleBtns = document.querySelectorAll('.toggle');
+		var toggleBtns = document.querySelectorAll('.toggleBtn');
 
 		for (var i = 0, l = toggleBtns.length; i < l; i += 1) {
 			toggleBtns[i].addEventListener('click', toggle);
