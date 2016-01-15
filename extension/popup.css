@@ -34,10 +34,18 @@ strong {
 	list-style: none;
 }
 
+.toggle-btn {
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: none;
+}
+
 .popupclosebtn { 
 	background: url(images/close.png);
 	background-size: contain;
 	border: none;
+    cursor: pointer;
 	float: right;
 	text-indent: -9999px;
 	width: 20px;

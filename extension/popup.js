@@ -19740,7 +19740,7 @@ var Actions = {
 
 module.exports = Actions;
 
-},{"../constants/Constants":169,"../dispatcher/Dispatcher":170}],166:[function(require,module,exports){
+},{"../constants/Constants":170,"../dispatcher/Dispatcher":171}],166:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -19763,9 +19763,14 @@ module.exports = SaveBtn;
 'use strict';
 
 var React = require('react');
+var Toggle = require('./Toggle');
 
 var List = React.createClass({
   displayName: 'List',
+
+  _click: function _click() {
+    console.log(this);
+  },
 
   render: function render() {
     return React.createElement(
@@ -19778,11 +19783,7 @@ var List = React.createClass({
           React.createElement(
             'p',
             { className: item.line.toLowerCase().replace(/\s/g, '-') },
-            React.createElement(
-              'span',
-              { className: 'line' },
-              item.line
-            )
+            React.createElement(Toggle, { item: item })
           )
         );
       })
@@ -19792,7 +19793,7 @@ var List = React.createClass({
 
 module.exports = List;
 
-},{"react":164}],168:[function(require,module,exports){
+},{"./Toggle":169,"react":164}],168:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19861,7 +19862,44 @@ var Popup = React.createClass({
 
 module.exports = Popup;
 
-},{"../actions/Actions":165,"../stores/TubeStore":172,"./CloseBtn":166,"./Lines":167,"react":164,"react-dom":8}],169:[function(require,module,exports){
+},{"../actions/Actions":165,"../stores/TubeStore":173,"./CloseBtn":166,"./Lines":167,"react":164,"react-dom":8}],169:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+var Toggle = React.createClass({
+  displayName: 'Toggle',
+
+  _click: function _click() {
+    console.log(this);
+  },
+
+  render: function render() {
+    return React.createElement(
+      'button',
+      { onClick: this._click, className: "toggle-btn " + (this.props.item.active ? '' : 'off') },
+      React.createElement(
+        'span',
+        { className: 'line' },
+        this.props.item.line
+      ),
+      React.createElement(
+        'span',
+        { className: 'status' },
+        this.props.item.status
+      ),
+      React.createElement(
+        'span',
+        { className: 'message' },
+        'No updates set'
+      )
+    );
+  }
+});
+
+module.exports = Toggle;
+
+},{"react":164}],170:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
@@ -19872,14 +19910,14 @@ module.exports = keyMirror({
   UPDATE: null
 });
 
-},{"keymirror":6}],170:[function(require,module,exports){
+},{"keymirror":6}],171:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":1}],171:[function(require,module,exports){
+},{"flux":1}],172:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19889,7 +19927,7 @@ var FilteredList = require('./components/Popup');
 
 ReactDOM.render(React.createElement(FilteredList, null), document.getElementsByClassName('main')[0]);
 
-},{"./components/Popup":168,"react":164,"react-dom":8}],172:[function(require,module,exports){
+},{"./components/Popup":168,"react":164,"react-dom":8}],173:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatcher/Dispatcher');
@@ -20223,4 +20261,4 @@ AppDispatcher.register(function (action) {
 
 module.exports = TubeStore;
 
-},{"../actions/Actions":165,"../constants/Constants":169,"../dispatcher/Dispatcher":170,"events":4,"object-assign":7}]},{},[171]);
+},{"../actions/Actions":165,"../constants/Constants":170,"../dispatcher/Dispatcher":171,"events":4,"object-assign":7}]},{},[172]);
