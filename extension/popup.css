@@ -29,9 +29,15 @@ strong {
 	padding: 20px 0 0;
 }
 
+.lines {
+	padding: 0;
+	list-style: none;
+}
+
 .popupclosebtn { 
 	background: url(images/close.png);
 	background-size: contain;
+	border: none;
 	float: right;
 	text-indent: -9999px;
 	width: 20px;

@@ -19782,9 +19782,7 @@ var keyMirror = require('keymirror');
 module.exports = keyMirror({
   DELETE: null,
   SAVE: null,
-  UPDATE: null,
-  LINES: 14, // number of TfL managed lines
-  CHANGE_EVENT: 'change'
+  UPDATE: null
 });
 
 },{"keymirror":6}],167:[function(require,module,exports){
@@ -19823,24 +19821,33 @@ var _data = setData(),
     _specialServiceLine = '',
     _plannedClosureLine = '';
 
+var CHANGE_EVENT = 'change';
+
 function setData() {
     var opt = [],
-        i = 0;
+        i = 0,
+        LINES = 14,
+        // number of TfL managed lines
+    data = [];
+
     if (localStorage.lines) {
         opt = JSON.parse(localStorage.lines);
-        for (i; i < Constants.LINES; i++) {
-            _data[i] = opt[i] === 1;
+        for (i; i < LINES; i++) {
+            data.push({ active: opt[i] === 1 });
         }
     } else {
-        for (i; i < Constants.LINES; i++) {
-            _data[i] = true;
+        for (i; i < LINES; i++) {
+            data.push({ active: true });
         }
     }
+    console.log(data);
+    return data;
 }
 
 function filterData() {
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
+
     // reset status
     _description = '';
     _minorDelays = 0;
@@ -19860,61 +19867,65 @@ function filterData() {
     _plannedClosureLine = '';
 
     for (var i = 0, l = items.length; i < l; i += 1) {
-        if (_data[i]) {
-            divider = ' ';
-            _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
-            if (_description === 'Suspended') {
-                if (_suspended) {
-                    divider = ', ';
-                }
-                _suspended += 1;
-                _suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Part Suspended') {
-                if (_partSuspended) {
-                    divider = ', ';
-                }
-                _partSuspended += 1;
-                _partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Planned Closure' || _description === 'Service Closed') {
-                if (_plannedClosure) {
-                    divider = ', ';
-                }
-                _plannedClosure += 1;
-                _plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Part Closure') {
-                partClosure += 1;
-            } else if (_description === 'Severe Delays') {
-                if (_severeDelays) {
-                    divider = ', ';
-                }
-                _severeDelays += 1;
-                _severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Special Service') {
-                if (_specialService) {
-                    divider = ', ';
-                }
-                _specialService += 1;
-                _specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Reduced Service') {
-                reducedService += 1;
-            } else if (_description === 'Bus Service') {
-                busService += 1;
-            } else if (_description === 'Minor Delays') {
-                if (_minorDelays) {
-                    divider = ', ';
-                }
-                _minorDelays += 1;
-                _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+        // if (_data[i]) {
+        _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
+        divider = ' ';
+        _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
+        if (_description === 'Suspended') {
+            if (_suspended) {
+                divider = ', ';
             }
+            _suspended += 1;
+            _suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+        } else if (_description === 'Part Suspended') {
+            if (_partSuspended) {
+                divider = ', ';
+            }
+            _partSuspended += 1;
+            _partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+        } else if (_description === 'Planned Closure' || _description === 'Service Closed') {
+            if (_plannedClosure) {
+                divider = ', ';
+            }
+            _plannedClosure += 1;
+            _plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+        } else if (_description === 'Part Closure') {
+            partClosure += 1;
+        } else if (_description === 'Severe Delays') {
+            if (_severeDelays) {
+                divider = ', ';
+            }
+            _severeDelays += 1;
+            _severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+        } else if (_description === 'Special Service') {
+            if (_specialService) {
+                divider = ', ';
+            }
+            _specialService += 1;
+            _specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+        } else if (_description === 'Reduced Service') {
+            reducedService += 1;
+        } else if (_description === 'Bus Service') {
+            busService += 1;
+        } else if (_description === 'Minor Delays') {
+            if (_minorDelays) {
+                divider = ', ';
+            }
+            _minorDelays += 1;
+            _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
         }
+        // }
     }
+    console.log('after ajax');
+    console.log(_data);
+    TubeStore.emitChange();
 }
 
 /**
 * @return {object}
 */
 function updateData() {
-    _data = 'ok';
+    _data = setData();
     _req.open('GET',
     // TODO use new TfL api for JSON
     'http://cloud.tfl.gov.uk/TrackerNet/LineStatus', true);
@@ -19992,8 +20003,8 @@ var TubeStore = assign({}, EventEmitter.prototype, {
     * Get the staus of tube lines.
     * @return {object}
     */
-    getStatus: function getStatus() {
-        return _items;
+    getData: function getData() {
+        return _data;
     },
 
     description: function description() {
@@ -20070,21 +20081,21 @@ var TubeStore = assign({}, EventEmitter.prototype, {
     // },
 
     emitChange: function emitChange() {
-        this.emit(Constants.CHANGE_EVENT);
+        this.emit(CHANGE_EVENT);
     },
 
     /**
      * @param {function} callback
      */
     addChangeListener: function addChangeListener(callback) {
-        this.on(Constants.CHANGE_EVENT, callback);
+        this.on(CHANGE_EVENT, callback);
     },
 
     /**
      * @param {function} callback
      */
     removeChangeListener: function removeChangeListener(callback) {
-        this.removeListener(Constants.CHANGE_EVENT, callback);
+        this.removeListener(CHANGE_EVENT, callback);
     }
 });
 
@@ -20105,7 +20116,7 @@ AppDispatcher.register(function (action) {
 
         case Constants.UPDATE:
             updateData();
-            TubeStore.emitChange();
+            console.log('update');
             break;
 
         default:

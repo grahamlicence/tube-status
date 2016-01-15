@@ -24,44 +24,53 @@ var _data = setData(),
     specialServiceLine = '',
     plannedClosureLine = '';
 
+var CHANGE_EVENT = 'change';
+
 function setData() {
     var opt = [],
-        i = 0;
+        i = 0,
+        LINES = 14, // number of TfL managed lines
+        data = [];
+
     if (localStorage.lines) {
         opt = JSON.parse(localStorage.lines);
-        for (i; i < Constants.LINES; i++) {
-            _data[i] = opt[i] === 1;
+        for (i; i < LINES; i++) {
+            data.push({active: opt[i] === 1});
         }
     } else {
-        for (i; i < Constants.LINES; i++) {
-            _data[i] = true;
+        for (i; i < LINES; i++) {
+            data.push({active: true});
         }
     }
+    console.log(data);
+    return data;
 }
 
 function filterData() {
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
-    // reset status
-    description = '';
-    minorDelays = 0;
-    busService = 0;
-    reducedService = 0;
-    severeDelays = 0;
-    partClosure = 0;
-    plannedClosure = 0;
-    partSuspended = 0;
-    suspended = 0;
-    specialService = 0;
-    partSuspendedLine = '';
-    suspendedLine = '';
-    severeDelaysLine = '';
-    minorDelaysLine = '';
-    specialServiceLine = '';
-    plannedClosureLine = '';
+
+        // reset status
+        description = '';
+        minorDelays = 0;
+        busService = 0;
+        reducedService = 0;
+        severeDelays = 0;
+        partClosure = 0;
+        plannedClosure = 0;
+        partSuspended = 0;
+        suspended = 0;
+        specialService = 0;
+        partSuspendedLine = '';
+        suspendedLine = '';
+        severeDelaysLine = '';
+        minorDelaysLine = '';
+        specialServiceLine = '';
+        plannedClosureLine = '';
 
         for (var i = 0, l = items.length; i < l; i += 1) {
-            if (_data[i]) {
+            // if (_data[i]) { 
+            _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
                 divider = ' ';
                 description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
                 if (description === 'Suspended') {
@@ -107,15 +116,18 @@ function filterData() {
                     minorDelays += 1;
                     minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
                 }
-            }
+            // }
         }
+        console.log('after ajax');
+        console.log(_data);
+        TubeStore.emitChange();
 }
 
 /**
 * @return {object}
 */
 function updateData() {
-    _data = 'ok';
+    _data = setData();
     _req.open(
         'GET',
         // TODO use new TfL api for JSON
@@ -199,8 +211,8 @@ const TubeStore = assign({}, EventEmitter.prototype, {
     * Get the staus of tube lines.
     * @return {object}
     */
-    getStatus: function() {
-        return _items;
+    getData: function() {
+        return _data;
     },
 
     description: function() {
@@ -277,21 +289,21 @@ const TubeStore = assign({}, EventEmitter.prototype, {
   // },
 
   emitChange: function() {
-    this.emit(Constants.CHANGE_EVENT);
+    this.emit(CHANGE_EVENT);
   },
 
   /**
    * @param {function} callback
    */
   addChangeListener: function(callback) {
-    this.on(Constants.CHANGE_EVENT, callback);
+    this.on(CHANGE_EVENT, callback);
   },
 
   /**
    * @param {function} callback
    */
   removeChangeListener: function(callback) {
-    this.removeListener(Constants.CHANGE_EVENT, callback);
+    this.removeListener(CHANGE_EVENT, callback);
   }
 });
 
@@ -312,7 +324,7 @@ AppDispatcher.register(function(action) {
 
     case Constants.UPDATE:
         updateData();
-        TubeStore.emitChange();
+        console.log('update')
       break;
 
     default:
