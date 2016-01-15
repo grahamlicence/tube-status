@@ -19777,6 +19777,7 @@ var List = React.createClass({
       'ul',
       { className: this.props.className },
       this.props.items.map(function (item) {
+        console.log(item);
         return React.createElement(
           'li',
           { key: item.line },
@@ -19892,7 +19893,8 @@ var Toggle = React.createClass({
         'span',
         { className: 'message' },
         'No updates set'
-      )
+      ),
+      React.createElement('span', { className: "toggle " + (this.props.item.active ? 'on' : 'off') })
     );
   }
 });
@@ -19968,11 +19970,11 @@ function setData() {
     if (localStorage.lines) {
         opt = JSON.parse(localStorage.lines);
         for (i; i < LINES; i++) {
-            data.push({ active: opt[i] === 1 });
+            data.push({ active: opt[i] === 1, id: i });
         }
     } else {
         for (i; i < LINES; i++) {
-            data.push({ active: true });
+            data.push({ active: true, id: i });
         }
     }
     console.log(data);

@@ -35,11 +35,11 @@ function setData() {
     if (localStorage.lines) {
         opt = JSON.parse(localStorage.lines);
         for (i; i < LINES; i++) {
-            data.push({active: opt[i] === 1});
+            data.push({active: opt[i] === 1, id: i});
         }
     } else {
         for (i; i < LINES; i++) {
-            data.push({active: true});
+            data.push({active: true, id: i});
         }
     }
     console.log(data);

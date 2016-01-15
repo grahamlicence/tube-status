@@ -12,6 +12,7 @@ const Toggle = React.createClass({
         <span className="line">{this.props.item.line}</span>
         <span className="status">{this.props.item.status}</span>
         <span className="message">No updates set</span>
+        <span className={"toggle " + (this.props.item.active ? 'on' : 'off')}></span>
       </button>
     )  
   }
