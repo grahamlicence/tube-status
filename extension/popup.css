@@ -39,6 +39,7 @@ strong {
     padding: 0;
     cursor: pointer;
     background: none;
+    text-align: left;
 }
 
 .popupclosebtn { 
@@ -81,6 +82,10 @@ strong {
 .message {
 	width: 100px;
 	display: inline-block;
+	text-align: left;
+    padding-left: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
 }
 .message {
 	display: none;
@@ -166,5 +171,9 @@ strong {
 }
 .dlr .line {
 	background-color: #00A4A7;
+	color: #fff;
+}
+.tfl-rail .line {
+	background-color: #0019a8;
 	color: #fff;
 }

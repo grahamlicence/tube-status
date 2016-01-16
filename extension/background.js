@@ -19866,11 +19866,11 @@ function filterData() {
     _specialServiceLine = '';
     _plannedClosureLine = '';
 
-    for (var i = 0, l = items.length; i < l; i += 1) {
-        // if (_data[i]) {
+    for (var i = 0, l = items.length; i < l; i++) {
         _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
         divider = ' ';
         _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
+        _data[i].description = _description;
         if (_description === 'Suspended') {
             if (_suspended) {
                 divider = ', ';
@@ -19914,7 +19914,15 @@ function filterData() {
             _minorDelays += 1;
             _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
         }
-        // }
+
+        if (status !== 'Good Service') {
+            _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
+            if (_data[i].details.charAt(0) === '<') {
+                _data[i].details = _data[i].details.substring(6);
+            }
+        } else {
+            _data[i].details = '';
+        }
     }
     console.log('after ajax');
     console.log(_data);
@@ -19932,70 +19940,6 @@ function updateData() {
     _req.onload = filterData;
     _req.send(null);
 }
-
-// /**
-// * Filter the list by input value
-// * @param {Object} val - filter input text
-// * @return {object}
-// */
-// function filter(val) {
-//     var updatedList = _names;
-//     updatedList = updatedList.filter(function(item){
-//         return item.name.toLowerCase().search(
-//             val.toLowerCase()) !== -1;
-//     });
-//     _items = updatedList;
-// }
-
-// /**
-// * Sort the array by defined value
-// * @private
-// * @param {String} val - value to sort array by
-// * @param {Boolean} highToLow - high to low or low to high
-// */
-// function sortItems (val, highToLow) {
-//     _items = _items.sort(function(a, b) {
-//         if (highToLow) {
-//             if (a[val] > b[val]) {
-//                 return 1;
-//             }
-//             if (a[val] < b[val]) {
-//                 return -1;
-//             }
-//             return 0; // matches
-//         } else {
-//             if (a[val] < b[val]) {
-//                 return 1;
-//             }
-//             if (a[val] > b[val]) {
-//                 return -1;
-//             }
-//             return 0;
-//         }
-//     });
-// }
-
-// /**
-// * Save a name
-// * @param {Object} name - name to be saved
-// */
-// function save(name) {
-//     _saved.push(name);
-// }
-
-// /**
-// * Remove a name
-// * @param {Object} name - name to be removed
-// */
-// function del(name) {
-//   for (var n = 0; n < _saved.length; n++) {
-//     if (_saved[n].name == name.name) {
-//       var removedObject = _saved.splice(n,1);
-//       removedObject = null;
-//       break;
-//     }
-//   }
-// }
 
 var TubeStore = assign({}, EventEmitter.prototype, {
 
@@ -20051,35 +19995,6 @@ var TubeStore = assign({}, EventEmitter.prototype, {
         return _minorDelaysLine + ' minor delays';
     },
 
-    // /**
-    //  * Check if name saved.
-    //  * @return {object}
-    //  */
-    // isSaved: function(name) {
-    //   for (var i = 0; i < _saved.length; i++) {
-    //       if (_saved[i].name === name) {
-    //           return true;
-    //       }
-    //   }
-    //   return false;
-    // },
-
-    // /**
-    //  * Get the saved names.
-    //  * @return {object}
-    //  */
-    // getSaved: function() {
-    //   return _saved;
-    // },
-
-    // /**
-    //  * Get the sorted/filtered items.
-    //  * @return {object}
-    //  */
-    // getItems: function() {
-    //   return _items;
-    // },
-
     emitChange: function emitChange() {
         this.emit(CHANGE_EVENT);
     },
@@ -20104,15 +20019,6 @@ AppDispatcher.register(function (action) {
     var text;
 
     switch (action.actionType) {
-        // case Constants.DELETE:
-        //     del(action.item);
-        //     TubeStore.emitChange();
-        //   break;
-
-        // case Constants.SAVE:
-        //     save(action.item);
-        //     TubeStore.emitChange();
-        //   break;
 
         case Constants.UPDATE:
             updateData();

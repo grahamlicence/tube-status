@@ -17,18 +17,6 @@ function getState() {
 
 const Popup = React.createClass({
   
-    // /**
-    // * Filter the list by input value
-    // * @private
-    // * @param {Object} value - filter input text
-    // */
-    // _filterList: function(event){
-    //     var value = event.target.value;
-    //     Actions.filter(value);
-    // },
-    // /**
-    // * Event handler for 'change' events coming from the ListStore
-    // */
     _onChange: function() {
         this.setState(getState());
     },
