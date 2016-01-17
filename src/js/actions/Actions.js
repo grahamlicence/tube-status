@@ -10,6 +10,14 @@ var Actions = {
     AppDispatcher.dispatch({
       actionType: Constants.UPDATE
     });
+  },
+
+  set: function(id, active) {
+    AppDispatcher.dispatch({
+      actionType: Constants.SET,
+      id: id,
+      active: active
+    });
   }
 
 };

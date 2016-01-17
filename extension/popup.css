@@ -34,12 +34,18 @@ strong {
 	list-style: none;
 }
 
+.lines li {
+	min-height: 26px;
+}
+
 .toggle-btn {
     border: none;
     padding: 0;
-    cursor: pointer;
     background: none;
     text-align: left;
+}
+.toggle-btn:hover {
+    cursor: pointer;
 }
 
 .popupclosebtn { 

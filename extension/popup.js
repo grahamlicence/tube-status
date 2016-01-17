@@ -19734,6 +19734,14 @@ var Actions = {
     AppDispatcher.dispatch({
       actionType: Constants.UPDATE
     });
+  },
+
+  set: function set(id, active) {
+    AppDispatcher.dispatch({
+      actionType: Constants.SET,
+      id: id,
+      active: active
+    });
   }
 
 };
@@ -19855,18 +19863,20 @@ module.exports = Popup;
 'use strict';
 
 var React = require('react');
+var Actions = require('../actions/Actions');
 
 var Toggle = React.createClass({
   displayName: 'Toggle',
 
   _click: function _click() {
     console.log(this);
+    Actions.set(this.props.item.id, this.props.item.active);
   },
 
   render: function render() {
     return React.createElement(
       'button',
-      { onClick: this._click, className: "toggle-btn " + (this.props.item.active ? '' : 'off') },
+      { type: 'button', onClick: this._click, className: "toggle-btn " + (this.props.item.active ? '' : 'off') },
       React.createElement(
         'span',
         { className: 'line' },
@@ -19896,14 +19906,13 @@ var Toggle = React.createClass({
 
 module.exports = Toggle;
 
-},{"react":164}],170:[function(require,module,exports){
+},{"../actions/Actions":165,"react":164}],170:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  DELETE: null,
-  SAVE: null,
+  SET: null,
   UPDATE: null
 });
 
@@ -19974,6 +19983,26 @@ function setData() {
     }
     console.log(data);
     return data;
+}
+
+var storeOptions = function storeOptions() {
+    var opt = [],
+        i = 0;
+    for (i; i < 14; i++) {
+        opt[i] = _data[i].active === true ? 1 : 0;
+    }
+    localStorage.lines = JSON.stringify(opt);
+};
+
+function updateShown(id, active) {
+    if (active) {
+        _data[id].active = false;
+    } else {
+        _data[id].active = true;
+    }
+    storeOptions();
+    // data = _setData();   
+    TubeStore.emitChange();
 }
 
 function filterData() {
@@ -20048,7 +20077,7 @@ function filterData() {
         }
 
         if (status !== 'Good Service') {
-            _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
+            _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
             if (_data[i].details.charAt(0) === '<') {
                 _data[i].details = _data[i].details.substring(6);
             }
@@ -20155,6 +20184,10 @@ AppDispatcher.register(function (action) {
         case Constants.UPDATE:
             updateData();
             console.log('update');
+            break;
+
+        case Constants.SET:
+            updateShown(action.id, action.active);
             break;
 
         default:

@@ -1,14 +1,16 @@
 var React = require('react');
+var Actions = require('../actions/Actions');
 
 const Toggle = React.createClass({
 
     _click: function () {
         console.log(this)
+        Actions.set(this.props.item.id, this.props.item.active);
     },
 
   render: function(){
     return (
-      <button onClick={this._click} className={"toggle-btn " + (this.props.item.active ? '' : 'off')}>
+      <button type="button" onClick={this._click} className={"toggle-btn " + (this.props.item.active ? '' : 'off')}>
         <span className="line">{this.props.item.line}</span>
         <span className="status">{this.props.item.description}</span>
         <span className="message">No updates set</span>
