@@ -62,8 +62,12 @@ function updateShown(id, active) {
         _data[id].active = true;
     }
     storeOptions();
-    // data = _setData();    
+    filterData();
+
     TubeStore.emitChange();
+
+    // update background
+    chrome.runtime.sendMessage({msg: 'dataupdate'});
 }
 
 function filterData() {
@@ -90,60 +94,64 @@ function filterData() {
 
         for (var i = 0, l = items.length; i < l; i++) {
             _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
-            divider = ' ';
-            description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
-            _data[i].description = description;
-            if (description === 'Suspended') {
-                if (suspended) {
-                    divider = ', ';
+            _data[i].details = '';
+            
+            // check if status required for this line
+            if (_data[i].active) {
+                divider = ' ';
+                description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
+                _data[i].description = description;
+                if (description === 'Suspended') {
+                    if (suspended) {
+                        divider = ', ';
+                    }
+                    suspended += 1;
+                    suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+                } else if (description === 'Part Suspended') {
+                    if (partSuspended) {
+                        divider = ', ';
+                    }
+                    partSuspended += 1;
+                    partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+                } else if (description === 'Planned Closure' || description === 'Service Closed') {
+                    if (plannedClosure) {
+                        divider = ', ';
+                    }
+                    plannedClosure += 1;
+                    plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+                } else if (description === 'Part Closure') {
+                    partClosure += 1;
+                } else if (description === 'Severe Delays') {
+                    if (severeDelays) {
+                        divider = ', ';
+                    }
+                    severeDelays += 1;
+                    severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+                } else if (description === 'Special Service') {
+                    if (specialService) {
+                        divider = ', ';
+                    }
+                    specialService += 1;
+                    specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+                }  else if (description === 'Reduced Service') {
+                    reducedService += 1;
+                } else if (description === 'Bus Service') {
+                    busService += 1;
+                } else if (description === 'Minor Delays') {
+                    if (minorDelays) {
+                        divider = ', ';
+                    }
+                    minorDelays += 1;
+                    minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
                 }
-                suspended += 1;
-                suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (description === 'Part Suspended') {
-                if (partSuspended) {
-                    divider = ', ';
-                }
-                partSuspended += 1;
-                partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (description === 'Planned Closure' || description === 'Service Closed') {
-                if (plannedClosure) {
-                    divider = ', ';
-                }
-                plannedClosure += 1;
-                plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (description === 'Part Closure') {
-                partClosure += 1;
-            } else if (description === 'Severe Delays') {
-                if (severeDelays) {
-                    divider = ', ';
-                }
-                severeDelays += 1;
-                severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (description === 'Special Service') {
-                if (specialService) {
-                    divider = ', ';
-                }
-                specialService += 1;
-                specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            }  else if (description === 'Reduced Service') {
-                reducedService += 1;
-            } else if (description === 'Bus Service') {
-                busService += 1;
-            } else if (description === 'Minor Delays') {
-                if (minorDelays) {
-                    divider = ', ';
-                }
-                minorDelays += 1;
-                minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            }
 
-            if (status !== 'Good Service') {
-                _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
-                if (_data[i].details.charAt(0) === '<') {
-                    _data[i].details = _data[i].details.substring(6);
+                if (status !== 'Good Service') {
+                    _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
+                    if (_data[i].details.charAt(0) === '<') {
+                        _data[i].details = _data[i].details.substring(6);
+                    }
                 }
-            } else {
-                _data[i].details = '';
+
             }
         }
         console.log('after ajax');

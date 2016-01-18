@@ -4,7 +4,6 @@ var Actions = require('../actions/Actions');
 const Toggle = React.createClass({
 
     _click: function () {
-        console.log(this)
         Actions.set(this.props.item.id, this.props.item.active);
     },
 

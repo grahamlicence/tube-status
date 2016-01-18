@@ -3,16 +3,11 @@ var Toggle = require('./Toggle');
 
 const List = React.createClass({
 
-    _click: function () {
-        console.log(this)
-    },
-
   render: function(){
     return (
       <ul className={this.props.className}>
       {
         this.props.items.map(function(item) {
-          console.log(item)
           return <li key={item.line}>
                 <p className={item.line.toLowerCase().replace(/\s/g, '-')}>
                   <Toggle item={item} />

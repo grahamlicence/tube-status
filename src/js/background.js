@@ -33,3 +33,14 @@ function checkStatus () {
 }
     
 checkStatus();
+var checker = setInterval(function() {
+    checkStatus();
+}, 300000); //check every 5 minutes
+
+// update icon when settings changed
+chrome.runtime.onMessage.addListener(
+    function(request) {
+    if (request.msg === 'dataupdate') {
+        checkStatus();
+    }
+});

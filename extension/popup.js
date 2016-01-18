@@ -19776,16 +19776,11 @@ var Toggle = require('./Toggle');
 var List = React.createClass({
   displayName: 'List',
 
-  _click: function _click() {
-    console.log(this);
-  },
-
   render: function render() {
     return React.createElement(
       'ul',
       { className: this.props.className },
       this.props.items.map(function (item) {
-        console.log(item);
         return React.createElement(
           'li',
           { key: item.line },
@@ -19869,7 +19864,6 @@ var Toggle = React.createClass({
   displayName: 'Toggle',
 
   _click: function _click() {
-    console.log(this);
     Actions.set(this.props.item.id, this.props.item.active);
   },
 
@@ -20001,8 +19995,12 @@ function updateShown(id, active) {
         _data[id].active = true;
     }
     storeOptions();
-    // data = _setData();   
+    filterData();
+
     TubeStore.emitChange();
+
+    // update background
+    chrome.runtime.sendMessage({ msg: 'dataupdate' });
 }
 
 function filterData() {
@@ -20029,60 +20027,63 @@ function filterData() {
 
     for (var i = 0, l = items.length; i < l; i++) {
         _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
-        divider = ' ';
-        _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
-        _data[i].description = _description;
-        if (_description === 'Suspended') {
-            if (_suspended) {
-                divider = ', ';
-            }
-            _suspended += 1;
-            _suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-        } else if (_description === 'Part Suspended') {
-            if (_partSuspended) {
-                divider = ', ';
-            }
-            _partSuspended += 1;
-            _partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-        } else if (_description === 'Planned Closure' || _description === 'Service Closed') {
-            if (_plannedClosure) {
-                divider = ', ';
-            }
-            _plannedClosure += 1;
-            _plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-        } else if (_description === 'Part Closure') {
-            partClosure += 1;
-        } else if (_description === 'Severe Delays') {
-            if (_severeDelays) {
-                divider = ', ';
-            }
-            _severeDelays += 1;
-            _severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-        } else if (_description === 'Special Service') {
-            if (_specialService) {
-                divider = ', ';
-            }
-            _specialService += 1;
-            _specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-        } else if (_description === 'Reduced Service') {
-            reducedService += 1;
-        } else if (_description === 'Bus Service') {
-            busService += 1;
-        } else if (_description === 'Minor Delays') {
-            if (_minorDelays) {
-                divider = ', ';
-            }
-            _minorDelays += 1;
-            _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-        }
+        _data[i].details = '';
 
-        if (status !== 'Good Service') {
-            _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
-            if (_data[i].details.charAt(0) === '<') {
-                _data[i].details = _data[i].details.substring(6);
+        // check if status required for this line
+        if (_data[i].active) {
+            divider = ' ';
+            _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
+            _data[i].description = _description;
+            if (_description === 'Suspended') {
+                if (_suspended) {
+                    divider = ', ';
+                }
+                _suspended += 1;
+                _suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+            } else if (_description === 'Part Suspended') {
+                if (_partSuspended) {
+                    divider = ', ';
+                }
+                _partSuspended += 1;
+                _partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+            } else if (_description === 'Planned Closure' || _description === 'Service Closed') {
+                if (_plannedClosure) {
+                    divider = ', ';
+                }
+                _plannedClosure += 1;
+                _plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+            } else if (_description === 'Part Closure') {
+                partClosure += 1;
+            } else if (_description === 'Severe Delays') {
+                if (_severeDelays) {
+                    divider = ', ';
+                }
+                _severeDelays += 1;
+                _severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+            } else if (_description === 'Special Service') {
+                if (_specialService) {
+                    divider = ', ';
+                }
+                _specialService += 1;
+                _specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
+            } else if (_description === 'Reduced Service') {
+                reducedService += 1;
+            } else if (_description === 'Bus Service') {
+                busService += 1;
+            } else if (_description === 'Minor Delays') {
+                if (_minorDelays) {
+                    divider = ', ';
+                }
+                _minorDelays += 1;
+                _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
             }
-        } else {
-            _data[i].details = '';
+
+            if (status !== 'Good Service') {
+                _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
+                if (_data[i].details.charAt(0) === '<') {
+                    _data[i].details = _data[i].details.substring(6);
+                }
+            }
         }
     }
     console.log('after ajax');
