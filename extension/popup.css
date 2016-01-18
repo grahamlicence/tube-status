@@ -4,7 +4,7 @@ html {
 	
 body {
 	min-width:280px;
-	min-height: 450px;
+	min-height: 350px;
 	overflow-x:hidden;
 }
 .wrapper {
@@ -35,18 +35,21 @@ strong {
 	list-style: none;
 }
 
-.lines li {
-	min-height: 26px;
-}
-
 .toggle-btn {
+	font-size: 13px;
     border: none;
     padding: 0;
     background: none;
     text-align: left;
+    width: 100%;
+    transition: background 0.3s;
+    background-color: #E6E6E6;
 }
-.toggle-btn:hover {
+.toggle-btn:hover,
+.toggle-btn:focus {
     cursor: pointer;
+    outline: none;
+    background-color: #E6E6E6;
 }
 
 .popupclosebtn { 
@@ -88,12 +91,11 @@ strong {
 }
 .status, 
 .message {
-	width: 100px;
+	width: 110px;
 	display: inline-block;
 	vertical-align: top;
 	text-align: left;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 2px 5px 0;
     box-sizing: border-box;
 }
 .message {
@@ -117,13 +119,15 @@ strong {
 	display: inline-block;
 	width: 15px;
 	height: 15px;
+	margin-top: 2px;
 }
 .toggle-btn:hover .toggle,
 .toggleBtn:hover .toggle {
 	background: url(images/close.png) no-repeat 0 0;
 	background-size: contain;
 }
-.off .toggle {
+.off .toggle,
+.off:hover .toggle {
 	background: none;
 }
 .off .toggle-btn:hover .toggle,
