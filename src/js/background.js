@@ -6,10 +6,6 @@ var Actions = require('./actions/Actions');
 
 function updateIcon() {
     // set icon
-
-    console.log(TubeStore.minorDelays())
-    
-    // TODO run this after update
     if (TubeStore.plannedClosure() > 0) { 
         chrome.browserAction.setIcon({path: 'images/bad.png'}); //red
         chrome.browserAction.setTitle({title: TubeStore.plannedClosureLine() + ' closed'});
@@ -46,7 +42,5 @@ chrome.runtime.onMessage.addListener(
     function(request) {
     if (request.msg === 'dataupdate') {
         Actions.update();
-        // updateIcon();
-
     }
 });

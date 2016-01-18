@@ -19760,10 +19760,6 @@ var Actions = require('./actions/Actions');
 
 function updateIcon() {
     // set icon
-
-    console.log(TubeStore.minorDelays());
-
-    // TODO run this after update
     if (TubeStore.plannedClosure() > 0) {
         chrome.browserAction.setIcon({ path: 'images/bad.png' }); //red
         chrome.browserAction.setTitle({ title: TubeStore.plannedClosureLine() + ' closed' });
@@ -19799,7 +19795,6 @@ var checker = setInterval(function () {
 chrome.runtime.onMessage.addListener(function (request) {
     if (request.msg === 'dataupdate') {
         Actions.update();
-        // updateIcon();
     }
 });
 
@@ -19869,7 +19864,6 @@ function setData() {
             data.push({ active: true, id: i });
         }
     }
-    console.log(data);
     return data;
 }
 
@@ -19896,7 +19890,6 @@ function updateShown(id, active) {
 }
 
 function filterData() {
-    console.log(_req);
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
 
@@ -19918,7 +19911,6 @@ function filterData() {
     _specialServiceLine = '';
     _plannedClosureLine = '';
 
-    console.log(_data);
     for (var i = 0, l = items.length; i < l; i++) {
         _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
         _data[i].details = '';
@@ -19927,7 +19919,6 @@ function filterData() {
         if (_data[i].active) {
             divider = ' ';
             _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
-            console.log(_description);
             _data[i].description = _description;
             if (_description === 'Suspended') {
                 if (_suspended) {
@@ -19970,7 +19961,6 @@ function filterData() {
                     divider = ', ';
                 }
                 _minorDelays += 1;
-                console.log('minor fucking delays ' + _minorDelays);
                 _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
             }
 
@@ -19982,8 +19972,6 @@ function filterData() {
             }
         }
     }
-    console.log('after ajax');
-    console.log(_data);
     TubeStore.emitChange();
 }
 
@@ -20082,7 +20070,6 @@ AppDispatcher.register(function (action) {
 
         case Constants.GET:
             getData();
-            console.log('update');
             break;
 
         case Constants.UPDATE:

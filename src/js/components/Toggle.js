@@ -15,11 +15,13 @@ const Toggle = React.createClass({
         <span className="message">No updates set</span>
         <span className={"toggle " + (this.props.item.active ? 'on' : 'off')}></span>
         {this.props.item.details.split('\n').map(function(item) {
-          return (
-            <span className="details">
-              {item}
-            </span>
-          )
+          if (item.length) {
+            return (
+              <span className="details">
+                {item}
+              </span>
+            )
+          }
         })}
       </button>
     )  
