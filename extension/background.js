@@ -19982,9 +19982,7 @@ function getData() {
     _data = setData();
     _req.open('GET',
     // TODO use new TfL api for JSON
-    'http://cloud.tfl.gov.uk/TrackerNet/LineStatus',
-    // 'http://localhost:5555/strike.xml',
-    true);
+    'http://cloud.tfl.gov.uk/TrackerNet/LineStatus', true);
     _req.onload = filterData;
     _req.send(null);
 }
