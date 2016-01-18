@@ -4,6 +4,7 @@ html {
 	
 body {
 	min-width:280px;
+	min-height: 450px;
 	overflow-x:hidden;
 }
 .wrapper {
