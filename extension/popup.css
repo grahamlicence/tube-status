@@ -4,6 +4,7 @@ html {
 	
 body {
 	min-width:280px;
+	min-height: 350px;
 	overflow-x:hidden;
 }
 .wrapper {
@@ -29,9 +30,33 @@ strong {
 	padding: 20px 0 0;
 }
 
+.lines {
+	padding: 0;
+	list-style: none;
+}
+
+.toggle-btn {
+	font-size: 13px;
+    border: none;
+    padding: 0;
+    background: none;
+    text-align: left;
+    width: 100%;
+    transition: background 0.3s;
+    background-color: #E6E6E6;
+}
+.toggle-btn:hover,
+.toggle-btn:focus {
+    cursor: pointer;
+    outline: none;
+    background-color: #E6E6E6;
+}
+
 .popupclosebtn { 
 	background: url(images/close.png);
 	background-size: contain;
+	border: none;
+    cursor: pointer;
 	float: right;
 	text-indent: -9999px;
 	width: 20px;
@@ -47,6 +72,7 @@ strong {
 	width: 140px;
 	display: inline-block;
 	padding: 2px;
+	vertical-align: top;
 }
 .details {
 	font-size: 11px;
@@ -65,8 +91,12 @@ strong {
 }
 .status, 
 .message {
-	width: 100px;
+	width: 110px;
 	display: inline-block;
+	vertical-align: top;
+	text-align: left;
+    padding: 2px 5px 0;
+    box-sizing: border-box;
 }
 .message {
 	display: none;
@@ -89,14 +119,18 @@ strong {
 	display: inline-block;
 	width: 15px;
 	height: 15px;
+	margin-top: 2px;
 }
+.toggle-btn:hover .toggle,
 .toggleBtn:hover .toggle {
 	background: url(images/close.png) no-repeat 0 0;
 	background-size: contain;
 }
-.off .toggle {
+.off .toggle,
+.off:hover .toggle {
 	background: none;
 }
+.off .toggle-btn:hover .toggle,
 .off .toggleBtn:hover .toggle {
 	background: url(images/tick.png) no-repeat 0 0;
 	background-size: contain;

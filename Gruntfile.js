@@ -1,9 +1,31 @@
 module.exports = function(grunt) {
 
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    require('load-grunt-tasks')(grunt, {
+        pattern: ['grunt-*']
+    });
 
     grunt.initConfig({
 
+        browserify: {
+            options: {
+                sourceMap: true,
+                transform: [
+                    ['babelify', {
+                        loose: 'all'
+                    }]
+                ]
+            },
+            background: {
+                files: {
+                    './extension/background.js': ['./src/js/background.js']
+                }
+            },
+            popup: {
+                files: {
+                    './extension/popup.js': ['./src/js/popup.js']
+                }
+            }
+        },
 
         clean: ['production/'],
 
@@ -37,10 +59,19 @@ module.exports = function(grunt) {
                 src: ['*.css'],
                 dest: 'production'
             }
+        },
+
+        watch: {
+            js: {
+                files: ['src/**/*.js'],
+                tasks: ['browserify']
+            }
         }
 
     });
 
     grunt.registerTask('release', ['clean', 'copy:prod', 'cssmin', 'uglify']);
+
+    grunt.registerTask('dev', ['browserify', 'watch']);
 
 };
