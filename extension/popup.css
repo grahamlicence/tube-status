@@ -43,7 +43,6 @@ strong {
     text-align: left;
     width: 100%;
     transition: background 0.3s;
-    background-color: #E6E6E6;
 }
 .toggle-btn:hover,
 .toggle-btn:focus {
@@ -68,6 +67,7 @@ strong {
 	top: 5px;
 	right: 5px;
 }
+
 .line {
 	width: 140px;
 	display: inline-block;

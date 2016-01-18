@@ -70,7 +70,7 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.registerTask('release', ['clean', 'copy:prod', 'cssmin', 'uglify']);
+    grunt.registerTask('release', ['clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
 
     grunt.registerTask('dev', ['browserify', 'watch']);
 
