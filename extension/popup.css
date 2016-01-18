@@ -68,6 +68,7 @@ strong {
 	width: 140px;
 	display: inline-block;
 	padding: 2px;
+	vertical-align: top;
 }
 .details {
 	font-size: 11px;
@@ -88,6 +89,7 @@ strong {
 .message {
 	width: 100px;
 	display: inline-block;
+	vertical-align: top;
 	text-align: left;
     padding-left: 5px;
     padding-right: 5px;
@@ -115,6 +117,7 @@ strong {
 	width: 15px;
 	height: 15px;
 }
+.toggle-btn:hover .toggle,
 .toggleBtn:hover .toggle {
 	background: url(images/close.png) no-repeat 0 0;
 	background-size: contain;
@@ -122,6 +125,7 @@ strong {
 .off .toggle {
 	background: none;
 }
+.off .toggle-btn:hover .toggle,
 .off .toggleBtn:hover .toggle {
 	background: url(images/tick.png) no-repeat 0 0;
 	background-size: contain;
