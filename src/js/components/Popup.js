@@ -36,7 +36,7 @@ const Popup = React.createClass({
     },
 
      componentDidMount: function() {
-        Actions.update();
+        Actions.get();
     },
 
     render: function(){

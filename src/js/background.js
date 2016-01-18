@@ -4,10 +4,12 @@ var React = require('react');
 var TubeStore = require('./stores/TubeStore');
 var Actions = require('./actions/Actions');
 
-function checkStatus () {
+function updateIcon() {
     // set icon
-    Actions.update();
+
+    console.log(TubeStore.minorDelays())
     
+    // TODO run this after update
     if (TubeStore.plannedClosure() > 0) { 
         chrome.browserAction.setIcon({path: 'images/bad.png'}); //red
         chrome.browserAction.setTitle({title: TubeStore.plannedClosureLine() + ' closed'});
@@ -31,16 +33,20 @@ function checkStatus () {
         chrome.browserAction.setTitle({title: 'No issues reported'});
     }
 }
+
+TubeStore.addChangeListener(updateIcon);
     
-checkStatus();
+Actions.get();
 var checker = setInterval(function() {
-    checkStatus();
+    Actions.get();
 }, 300000); //check every 5 minutes
 
 // update icon when settings changed
 chrome.runtime.onMessage.addListener(
     function(request) {
     if (request.msg === 'dataupdate') {
-        checkStatus();
+        Actions.update();
+        // updateIcon();
+
     }
 });

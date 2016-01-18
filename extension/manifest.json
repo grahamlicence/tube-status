@@ -16,7 +16,8 @@
     "scripts": ["background.js"]
   }, 
   "permissions": [
-    "http://cloud.tfl.gov.uk/"
+    "http://cloud.tfl.gov.uk/",
+    "http://localhost:5555/strike.xml"
   ],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }

@@ -12,6 +12,12 @@ var Actions = {
     });
   },
 
+  get: function() {
+    AppDispatcher.dispatch({
+      actionType: Constants.GET
+    });
+  },
+
   set: function(id, active) {
     AppDispatcher.dispatch({
       actionType: Constants.SET,

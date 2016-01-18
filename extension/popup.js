@@ -19736,6 +19736,12 @@ var Actions = {
     });
   },
 
+  get: function get() {
+    AppDispatcher.dispatch({
+      actionType: Constants.GET
+    });
+  },
+
   set: function set(id, active) {
     AppDispatcher.dispatch({
       actionType: Constants.SET,
@@ -19839,7 +19845,7 @@ var Popup = React.createClass({
     },
 
     componentDidMount: function componentDidMount() {
-        Actions.update();
+        Actions.get();
     },
 
     render: function render() {
@@ -19906,6 +19912,7 @@ module.exports = Toggle;
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
+  GET: null,
   SET: null,
   UPDATE: null
 });
@@ -19997,13 +20004,12 @@ function updateShown(id, active) {
     storeOptions();
     filterData();
 
-    TubeStore.emitChange();
-
     // update background
     chrome.runtime.sendMessage({ msg: 'dataupdate' });
 }
 
 function filterData() {
+    console.log(_req);
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
 
@@ -20025,6 +20031,7 @@ function filterData() {
     _specialServiceLine = '';
     _plannedClosureLine = '';
 
+    console.log(_data);
     for (var i = 0, l = items.length; i < l; i++) {
         _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
         _data[i].details = '';
@@ -20033,6 +20040,7 @@ function filterData() {
         if (_data[i].active) {
             divider = ' ';
             _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
+            console.log(_description);
             _data[i].description = _description;
             if (_description === 'Suspended') {
                 if (_suspended) {
@@ -20075,6 +20083,7 @@ function filterData() {
                     divider = ', ';
                 }
                 _minorDelays += 1;
+                console.log('minor fucking delays ' + _minorDelays);
                 _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
             }
 
@@ -20094,11 +20103,13 @@ function filterData() {
 /**
 * @return {object}
 */
-function updateData() {
+function getData() {
     _data = setData();
     _req.open('GET',
     // TODO use new TfL api for JSON
-    'http://cloud.tfl.gov.uk/TrackerNet/LineStatus', true);
+    'http://cloud.tfl.gov.uk/TrackerNet/LineStatus',
+    // 'http://localhost:5555/strike.xml',
+    true);
     _req.onload = filterData;
     _req.send(null);
 }
@@ -20182,9 +20193,14 @@ AppDispatcher.register(function (action) {
 
     switch (action.actionType) {
 
-        case Constants.UPDATE:
-            updateData();
+        case Constants.GET:
+            getData();
             console.log('update');
+            break;
+
+        case Constants.UPDATE:
+            _data = setData();
+            filterData();
             break;
 
         case Constants.SET:
