@@ -7,6 +7,8 @@ Chrome London Underground status extension
 
 ### Release notes
 
+Release 2.0.1 Minor bug fix
+
 Release 2.0.0 App refactor to use React.
 
 Release 1.3.5 Added colour for TfL Rail.
