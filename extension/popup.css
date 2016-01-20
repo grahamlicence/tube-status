@@ -78,6 +78,7 @@ strong {
 	font-size: 11px;
 	display: block;
 	margin: 0 0 7px;
+    padding: 2px 3px 0;
 }
 .off .line {
 	opacity: 0.3;
