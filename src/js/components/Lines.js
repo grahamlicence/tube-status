@@ -8,7 +8,7 @@ const List = React.createClass({
       <ul className={this.props.className}>
       {
         this.props.items.map(function(item) {
-          return <li key={item.line}>
+          return <li key={item.line.replace(/ /g,'')}>
                 <p className={item.line.toLowerCase().replace(/\s/g, '-')}>
                   <Toggle item={item} />
                 </p>

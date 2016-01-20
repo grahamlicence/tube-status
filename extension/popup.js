@@ -19789,7 +19789,7 @@ var List = React.createClass({
       this.props.items.map(function (item) {
         return React.createElement(
           'li',
-          { key: item.line },
+          { key: item.line.replace(/ /g, '') },
           React.createElement(
             'p',
             { className: item.line.toLowerCase().replace(/\s/g, '-') },
@@ -19893,11 +19893,11 @@ var Toggle = React.createClass({
         'No updates set'
       ),
       React.createElement('span', { className: "toggle " + (this.props.item.active ? 'on' : 'off') }),
-      this.props.item.details.split('\n').map(function (item) {
+      this.props.item.details.split('\n').map(function (item, count) {
         if (item.length) {
           return React.createElement(
             'span',
-            { className: 'details' },
+            { key: count, className: 'details' },
             item
           );
         }

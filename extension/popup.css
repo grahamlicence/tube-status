@@ -71,7 +71,7 @@ strong {
 .line {
 	width: 140px;
 	display: inline-block;
-	padding: 2px;
+	padding: 2px 2px 2px 3px;
 	vertical-align: top;
 }
 .details {
