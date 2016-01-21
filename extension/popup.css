@@ -73,6 +73,7 @@ strong {
 	display: inline-block;
 	padding: 2px 2px 2px 3px;
 	vertical-align: top;
+	transition: opacity 0.3s;
 }
 .details {
 	font-size: 11px;
