@@ -19728,7 +19728,7 @@ var Constants = require('../constants/Constants');
 var Actions = {
 
   /**
-   * @param  {Object} update data
+   * update the data shown
    */
   update: function update() {
     AppDispatcher.dispatch({
@@ -19736,12 +19736,19 @@ var Actions = {
     });
   },
 
+  /**
+   * get the TfL feed
+   */
   get: function get() {
     AppDispatcher.dispatch({
       actionType: Constants.GET
     });
   },
 
+  /**
+   * @param id {Object} Line id
+   * @param active {Boolean} Line status shown
+   */
   set: function set(id, active) {
     AppDispatcher.dispatch({
       actionType: Constants.SET,
@@ -19762,6 +19769,7 @@ var React = require('react');
 var SaveBtn = React.createClass({
     displayName: "SaveBtn",
 
+    // Close the popup when clicked
     _click: function _click() {
         window.close();
     },
@@ -19779,8 +19787,8 @@ module.exports = SaveBtn;
 var React = require('react');
 var Toggle = require('./Toggle');
 
-var List = React.createClass({
-  displayName: 'List',
+var Lines = React.createClass({
+  displayName: 'Lines',
 
   render: function render() {
     return React.createElement(
@@ -19801,7 +19809,7 @@ var List = React.createClass({
   }
 });
 
-module.exports = List;
+module.exports = Lines;
 
 },{"./Toggle":169,"react":164}],168:[function(require,module,exports){
 'use strict';
@@ -19812,7 +19820,7 @@ var ReactDOM = require('react-dom');
 var Store = require('../stores/TubeStore');
 var Actions = require('../actions/Actions');
 var CloseBtn = require('./CloseBtn');
-var List = require('./Lines');
+var Lines = require('./Lines');
 
 /**
  * Retrieve the current data from the Store
@@ -19826,6 +19834,9 @@ function getState() {
 var Popup = React.createClass({
     displayName: 'Popup',
 
+    /**
+     * Update state when changed
+     */
     _onChange: function _onChange() {
         this.setState(getState());
     },
@@ -19853,7 +19864,7 @@ var Popup = React.createClass({
             'div',
             { className: 'tube-status' },
             React.createElement(CloseBtn, null),
-            React.createElement(List, { className: 'lines', items: this.state.items })
+            React.createElement(Lines, { className: 'lines', items: this.state.items })
         );
     }
 });
@@ -19907,6 +19918,7 @@ var Toggle = React.createClass({
 });
 
 module.exports = Toggle;
+/* Line name */ /* Line status */ /* only show details if available */
 
 },{"../actions/Actions":165,"react":164}],170:[function(require,module,exports){
 'use strict';
@@ -19932,9 +19944,9 @@ module.exports = new Dispatcher();
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-var FilteredList = require('./components/Popup');
+var Popup = require('./components/Popup');
 
-ReactDOM.render(React.createElement(FilteredList, null), document.getElementsByClassName('main')[0]);
+ReactDOM.render(React.createElement(Popup, null), document.getElementsByClassName('main')[0]);
 
 },{"./components/Popup":168,"react":164,"react-dom":8}],173:[function(require,module,exports){
 'use strict';
@@ -20010,6 +20022,7 @@ function updateShown(id, active) {
 }
 
 function filterData() {
+    // TODO: save data into localstorage so that data is shared between background and popup
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
 
@@ -20036,6 +20049,7 @@ function filterData() {
         _data[i].details = '';
 
         // check if status required for this line
+        // TODO: check against new API for line status
         if (_data[i].active) {
             divider = ' ';
             _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
@@ -20117,13 +20131,19 @@ var TubeStore = assign({}, EventEmitter.prototype, {
         return _data;
     },
 
+    /**
+    * Description of all line status
+    * @return {object}
+    */
     description: function description() {
         return _description;
     },
 
+    // TODO: when incorporating JSON feed return all status types in single object
     plannedClosure: function plannedClosure() {
         return _plannedClosure;
     },
+
     plannedClosureLine: function plannedClosureLine() {
         return _plannedClosureLine + ' planned closure';
     },
@@ -20139,24 +20159,31 @@ var TubeStore = assign({}, EventEmitter.prototype, {
     partSuspended: function partSuspended() {
         return _partSuspended;
     },
+
     partSuspendedLine: function partSuspendedLine() {
         return _partSuspendedLine + ' part suspended';
     },
+
     severeDelays: function severeDelays() {
         return _severeDelays;
     },
+
     severeDelaysLine: function severeDelaysLine() {
         return _severeDelaysLine + ' severe delays';
     },
+
     specialService: function specialService() {
         return _specialService;
     },
+
     specialServiceLine: function specialServiceLine() {
         return _specialServiceLine + ' special service';
     },
+
     minorDelays: function minorDelays() {
         return _minorDelays;
     },
+
     minorDelaysLine: function minorDelaysLine() {
         return _minorDelaysLine + ' minor delays';
     },

@@ -19723,7 +19723,7 @@ var Constants = require('../constants/Constants');
 var Actions = {
 
   /**
-   * @param  {Object} update data
+   * update the data shown
    */
   update: function update() {
     AppDispatcher.dispatch({
@@ -19731,12 +19731,19 @@ var Actions = {
     });
   },
 
+  /**
+   * get the TfL feed
+   */
   get: function get() {
     AppDispatcher.dispatch({
       actionType: Constants.GET
     });
   },
 
+  /**
+   * @param id {Object} Line id
+   * @param active {Boolean} Line status shown
+   */
   set: function set(id, active) {
     AppDispatcher.dispatch({
       actionType: Constants.SET,
@@ -19890,6 +19897,7 @@ function updateShown(id, active) {
 }
 
 function filterData() {
+    // TODO: save data into localstorage so that data is shared between background and popup
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
 
@@ -19916,6 +19924,7 @@ function filterData() {
         _data[i].details = '';
 
         // check if status required for this line
+        // TODO: check against new API for line status
         if (_data[i].active) {
             divider = ' ';
             _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
@@ -19997,13 +20006,19 @@ var TubeStore = assign({}, EventEmitter.prototype, {
         return _data;
     },
 
+    /**
+    * Description of all line status
+    * @return {object}
+    */
     description: function description() {
         return _description;
     },
 
+    // TODO: when incorporating JSON feed return all status types in single object
     plannedClosure: function plannedClosure() {
         return _plannedClosure;
     },
+
     plannedClosureLine: function plannedClosureLine() {
         return _plannedClosureLine + ' planned closure';
     },
@@ -20019,24 +20034,31 @@ var TubeStore = assign({}, EventEmitter.prototype, {
     partSuspended: function partSuspended() {
         return _partSuspended;
     },
+
     partSuspendedLine: function partSuspendedLine() {
         return _partSuspendedLine + ' part suspended';
     },
+
     severeDelays: function severeDelays() {
         return _severeDelays;
     },
+
     severeDelaysLine: function severeDelaysLine() {
         return _severeDelaysLine + ' severe delays';
     },
+
     specialService: function specialService() {
         return _specialService;
     },
+
     specialServiceLine: function specialServiceLine() {
         return _specialServiceLine + ' special service';
     },
+
     minorDelays: function minorDelays() {
         return _minorDelays;
     },
+
     minorDelaysLine: function minorDelaysLine() {
         return _minorDelaysLine + ' minor delays';
     },

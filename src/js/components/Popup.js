@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom');
 var Store = require('../stores/TubeStore');
 var Actions = require('../actions/Actions');
 var CloseBtn = require('./CloseBtn');
-var List = require('./Lines');
+var Lines = require('./Lines');
 
 /**
  * Retrieve the current data from the Store
@@ -17,6 +17,9 @@ function getState() {
 
 const Popup = React.createClass({
   
+    /**
+     * Update state when changed
+     */
     _onChange: function() {
         this.setState(getState());
     },
@@ -43,7 +46,7 @@ const Popup = React.createClass({
         return (
             <div className="tube-status">
                 <CloseBtn />
-                <List className="lines" items={this.state.items} />
+                <Lines className="lines" items={this.state.items} />
             </div>
         );
     }

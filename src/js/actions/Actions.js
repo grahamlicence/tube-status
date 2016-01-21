@@ -4,7 +4,7 @@ var Constants = require('../constants/Constants');
 var Actions = {
 
   /**
-   * @param  {Object} update data
+   * update the data shown
    */
   update: function() {
     AppDispatcher.dispatch({
@@ -12,12 +12,19 @@ var Actions = {
     });
   },
 
+  /**
+   * get the TfL feed
+   */
   get: function() {
     AppDispatcher.dispatch({
       actionType: Constants.GET
     });
   },
 
+  /**
+   * @param id {Object} Line id
+   * @param active {Boolean} Line status shown
+   */
   set: function(id, active) {
     AppDispatcher.dispatch({
       actionType: Constants.SET,

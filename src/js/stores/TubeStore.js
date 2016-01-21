@@ -68,6 +68,7 @@ function updateShown(id, active) {
 }
 
 function filterData() {
+    // TODO: save data into localstorage so that data is shared between background and popup
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
 
@@ -94,6 +95,7 @@ function filterData() {
             _data[i].details = '';
             
             // check if status required for this line
+            // TODO: check against new API for line status
             if (_data[i].active) {
                 divider = ' ';
                 description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
@@ -178,13 +180,19 @@ const TubeStore = assign({}, EventEmitter.prototype, {
         return _data;
     },
 
+    /**
+    * Description of all line status
+    * @return {object}
+    */
     description: function() {
         return description;
     },
 
+    // TODO: when incorporating JSON feed return all status types in single object
     plannedClosure: function() {
         return plannedClosure;
     },
+
     plannedClosureLine: function() {
         return plannedClosureLine + ' planned closure';
     },
@@ -200,24 +208,31 @@ const TubeStore = assign({}, EventEmitter.prototype, {
     partSuspended: function() {
         return partSuspended;
     },
+
     partSuspendedLine: function() {
         return partSuspendedLine + ' part suspended'
     },
+
     severeDelays: function() {
         return severeDelays;
     },
+
     severeDelaysLine: function() {
         return severeDelaysLine + ' severe delays'
     },
+
     specialService: function() {
         return specialService;
     },
+
     specialServiceLine: function() {
         return specialServiceLine + ' special service'
     },
+
     minorDelays: function() {
         return minorDelays;
     },
+
     minorDelaysLine: function() {
         return minorDelaysLine + ' minor delays'
     },

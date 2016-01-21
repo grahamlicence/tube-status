@@ -2,6 +2,7 @@ var React = require('react');
 
 const SaveBtn = React.createClass({
 
+    // Close the popup when clicked
     _click: function () {
         window.close();
     },
