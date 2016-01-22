@@ -19866,7 +19866,6 @@ var Constants = require('../constants/Constants');
 var assign = require('object-assign');
 var Actions = require('../actions/Actions');
 var Config = require('../Config');
-var h = require('../helpers');
 
 // service data
 var _req = new XMLHttpRequest(),
@@ -19897,7 +19896,6 @@ function dataUpdated() {
 function getData() {
   // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
   var url = 'http://localhost:8000/data.json';
-  console.log('getting the data');
   _req.open('GET', url, true);
   _req.onload = dataUpdated;
   _req.send(null);
@@ -19940,7 +19938,7 @@ AppDispatcher.register(function (action) {
 
 module.exports = DataStore;
 
-},{"../Config":164,"../actions/Actions":165,"../constants/Constants":167,"../dispatcher/Dispatcher":168,"../helpers":169,"events":4,"object-assign":7}],171:[function(require,module,exports){
+},{"../Config":164,"../actions/Actions":165,"../constants/Constants":167,"../dispatcher/Dispatcher":168,"events":4,"object-assign":7}],171:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatcher/Dispatcher');
@@ -19955,24 +19953,7 @@ var h = require('../helpers');
 var _data = setData(),
     _req = new XMLHttpRequest(),
     _response = [],
-    description = '',
-    minorDelays = 0,
-    busService = 0,
-    reducedService = 0,
-    severeDelays = 0,
-    partClosure = 0,
-    plannedClosure = 0,
-    partSuspended = 0,
-    suspended = 0,
-    specialService = 0,
-    partSuspendedLine = '',
-    suspendedLine = '',
-    severeDelaysLine = '',
-    minorDelaysLine = '',
-    specialServiceLine = '',
-    plannedClosureLine = '';
-
-var CHANGE_EVENT = 'change';
+    CHANGE_EVENT = 'change';
 
 /**
 * Set the data for the lines shown and save to localhost
@@ -20018,6 +19999,9 @@ var loadData = function loadData() {
     return JSON.parse(localStorage.data);
 };
 
+/**
+* Update the active lines (those whose updates are shown)
+*/
 function updateShown(id, active) {
     if (active) {
         _data[id].active = false;
@@ -20078,6 +20062,7 @@ function filterData() {
             }
         }
 
+        // nothing in the TfL docs suggests there are more than 1 but will check when updates happen
         if (_response[i].lineStatuses.length > 1) {
             console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].line);
         }
@@ -20092,8 +20077,6 @@ var TubeStore = assign({}, EventEmitter.prototype, {
     * @return {object}
     */
     getData: function getData() {
-        console.log('getting the dats');
-        console.log(_data);
         return _data;
     },
 
@@ -20118,7 +20101,6 @@ var TubeStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 AppDispatcher.register(function (action) {
-    var text;
 
     switch (action.actionType) {
 
@@ -20134,8 +20116,6 @@ AppDispatcher.register(function (action) {
             updateShown(action.id, action.active);
             break;
 
-        default:
-        // no op
     }
 });
 

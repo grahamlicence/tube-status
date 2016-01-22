@@ -7,7 +7,7 @@ const SaveBtn = React.createClass({
         window.close();
     },
 
-    render: function(){
+    render: function() {
         return (
             <button onClick={this._click} className="popupclosebtn" title="close popup"></button>
         )  

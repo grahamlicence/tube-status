@@ -3,7 +3,7 @@ var Toggle = require('./Toggle');
 
 const Lines = React.createClass({
 
-  render: function(){
+  render: function() {
     return (
       <ul className={this.props.className}>
       {

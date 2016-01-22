@@ -4,7 +4,6 @@ var Constants = require('../constants/Constants');
 var assign = require('object-assign');
 var Actions = require('../actions/Actions');
 var Config = require('../Config');
-var h = require('../helpers');
 
 // service data
 var _req = new XMLHttpRequest(),
@@ -35,7 +34,6 @@ function dataUpdated() {
 function getData() {
     // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
     var url = 'http://localhost:8000/data.json';
-    console.log('getting the data')
     _req.open(
         'GET',
         url,
