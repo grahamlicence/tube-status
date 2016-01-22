@@ -10,6 +10,8 @@ var Lines = require('./Lines');
  * Retrieve the current data from the Store
  */
 function getState() {
+        console.log('--got the state')
+        // console.log(this.state.items)
   return {
     items: Store.getData()
   };
@@ -39,17 +41,29 @@ const Popup = React.createClass({
     },
 
      componentDidMount: function() {
-        Actions.get();
+        // Actions.get();
+        // 
+        Actions.updateData();
+
+        // listener for background data updates
+        chrome.runtime.onMessage.addListener(
+            function(request) {
+            if (request.msg === 'dataupdate') {
+                Actions.updateData();
+            }
+        });
     },
 
     render: function(){
+        var name = this.state.items.length ? this.state.items[0].line : 'nope';
         return (
             <div className="tube-status">
                 <CloseBtn />
-                <Lines className="lines" items={this.state.items} />
+                <p>{name}</p>
             </div>
         );
     }
+                // <Lines className="lines" items={this.state.items} />
 });
 
 module.exports = Popup;

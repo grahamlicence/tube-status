@@ -19735,11 +19735,29 @@ var Constants = require('../constants/Constants');
 var Actions = {
 
   /**
-   * update the data shown
+   * remove this
    */
   update: function update() {
     AppDispatcher.dispatch({
       actionType: Constants.UPDATE
+    });
+  },
+
+  /**
+   * data has been updated
+   */
+  updateData: function updateData() {
+    AppDispatcher.dispatch({
+      actionType: Constants.UPDATEDATA
+    });
+  },
+
+  /**
+   * lines shown has been updated
+   */
+  updateLines: function updateLines() {
+    AppDispatcher.dispatch({
+      actionType: Constants.UPDATELINES
     });
   },
 
@@ -19775,6 +19793,7 @@ module.exports = Actions;
 var React = require('react');
 
 var TubeStore = require('./stores/TubeStore');
+var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
 
 function updateIcon() {
@@ -19808,16 +19827,18 @@ TubeStore.addChangeListener(updateIcon);
 Actions.get();
 var checker = setInterval(function () {
     Actions.get();
-}, 300000); //check every 5 minutes
+}, 3000); //check every 5 minutes
+// }, 300000); //check every 5 minutes
 
 // update icon when settings changed
-chrome.runtime.onMessage.addListener(function (request) {
-    if (request.msg === 'dataupdate') {
-        Actions.update();
-    }
-});
+// chrome.runtime.onMessage.addListener(
+//     function(request) {
+//     if (request.msg === 'dataupdate') {
+//         Actions.update();
+//     }
+// });
 
-},{"./actions/Actions":165,"./stores/TubeStore":170,"react":163}],167:[function(require,module,exports){
+},{"./actions/Actions":165,"./stores/DataStore":170,"./stores/TubeStore":171,"react":163}],167:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
@@ -19825,7 +19846,9 @@ var keyMirror = require('keymirror');
 module.exports = keyMirror({
   GET: null,
   SET: null,
-  UPDATE: null
+  UPDATE: null,
+  UPDATEDATA: null,
+  UPDATELINES: null
 });
 
 },{"keymirror":6}],168:[function(require,module,exports){
@@ -19866,9 +19889,92 @@ var Config = require('../Config');
 var h = require('../helpers');
 
 // service data
+var _req = new XMLHttpRequest(),
+    _response = [];
+
+var CHANGE_EVENT = 'change';
+
+_req.responseType = 'json';
+
+var saveData = function saveData() {
+  localStorage.data = JSON.stringify(_response);
+};
+
+/**
+* Data has been updated
+*/
+function dataUpdated() {
+  _response = _req.response;
+  saveData();
+  Actions.updateData();
+  // TODO this action needs to be the chrome event too
+  chrome.runtime.sendMessage({ msg: 'dataupdate' });
+}
+
+/**
+* API call
+*/
+function getData() {
+  // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
+  var url = 'http://localhost:8000/data.json';
+  console.log('getting the data');
+  _req.open('GET', url, true);
+  _req.onload = dataUpdated;
+  _req.send(null);
+}
+
+var DataStore = assign({}, EventEmitter.prototype, {
+
+  emitChange: function emitChange() {
+    this.emit(CHANGE_EVENT);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  addChangeListener: function addChangeListener(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  removeChangeListener: function removeChangeListener(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  }
+});
+
+// Register callback to handle all updates
+AppDispatcher.register(function (action) {
+
+  switch (action.actionType) {
+
+    case Constants.GET:
+      getData();
+      break;
+
+    default:
+    // no op
+  }
+});
+
+module.exports = DataStore;
+
+},{"../Config":164,"../actions/Actions":165,"../constants/Constants":167,"../dispatcher/Dispatcher":168,"../helpers":169,"events":4,"object-assign":7}],171:[function(require,module,exports){
+'use strict';
+
+var AppDispatcher = require('../dispatcher/Dispatcher');
+var EventEmitter = require('events').EventEmitter;
+var Constants = require('../constants/Constants');
+var assign = require('object-assign');
+var Actions = require('../actions/Actions');
+var Config = require('../Config');
+var h = require('../helpers');
+
+// service data
 var _data = setData(),
     _req = new XMLHttpRequest(),
-    _status = [],
+    _response = [],
     _description = '',
     _minorDelays = 0,
     busService = 0,
@@ -19918,11 +20024,11 @@ var storeOptions = function storeOptions() {
 };
 
 var saveData = function saveData() {
-    localStorage.data = JSON.stringify(_status);
+    localStorage.data = JSON.stringify(_response);
 };
 
 var loadData = function loadData() {
-    _status = JSON.parse(localStorage.data);
+    _response = JSON.parse(localStorage.data);
 };
 
 function updateShown(id, active) {
@@ -19940,21 +20046,32 @@ function updateShown(id, active) {
 
 function filterData() {
 
-    console.log(_status);
-    for (var i = 0, l = _status.length; i < l; i++) {
-        _data[i].line = _status[i].name;
+    loadData();
+
+    // console.log(_response);
+
+    _data[0].line = _response[0].name;
+
+    console.log(_data);
+    console.log('emitting the change');
+    TubeStore.emitChange();
+
+    return;
+
+    for (var i = 0, l = _response.length; i < l; i++) {
+        _data[i].line = _response[i].name;
         _data[i].details = '';
 
         if (_data[i].active) {
-            _data[i].description = _status[i].lineStatuses[0].statusSeverityDescription;
+            _data[i].description = _response[i].lineStatuses[0].statusSeverityDescription;
 
-            if (_status[i].lineStatuses[0].reason) {
-                _data[i].details = h.formatDetails(_status[i].lineStatuses[0].reason);
+            if (_response[i].lineStatuses[0].reason) {
+                _data[i].details = h.formatDetails(_response[i].lineStatuses[0].reason);
             }
         }
 
-        if (_status[i].lineStatuses.length > 1) {
-            console.log('Statuses: ' + _status[i].lineStatuses.length + ', ' + _status[i].line);
+        if (_response[i].lineStatuses.length > 1) {
+            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].line);
         }
     }
     TubeStore.emitChange();
@@ -20047,14 +20164,17 @@ function filterData() {
     TubeStore.emitChange();
 }
 
+/**
+* Data has been updated
+*/
 function dataUpdated() {
-    _status = _req.response;
+    _response = _req.response;
     saveData();
     filterData();
 }
 
 /**
-* @return {object}
+* API call
 */
 function getData() {
     // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
@@ -20074,6 +20194,8 @@ var TubeStore = assign({}, EventEmitter.prototype, {
     * @return {object}
     */
     getData: function getData() {
+        console.log('getting the dats');
+        console.log(_data);
         return _data;
     },
 
@@ -20159,8 +20281,13 @@ AppDispatcher.register(function (action) {
 
     switch (action.actionType) {
 
-        case Constants.GET:
-            getData();
+        // case Constants.GET:
+        //     getData();
+        //   break;
+
+        case Constants.UPDATEDATA:
+            _data = setData();
+            filterData();
             break;
 
         case Constants.UPDATE:

@@ -2,6 +2,7 @@
 var React = require('react');
 
 var TubeStore = require('./stores/TubeStore');
+var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
 
 function updateIcon() {
@@ -35,12 +36,13 @@ TubeStore.addChangeListener(updateIcon);
 Actions.get();
 var checker = setInterval(function() {
     Actions.get();
-}, 300000); //check every 5 minutes
+}, 3000); //check every 5 minutes
+// }, 300000); //check every 5 minutes
 
 // update icon when settings changed
-chrome.runtime.onMessage.addListener(
-    function(request) {
-    if (request.msg === 'dataupdate') {
-        Actions.update();
-    }
-});
+// chrome.runtime.onMessage.addListener(
+//     function(request) {
+//     if (request.msg === 'dataupdate') {
+//         Actions.update();
+//     }
+// });

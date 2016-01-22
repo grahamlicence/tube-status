@@ -19740,11 +19740,29 @@ var Constants = require('../constants/Constants');
 var Actions = {
 
   /**
-   * update the data shown
+   * remove this
    */
   update: function update() {
     AppDispatcher.dispatch({
       actionType: Constants.UPDATE
+    });
+  },
+
+  /**
+   * data has been updated
+   */
+  updateData: function updateData() {
+    AppDispatcher.dispatch({
+      actionType: Constants.UPDATEDATA
+    });
+  },
+
+  /**
+   * lines shown has been updated
+   */
+  updateLines: function updateLines() {
+    AppDispatcher.dispatch({
+      actionType: Constants.UPDATELINES
     });
   },
 
@@ -19838,6 +19856,8 @@ var Lines = require('./Lines');
  * Retrieve the current data from the Store
  */
 function getState() {
+    console.log('--got the state');
+    // console.log(this.state.items)
     return {
         items: Store.getData()
     };
@@ -19868,17 +19888,32 @@ var Popup = React.createClass({
     },
 
     componentDidMount: function componentDidMount() {
-        Actions.get();
+        // Actions.get();
+        //
+        Actions.updateData();
+
+        // listener for background data updates
+        chrome.runtime.onMessage.addListener(function (request) {
+            if (request.msg === 'dataupdate') {
+                Actions.updateData();
+            }
+        });
     },
 
     render: function render() {
+        var name = this.state.items.length ? this.state.items[0].line : 'nope';
         return React.createElement(
             'div',
             { className: 'tube-status' },
             React.createElement(CloseBtn, null),
-            React.createElement(Lines, { className: 'lines', items: this.state.items })
+            React.createElement(
+                'p',
+                null,
+                name
+            )
         );
     }
+    // <Lines className="lines" items={this.state.items} />
 });
 
 module.exports = Popup;
@@ -19940,7 +19975,9 @@ var keyMirror = require('keymirror');
 module.exports = keyMirror({
   GET: null,
   SET: null,
-  UPDATE: null
+  UPDATE: null,
+  UPDATEDATA: null,
+  UPDATELINES: null
 });
 
 },{"keymirror":6}],172:[function(require,module,exports){
@@ -19993,7 +20030,7 @@ var h = require('../helpers');
 // service data
 var _data = setData(),
     _req = new XMLHttpRequest(),
-    _status = [],
+    _response = [],
     _description = '',
     _minorDelays = 0,
     busService = 0,
@@ -20043,11 +20080,11 @@ var storeOptions = function storeOptions() {
 };
 
 var saveData = function saveData() {
-    localStorage.data = JSON.stringify(_status);
+    localStorage.data = JSON.stringify(_response);
 };
 
 var loadData = function loadData() {
-    _status = JSON.parse(localStorage.data);
+    _response = JSON.parse(localStorage.data);
 };
 
 function updateShown(id, active) {
@@ -20065,21 +20102,32 @@ function updateShown(id, active) {
 
 function filterData() {
 
-    console.log(_status);
-    for (var i = 0, l = _status.length; i < l; i++) {
-        _data[i].line = _status[i].name;
+    loadData();
+
+    // console.log(_response);
+
+    _data[0].line = _response[0].name;
+
+    console.log(_data);
+    console.log('emitting the change');
+    TubeStore.emitChange();
+
+    return;
+
+    for (var i = 0, l = _response.length; i < l; i++) {
+        _data[i].line = _response[i].name;
         _data[i].details = '';
 
         if (_data[i].active) {
-            _data[i].description = _status[i].lineStatuses[0].statusSeverityDescription;
+            _data[i].description = _response[i].lineStatuses[0].statusSeverityDescription;
 
-            if (_status[i].lineStatuses[0].reason) {
-                _data[i].details = h.formatDetails(_status[i].lineStatuses[0].reason);
+            if (_response[i].lineStatuses[0].reason) {
+                _data[i].details = h.formatDetails(_response[i].lineStatuses[0].reason);
             }
         }
 
-        if (_status[i].lineStatuses.length > 1) {
-            console.log('Statuses: ' + _status[i].lineStatuses.length + ', ' + _status[i].line);
+        if (_response[i].lineStatuses.length > 1) {
+            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].line);
         }
     }
     TubeStore.emitChange();
@@ -20172,14 +20220,17 @@ function filterData() {
     TubeStore.emitChange();
 }
 
+/**
+* Data has been updated
+*/
 function dataUpdated() {
-    _status = _req.response;
+    _response = _req.response;
     saveData();
     filterData();
 }
 
 /**
-* @return {object}
+* API call
 */
 function getData() {
     // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
@@ -20199,6 +20250,8 @@ var TubeStore = assign({}, EventEmitter.prototype, {
     * @return {object}
     */
     getData: function getData() {
+        console.log('getting the dats');
+        console.log(_data);
         return _data;
     },
 
@@ -20284,8 +20337,13 @@ AppDispatcher.register(function (action) {
 
     switch (action.actionType) {
 
-        case Constants.GET:
-            getData();
+        // case Constants.GET:
+        //     getData();
+        //   break;
+
+        case Constants.UPDATEDATA:
+            _data = setData();
+            filterData();
             break;
 
         case Constants.UPDATE:
