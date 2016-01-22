@@ -19720,6 +19720,18 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":32}],165:[function(require,module,exports){
+// TfL API id and key here
+
+'use strict';
+
+var Config = {
+    appId: '418a3c8f',
+    appKey: '2beee1008f38cd15ffcab6deb991cc60'
+};
+
+module.exports = Config;
+
+},{}],166:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatcher/Dispatcher');
@@ -19761,7 +19773,7 @@ var Actions = {
 
 module.exports = Actions;
 
-},{"../constants/Constants":170,"../dispatcher/Dispatcher":171}],166:[function(require,module,exports){
+},{"../constants/Constants":171,"../dispatcher/Dispatcher":172}],167:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -19781,7 +19793,7 @@ var SaveBtn = React.createClass({
 
 module.exports = SaveBtn;
 
-},{"react":164}],167:[function(require,module,exports){
+},{"react":164}],168:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19800,7 +19812,7 @@ var Lines = React.createClass({
           { key: item.line.replace(/ /g, '') },
           React.createElement(
             'p',
-            { className: item.line.toLowerCase().replace(/\s/g, '-') },
+            { className: item.line.toLowerCase().replace(/\s/g, '-').replace(/\&/g, 'and') },
             React.createElement(Toggle, { item: item })
           )
         );
@@ -19811,7 +19823,7 @@ var Lines = React.createClass({
 
 module.exports = Lines;
 
-},{"./Toggle":169,"react":164}],168:[function(require,module,exports){
+},{"./Toggle":170,"react":164}],169:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19871,7 +19883,7 @@ var Popup = React.createClass({
 
 module.exports = Popup;
 
-},{"../actions/Actions":165,"../stores/TubeStore":173,"./CloseBtn":166,"./Lines":167,"react":164,"react-dom":8}],169:[function(require,module,exports){
+},{"../actions/Actions":166,"../stores/TubeStore":175,"./CloseBtn":167,"./Lines":168,"react":164,"react-dom":8}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19920,7 +19932,7 @@ var Toggle = React.createClass({
 module.exports = Toggle;
 /* Line name */ /* Line status */ /* only show details if available */
 
-},{"../actions/Actions":165,"react":164}],170:[function(require,module,exports){
+},{"../actions/Actions":166,"react":164}],171:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
@@ -19931,14 +19943,33 @@ module.exports = keyMirror({
   UPDATE: null
 });
 
-},{"keymirror":6}],171:[function(require,module,exports){
+},{"keymirror":6}],172:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":1}],172:[function(require,module,exports){
+},{"flux":1}],173:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+var helpers = {
+  formatDetails: function formatDetails(details) {
+    // Add new lines for different updates
+    var formattedDetails = details.replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
+
+    // remove line name
+    formattedDetails = formattedDetails.replace('Bakerloo Line: ', '').replace('Central Line: ', '').replace('Circle Line: ', '').replace('District Line: ', '').replace('DLR Line: ', '').replace('Hammersmith & City Line: ', '').replace('Jubilee Line: ', '').replace('London Overground: ', '').replace('Metropolitan Line: ', '').replace('Northern Line: ', '').replace('Piccadilly Line: ', '').replace('TfL Rail: ', '').replace('Victoria Line: ', '').replace('Waterloo & City Line: ', '');
+
+    return formattedDetails;
+  }
+};
+
+exports['default'] = helpers;
+module.exports = exports['default'];
+
+},{}],174:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19948,7 +19979,7 @@ var Popup = require('./components/Popup');
 
 ReactDOM.render(React.createElement(Popup, null), document.getElementsByClassName('main')[0]);
 
-},{"./components/Popup":168,"react":164,"react-dom":8}],173:[function(require,module,exports){
+},{"./components/Popup":169,"react":164,"react-dom":8}],175:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatcher/Dispatcher');
@@ -19956,10 +19987,13 @@ var EventEmitter = require('events').EventEmitter;
 var Constants = require('../constants/Constants');
 var assign = require('object-assign');
 var Actions = require('../actions/Actions');
+var Config = require('../Config');
+var h = require('../helpers');
 
 // service data
 var _data = setData(),
     _req = new XMLHttpRequest(),
+    _status = [],
     _description = '',
     _minorDelays = 0,
     busService = 0,
@@ -20008,6 +20042,14 @@ var storeOptions = function storeOptions() {
     localStorage.lines = JSON.stringify(opt);
 };
 
+var saveData = function saveData() {
+    localStorage.data = JSON.stringify(_status);
+};
+
+var loadData = function loadData() {
+    _status = JSON.parse(localStorage.data);
+};
+
 function updateShown(id, active) {
     if (active) {
         _data[id].active = false;
@@ -20022,6 +20064,27 @@ function updateShown(id, active) {
 }
 
 function filterData() {
+
+    console.log(_status);
+    for (var i = 0, l = _status.length; i < l; i++) {
+        _data[i].line = _status[i].name;
+        _data[i].details = '';
+
+        if (_data[i].active) {
+            _data[i].description = _status[i].lineStatuses[0].statusSeverityDescription;
+
+            if (_status[i].lineStatuses[0].reason) {
+                _data[i].details = h.formatDetails(_status[i].lineStatuses[0].reason);
+            }
+        }
+
+        if (_status[i].lineStatuses.length > 1) {
+            console.log('Statuses: ' + _status[i].lineStatuses.length + ', ' + _status[i].line);
+        }
+    }
+    TubeStore.emitChange();
+
+    return;
     // TODO: save data into localstorage so that data is shared between background and popup
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
@@ -20109,15 +20172,23 @@ function filterData() {
     TubeStore.emitChange();
 }
 
+function dataUpdated() {
+    _status = _req.response;
+    saveData();
+    filterData();
+}
+
 /**
 * @return {object}
 */
 function getData() {
+    // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
+    var url = 'http://localhost:8000/data.json';
+
     _data = setData();
-    _req.open('GET',
-    // TODO use new TfL api for JSON
-    'http://cloud.tfl.gov.uk/TrackerNet/LineStatus', true);
-    _req.onload = filterData;
+    _req.responseType = 'json';
+    _req.open('GET', url, true);
+    _req.onload = dataUpdated;
     _req.send(null);
 }
 
@@ -20233,4 +20304,4 @@ AppDispatcher.register(function (action) {
 
 module.exports = TubeStore;
 
-},{"../actions/Actions":165,"../constants/Constants":170,"../dispatcher/Dispatcher":171,"events":4,"object-assign":7}]},{},[172]);
+},{"../Config":165,"../actions/Actions":166,"../constants/Constants":171,"../dispatcher/Dispatcher":172,"../helpers":173,"events":4,"object-assign":7}]},{},[174]);

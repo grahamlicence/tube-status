@@ -3,10 +3,13 @@ var EventEmitter = require('events').EventEmitter;
 var Constants = require('../constants/Constants');
 var assign = require('object-assign');
 var Actions = require('../actions/Actions');
+var Config = require('../Config');
+var h = require('../helpers');
 
 // service data
 var _data = setData(),
     _req = new XMLHttpRequest(),
+    _status = [],
     description = '',
     minorDelays = 0,
     busService = 0,
@@ -54,6 +57,14 @@ var storeOptions = function () {
     localStorage.lines = JSON.stringify(opt);
 };
 
+var saveData = function () {
+    localStorage.data = JSON.stringify(_status);
+};
+
+var loadData = function () {
+    _status = JSON.parse(localStorage.data);
+};
+
 function updateShown(id, active) {
     if (active) {
         _data[id].active = false;
@@ -68,6 +79,28 @@ function updateShown(id, active) {
 }
 
 function filterData() {
+
+    console.log(_status);
+    for (var i = 0, l = _status.length; i < l; i++) {
+        _data[i].line = _status[i].name;
+        _data[i].details = '';
+    
+        if (_data[i].active) {
+            _data[i].description = _status[i].lineStatuses[0].statusSeverityDescription;
+            
+            if (_status[i].lineStatuses[0].reason) {
+                _data[i].details = h.formatDetails(_status[i].lineStatuses[0].reason);
+            }
+        }   
+
+        if (_status[i].lineStatuses.length > 1) {
+            console.log('Statuses: ' + _status[i].lineStatuses.length + ', ' + _status[i].line)
+        }
+        
+    }
+    TubeStore.emitChange();
+
+    return;
     // TODO: save data into localstorage so that data is shared between background and popup
     var items = _req.responseXML.getElementsByTagName('LineStatus'),
         divider = ' ';
@@ -156,17 +189,26 @@ function filterData() {
         TubeStore.emitChange();
 }
 
+function dataUpdated() {
+    _status = _req.response;
+    saveData();
+    filterData();
+}
+
 /**
 * @return {object}
 */
 function getData() {
+    // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
+    var url = 'http://localhost:8000/data.json';
+    
     _data = setData();
+    _req.responseType = 'json';
     _req.open(
         'GET',
-        // TODO use new TfL api for JSON
-        'http://cloud.tfl.gov.uk/TrackerNet/LineStatus',
+        url,
         true);
-    _req.onload = filterData;
+    _req.onload = dataUpdated;
     _req.send(null);
 }
 
