@@ -19856,8 +19856,6 @@ var Lines = require('./Lines');
  * Retrieve the current data from the Store
  */
 function getState() {
-    console.log('--got the state');
-    // console.log(this.state.items)
     return {
         items: Store.getData()
     };
@@ -19901,19 +19899,13 @@ var Popup = React.createClass({
     },
 
     render: function render() {
-        var name = this.state.items.length ? this.state.items[0].line : 'nope';
         return React.createElement(
             'div',
             { className: 'tube-status' },
             React.createElement(CloseBtn, null),
-            React.createElement(
-                'p',
-                null,
-                name
-            )
+            React.createElement(Lines, { className: 'lines', items: this.state.items })
         );
     }
-    // <Lines className="lines" items={this.state.items} />
 });
 
 module.exports = Popup;
@@ -20031,25 +20023,29 @@ var h = require('../helpers');
 var _data = setData(),
     _req = new XMLHttpRequest(),
     _response = [],
-    _description = '',
-    _minorDelays = 0,
+    description = '',
+    minorDelays = 0,
     busService = 0,
     reducedService = 0,
-    _severeDelays = 0,
+    severeDelays = 0,
     partClosure = 0,
-    _plannedClosure = 0,
-    _partSuspended = 0,
-    _suspended = 0,
-    _specialService = 0,
-    _partSuspendedLine = '',
-    _suspendedLine = '',
-    _severeDelaysLine = '',
-    _minorDelaysLine = '',
-    _specialServiceLine = '',
-    _plannedClosureLine = '';
+    plannedClosure = 0,
+    partSuspended = 0,
+    suspended = 0,
+    specialService = 0,
+    partSuspendedLine = '',
+    suspendedLine = '',
+    severeDelaysLine = '',
+    minorDelaysLine = '',
+    specialServiceLine = '',
+    plannedClosureLine = '';
 
 var CHANGE_EVENT = 'change';
 
+/**
+* Set the data for the lines shown and save to localhost
+* @return {object} data - array of lines
+*/
 function setData() {
     var opt = [],
         i = 0,
@@ -20070,6 +20066,9 @@ function setData() {
     return data;
 }
 
+/**
+* Store which lines are active.
+*/
 var storeOptions = function storeOptions() {
     var opt = [],
         i = 0;
@@ -20079,12 +20078,12 @@ var storeOptions = function storeOptions() {
     localStorage.lines = JSON.stringify(opt);
 };
 
-var saveData = function saveData() {
-    localStorage.data = JSON.stringify(_response);
-};
-
+/**
+* Get the data saved from the api.
+* @return {object} api response
+*/
 var loadData = function loadData() {
-    _response = JSON.parse(localStorage.data);
+    return JSON.parse(localStorage.data);
 };
 
 function updateShown(id, active) {
@@ -20097,32 +20096,53 @@ function updateShown(id, active) {
     filterData();
 
     // update background
-    chrome.runtime.sendMessage({ msg: 'dataupdate' });
+    chrome.runtime.sendMessage({ msg: 'iconupdate' });
 }
 
+/**
+* Filter the api data
+*/
 function filterData() {
 
-    loadData();
+    // reset data based on active lines
+    _data = setData();
+
+    // load saved json
+    _response = loadData();
 
     // console.log(_response);
-
-    _data[0].line = _response[0].name;
-
-    console.log(_data);
-    console.log('emitting the change');
-    TubeStore.emitChange();
-
-    return;
+    _data.severity = 'good';
 
     for (var i = 0, l = _response.length; i < l; i++) {
         _data[i].line = _response[i].name;
         _data[i].details = '';
 
+        // only check active lines
         if (_data[i].active) {
             _data[i].description = _response[i].lineStatuses[0].statusSeverityDescription;
 
             if (_response[i].lineStatuses[0].reason) {
                 _data[i].details = h.formatDetails(_response[i].lineStatuses[0].reason);
+            }
+
+            // check severity of issue
+            switch (_data[i].description) {
+                case 'Suspended':
+                case 'Part Suspended':
+                case 'Planned Closure':
+                case 'Service Closed':
+                case 'Severe Delays':
+                    _data.severity = 'bad';
+                    break;
+
+                case 'Special Service':
+                case 'Reduced Service':
+                case 'Bus Service':
+                case 'Minor Delays':
+                    if (_data.severity !== 'bad') {
+                        _data.severity = 'delay';
+                    }
+                    break;
             }
         }
 
@@ -20131,116 +20151,6 @@ function filterData() {
         }
     }
     TubeStore.emitChange();
-
-    return;
-    // TODO: save data into localstorage so that data is shared between background and popup
-    var items = _req.responseXML.getElementsByTagName('LineStatus'),
-        divider = ' ';
-
-    // reset status
-    _description = '';
-    _minorDelays = 0;
-    busService = 0;
-    reducedService = 0;
-    _severeDelays = 0;
-    partClosure = 0;
-    _plannedClosure = 0;
-    _partSuspended = 0;
-    _suspended = 0;
-    _specialService = 0;
-    _partSuspendedLine = '';
-    _suspendedLine = '';
-    _severeDelaysLine = '';
-    _minorDelaysLine = '';
-    _specialServiceLine = '';
-    _plannedClosureLine = '';
-
-    for (var i = 0, l = items.length; i < l; i++) {
-        _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
-        _data[i].details = '';
-
-        // check if status required for this line
-        // TODO: check against new API for line status
-        if (_data[i].active) {
-            divider = ' ';
-            _description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
-            _data[i].description = _description;
-            if (_description === 'Suspended') {
-                if (_suspended) {
-                    divider = ', ';
-                }
-                _suspended += 1;
-                _suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Part Suspended') {
-                if (_partSuspended) {
-                    divider = ', ';
-                }
-                _partSuspended += 1;
-                _partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Planned Closure' || _description === 'Service Closed') {
-                if (_plannedClosure) {
-                    divider = ', ';
-                }
-                _plannedClosure += 1;
-                _plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Part Closure') {
-                partClosure += 1;
-            } else if (_description === 'Severe Delays') {
-                if (_severeDelays) {
-                    divider = ', ';
-                }
-                _severeDelays += 1;
-                _severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Special Service') {
-                if (_specialService) {
-                    divider = ', ';
-                }
-                _specialService += 1;
-                _specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            } else if (_description === 'Reduced Service') {
-                reducedService += 1;
-            } else if (_description === 'Bus Service') {
-                busService += 1;
-            } else if (_description === 'Minor Delays') {
-                if (_minorDelays) {
-                    divider = ', ';
-                }
-                _minorDelays += 1;
-                _minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-            }
-
-            if (status !== 'Good Service') {
-                _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
-                if (_data[i].details.charAt(0) === '<') {
-                    _data[i].details = _data[i].details.substring(6);
-                }
-            }
-        }
-    }
-    TubeStore.emitChange();
-}
-
-/**
-* Data has been updated
-*/
-function dataUpdated() {
-    _response = _req.response;
-    saveData();
-    filterData();
-}
-
-/**
-* API call
-*/
-function getData() {
-    // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
-    var url = 'http://localhost:8000/data.json';
-
-    _data = setData();
-    _req.responseType = 'json';
-    _req.open('GET', url, true);
-    _req.onload = dataUpdated;
-    _req.send(null);
 }
 
 var TubeStore = assign({}, EventEmitter.prototype, {
@@ -20255,77 +20165,20 @@ var TubeStore = assign({}, EventEmitter.prototype, {
         return _data;
     },
 
-    /**
-    * Description of all line status
-    * @return {object}
-    */
-    description: function description() {
-        return _description;
-    },
-
-    // TODO: when incorporating JSON feed return all status types in single object
-    plannedClosure: function plannedClosure() {
-        return _plannedClosure;
-    },
-
-    plannedClosureLine: function plannedClosureLine() {
-        return _plannedClosureLine + ' planned closure';
-    },
-
-    suspended: function suspended() {
-        return _suspended;
-    },
-
-    suspendedLine: function suspendedLine() {
-        return _suspendedLine + ' suspended';
-    },
-
-    partSuspended: function partSuspended() {
-        return _partSuspended;
-    },
-
-    partSuspendedLine: function partSuspendedLine() {
-        return _partSuspendedLine + ' part suspended';
-    },
-
-    severeDelays: function severeDelays() {
-        return _severeDelays;
-    },
-
-    severeDelaysLine: function severeDelaysLine() {
-        return _severeDelaysLine + ' severe delays';
-    },
-
-    specialService: function specialService() {
-        return _specialService;
-    },
-
-    specialServiceLine: function specialServiceLine() {
-        return _specialServiceLine + ' special service';
-    },
-
-    minorDelays: function minorDelays() {
-        return _minorDelays;
-    },
-
-    minorDelaysLine: function minorDelaysLine() {
-        return _minorDelaysLine + ' minor delays';
-    },
-
     emitChange: function emitChange() {
         this.emit(CHANGE_EVENT);
     },
 
     /**
-     * @param {function} callback
-     */
+    * @param {function} callback
+    */
     addChangeListener: function addChangeListener(callback) {
         this.on(CHANGE_EVENT, callback);
     },
 
     /**
-     * @param {function} callback
-     */
+    * @param {function} callback
+    */
     removeChangeListener: function removeChangeListener(callback) {
         this.removeListener(CHANGE_EVENT, callback);
     }
@@ -20337,17 +20190,11 @@ AppDispatcher.register(function (action) {
 
     switch (action.actionType) {
 
-        // case Constants.GET:
-        //     getData();
-        //   break;
-
         case Constants.UPDATEDATA:
-            _data = setData();
             filterData();
             break;
 
-        case Constants.UPDATE:
-            _data = setData();
+        case Constants.UPDATELINES:
             filterData();
             break;
 

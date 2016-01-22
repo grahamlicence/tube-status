@@ -29,6 +29,10 @@ var _data = setData(),
 
 var CHANGE_EVENT = 'change';
 
+/**
+* Set the data for the lines shown and save to localhost
+* @return {object} data - array of lines
+*/
 function setData() {
     var opt = [],
         i = 0,
@@ -48,6 +52,9 @@ function setData() {
     return data;
 }
 
+/**
+* Store which lines are active.
+*/
 var storeOptions = function () {
     var opt = [],
         i = 0;
@@ -57,12 +64,12 @@ var storeOptions = function () {
     localStorage.lines = JSON.stringify(opt);
 };
 
-var saveData = function () {
-    localStorage.data = JSON.stringify(_response);
-};
-
+/**
+* Get the data saved from the api.
+* @return {object} api response
+*/
 var loadData = function () {
-    _response = JSON.parse(localStorage.data);
+    return JSON.parse(localStorage.data);
 };
 
 function updateShown(id, active) {
@@ -75,32 +82,53 @@ function updateShown(id, active) {
     filterData();
 
     // update background
-    chrome.runtime.sendMessage({msg: 'dataupdate'});
+    chrome.runtime.sendMessage({msg: 'iconupdate'});
 }
 
+/**
+* Filter the api data
+*/
 function filterData() {
 
-    loadData();
+    // reset data based on active lines
+    _data = setData();
+
+    // load saved json
+    _response = loadData();
 
     // console.log(_response);
-
-    _data[0].line = _response[0].name
-
-    console.log(_data)
-    console.log('emitting the change')
-    TubeStore.emitChange();
-
-    return;
+    _data.severity = 'good';
 
     for (var i = 0, l = _response.length; i < l; i++) {
         _data[i].line = _response[i].name;
         _data[i].details = '';
     
+        // only check active lines
         if (_data[i].active) {
             _data[i].description = _response[i].lineStatuses[0].statusSeverityDescription;
             
             if (_response[i].lineStatuses[0].reason) {
                 _data[i].details = h.formatDetails(_response[i].lineStatuses[0].reason);
+            }
+
+            // check severity of issue
+            switch (_data[i].description) {
+                case 'Suspended':
+                case 'Part Suspended':
+                case 'Planned Closure':
+                case 'Service Closed':
+                case 'Severe Delays':
+                    _data.severity = 'bad';
+                    break
+
+                case 'Special Service':
+                case 'Reduced Service':
+                case 'Bus Service':
+                case 'Minor Delays':
+                    if (_data.severity !== 'bad') {
+                        _data.severity = 'delay';
+                    }
+                    break
             }
         }   
 
@@ -110,121 +138,8 @@ function filterData() {
         
     }
     TubeStore.emitChange();
-
-    return;
-    // TODO: save data into localstorage so that data is shared between background and popup
-    var items = _req.responseXML.getElementsByTagName('LineStatus'),
-        divider = ' ';
-
-        // reset status
-        description = '';
-        minorDelays = 0;
-        busService = 0;
-        reducedService = 0;
-        severeDelays = 0;
-        partClosure = 0;
-        plannedClosure = 0;
-        partSuspended = 0;
-        suspended = 0;
-        specialService = 0;
-        partSuspendedLine = '';
-        suspendedLine = '';
-        severeDelaysLine = '';
-        minorDelaysLine = '';
-        specialServiceLine = '';
-        plannedClosureLine = '';
-
-        for (var i = 0, l = items.length; i < l; i++) {
-            _data[i].line = items[i].getElementsByTagName('Line')[0].getAttribute('Name');
-            _data[i].details = '';
-            
-            // check if status required for this line
-            // TODO: check against new API for line status
-            if (_data[i].active) {
-                divider = ' ';
-                description = items[i].getElementsByTagName('Status')[0].getAttribute('Description');
-                _data[i].description = description;
-                if (description === 'Suspended') {
-                    if (suspended) {
-                        divider = ', ';
-                    }
-                    suspended += 1;
-                    suspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-                } else if (description === 'Part Suspended') {
-                    if (partSuspended) {
-                        divider = ', ';
-                    }
-                    partSuspended += 1;
-                    partSuspendedLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-                } else if (description === 'Planned Closure' || description === 'Service Closed') {
-                    if (plannedClosure) {
-                        divider = ', ';
-                    }
-                    plannedClosure += 1;
-                    plannedClosureLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-                } else if (description === 'Part Closure') {
-                    partClosure += 1;
-                } else if (description === 'Severe Delays') {
-                    if (severeDelays) {
-                        divider = ', ';
-                    }
-                    severeDelays += 1;
-                    severeDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-                } else if (description === 'Special Service') {
-                    if (specialService) {
-                        divider = ', ';
-                    }
-                    specialService += 1;
-                    specialServiceLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-                }  else if (description === 'Reduced Service') {
-                    reducedService += 1;
-                } else if (description === 'Bus Service') {
-                    busService += 1;
-                } else if (description === 'Minor Delays') {
-                    if (minorDelays) {
-                        divider = ', ';
-                    }
-                    minorDelays += 1;
-                    minorDelaysLine += divider + items[i].getElementsByTagName('Line')[0].getAttribute('Name') + ' Line';
-                }
-
-                if (status !== 'Good Service') {
-                    _data[i].details = items[i].getAttribute('StatusDetails').replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
-                    if (_data[i].details.charAt(0) === '<') {
-                        _data[i].details = _data[i].details.substring(6);
-                    }
-                }
-
-            }
-        }
-        TubeStore.emitChange();
 }
 
-/**
-* Data has been updated
-*/
-function dataUpdated() {
-    _response = _req.response;
-    saveData();
-    filterData();
-}
-
-/**
-* API call
-*/
-function getData() {
-    // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
-    var url = 'http://localhost:8000/data.json';
-
-    _data = setData();
-    _req.responseType = 'json';
-    _req.open(
-        'GET',
-        url,
-        true);
-    _req.onload = dataUpdated;
-    _req.send(null);
-}
 
 const TubeStore = assign({}, EventEmitter.prototype, {
 
@@ -238,80 +153,23 @@ const TubeStore = assign({}, EventEmitter.prototype, {
         return _data;
     },
 
+    emitChange: function() {
+        this.emit(CHANGE_EVENT);
+    },
+
     /**
-    * Description of all line status
-    * @return {object}
+    * @param {function} callback
     */
-    description: function() {
-        return description;
+    addChangeListener: function(callback) {
+        this.on(CHANGE_EVENT, callback);
     },
 
-    // TODO: when incorporating JSON feed return all status types in single object
-    plannedClosure: function() {
-        return plannedClosure;
-    },
-
-    plannedClosureLine: function() {
-        return plannedClosureLine + ' planned closure';
-    },
-
-    suspended: function() {
-        return suspended;
-    },
-
-    suspendedLine: function() {
-        return suspendedLine + ' suspended';
-    },
-
-    partSuspended: function() {
-        return partSuspended;
-    },
-
-    partSuspendedLine: function() {
-        return partSuspendedLine + ' part suspended'
-    },
-
-    severeDelays: function() {
-        return severeDelays;
-    },
-
-    severeDelaysLine: function() {
-        return severeDelaysLine + ' severe delays'
-    },
-
-    specialService: function() {
-        return specialService;
-    },
-
-    specialServiceLine: function() {
-        return specialServiceLine + ' special service'
-    },
-
-    minorDelays: function() {
-        return minorDelays;
-    },
-
-    minorDelaysLine: function() {
-        return minorDelaysLine + ' minor delays'
-    },
-
-  emitChange: function() {
-    this.emit(CHANGE_EVENT);
-  },
-
-  /**
-   * @param {function} callback
-   */
-  addChangeListener: function(callback) {
-    this.on(CHANGE_EVENT, callback);
-  },
-
-  /**
-   * @param {function} callback
-   */
-  removeChangeListener: function(callback) {
-    this.removeListener(CHANGE_EVENT, callback);
-  }
+    /**
+    * @param {function} callback
+    */
+    removeChangeListener: function(callback) {
+        this.removeListener(CHANGE_EVENT, callback);
+    }
 });
 
 // Register callback to handle all updates
@@ -320,17 +178,11 @@ AppDispatcher.register(function(action) {
 
   switch(action.actionType) {
 
-    // case Constants.GET:
-    //     getData();
-    //   break;
-
     case Constants.UPDATEDATA:
-        _data = setData();
         filterData();
       break;
 
-    case Constants.UPDATE:
-        _data = setData();
+    case Constants.UPDATELINES:
         filterData();
       break;
 
