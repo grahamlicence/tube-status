@@ -1,11 +1,13 @@
 var React = require('react');
 var Toggle = require('./Toggle');
+var LastUpdate = require('./LastUpdate');
 
 const Lines = React.createClass({
 
   render: function() {
     return (
       <ul className={this.props.className}>
+      <LastUpdate updated={this.props.items.updated} />
       {
         this.props.items.map(function(item) {
           return (

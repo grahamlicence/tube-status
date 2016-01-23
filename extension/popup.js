@@ -19791,7 +19791,7 @@ var Actions = {
 
 module.exports = Actions;
 
-},{"../constants/Constants":171,"../dispatcher/Dispatcher":172}],167:[function(require,module,exports){
+},{"../constants/Constants":172,"../dispatcher/Dispatcher":173}],167:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -19815,7 +19815,66 @@ module.exports = SaveBtn;
 'use strict';
 
 var React = require('react');
+var h = require('../helpers');
+var Store = require('../stores/TubeStore');
+
+var LastUpdate = React.createClass({
+    displayName: 'LastUpdate',
+
+    _time: 0,
+
+    _lastUpdate: function _lastUpdate() {
+        this.setState({
+            updated: h.minutesAgo(this._time)
+        });
+    },
+
+    _chk: function _chk() {
+        console.log('data updated');
+        console.log(Store.getData().updated);
+        this._time = Store.getData().updated;
+        this._lastUpdate();
+    },
+
+    getInitialState: function getInitialState() {
+        return {
+            updated: 'updating now'
+        };
+    },
+
+    componentWillMount: function componentWillMount() {
+        Store.addChangeListener(this._chk);
+    },
+
+    componentWillUnmount: function componentWillUnmount() {
+        Store.removeChangeListener(this._chk);
+    },
+
+    componentDidMount: function componentDidMount() {
+        var _this = this,
+            checker = setInterval(function () {
+            _this._lastUpdate();
+        }, 10000);
+    },
+
+    render: function render() {
+        return React.createElement(
+            'li',
+            null,
+            'Last updated: ',
+            this.state.updated
+        );
+    }
+});
+
+module.exports = LastUpdate;
+
+},{"../helpers":174,"../stores/TubeStore":176,"react":164}],169:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
 var Toggle = require('./Toggle');
+var LastUpdate = require('./LastUpdate');
 
 var Lines = React.createClass({
   displayName: 'Lines',
@@ -19824,6 +19883,7 @@ var Lines = React.createClass({
     return React.createElement(
       'ul',
       { className: this.props.className },
+      React.createElement(LastUpdate, { updated: this.props.items.updated }),
       this.props.items.map(function (item) {
         return React.createElement(
           'li',
@@ -19841,7 +19901,7 @@ var Lines = React.createClass({
 
 module.exports = Lines;
 
-},{"./Toggle":170,"react":164}],169:[function(require,module,exports){
+},{"./LastUpdate":168,"./Toggle":171,"react":164}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19910,7 +19970,7 @@ var Popup = React.createClass({
 
 module.exports = Popup;
 
-},{"../actions/Actions":166,"../stores/TubeStore":175,"./CloseBtn":167,"./Lines":168,"react":164,"react-dom":8}],170:[function(require,module,exports){
+},{"../actions/Actions":166,"../stores/TubeStore":176,"./CloseBtn":167,"./Lines":169,"react":164,"react-dom":8}],171:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19959,7 +20019,7 @@ var Toggle = React.createClass({
 module.exports = Toggle;
 /* Line name */ /* Line status */ /* only show details if available */
 
-},{"../actions/Actions":166,"react":164}],171:[function(require,module,exports){
+},{"../actions/Actions":166,"react":164}],172:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
@@ -19972,14 +20032,14 @@ module.exports = keyMirror({
   UPDATELINES: null
 });
 
-},{"keymirror":6}],172:[function(require,module,exports){
+},{"keymirror":6}],173:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":1}],173:[function(require,module,exports){
+},{"flux":1}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19992,13 +20052,28 @@ var helpers = {
     formattedDetails = formattedDetails.replace('Bakerloo Line: ', '').replace('Central Line: ', '').replace('Circle Line: ', '').replace('District Line: ', '').replace('DLR Line: ', '').replace('Hammersmith & City Line: ', '').replace('Jubilee Line: ', '').replace('London Overground: ', '').replace('Metropolitan Line: ', '').replace('Northern Line: ', '').replace('Piccadilly Line: ', '').replace('TfL Rail: ', '').replace('Victoria Line: ', '').replace('Waterloo & City Line: ', '');
 
     return formattedDetails;
+  },
+  minutesAgo: function minutesAgo(time) {
+    var then = new Date(time),
+        now = Date.now(),
+        timePassed = parseInt((now - then) / 6000) / 10;
+
+    if (timePassed < 0.5) {
+      return 'just now';
+    } else if (timePassed < 1) {
+      return '30s ago';
+    } else if (timePassed < 2) {
+      return '1 minute ago';
+    } else {
+      return parseInt(timePassed) + ' minutes ago';
+    }
   }
 };
 
 exports['default'] = helpers;
 module.exports = exports['default'];
 
-},{}],174:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -20008,7 +20083,7 @@ var Popup = require('./components/Popup');
 
 ReactDOM.render(React.createElement(Popup, null), document.getElementsByClassName('main')[0]);
 
-},{"./components/Popup":169,"react":164,"react-dom":8}],175:[function(require,module,exports){
+},{"./components/Popup":170,"react":164,"react-dom":8}],176:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatcher/Dispatcher');
@@ -20098,6 +20173,8 @@ function filterData() {
 
     // console.log(_response);
     _data.severity = 'good';
+
+    _data.updated = _response[0].lastUpdated;
 
     for (var i = 0, l = _response.length; i < l; i++) {
         _data[i].line = _response[i].name;
@@ -20191,4 +20268,4 @@ AppDispatcher.register(function (action) {
 
 module.exports = TubeStore;
 
-},{"../Config":165,"../actions/Actions":166,"../constants/Constants":171,"../dispatcher/Dispatcher":172,"../helpers":173,"events":4,"object-assign":7}]},{},[174]);
+},{"../Config":165,"../actions/Actions":166,"../constants/Constants":172,"../dispatcher/Dispatcher":173,"../helpers":174,"events":4,"object-assign":7}]},{},[175]);

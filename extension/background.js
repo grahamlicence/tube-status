@@ -19808,8 +19808,8 @@ TubeStore.addChangeListener(updateIcon);
 Actions.get();
 var checker = setInterval(function () {
     Actions.get();
-}, 3000); //check every 5 minutes
-// }, 300000); //check every 5 minutes
+    // }, 3000); //check every 5 minutes
+}, 300000); //check every 5 minutes
 
 // listener for popup active lines updates
 chrome.runtime.onMessage.addListener(function (request) {
@@ -19817,6 +19817,8 @@ chrome.runtime.onMessage.addListener(function (request) {
         Actions.updateLines();
     }
 });
+
+// TODO update data when waking up chrome
 
 },{"./actions/Actions":165,"./stores/DataStore":170,"./stores/TubeStore":171,"react":163}],167:[function(require,module,exports){
 'use strict';
@@ -19851,6 +19853,21 @@ var helpers = {
     formattedDetails = formattedDetails.replace('Bakerloo Line: ', '').replace('Central Line: ', '').replace('Circle Line: ', '').replace('District Line: ', '').replace('DLR Line: ', '').replace('Hammersmith & City Line: ', '').replace('Jubilee Line: ', '').replace('London Overground: ', '').replace('Metropolitan Line: ', '').replace('Northern Line: ', '').replace('Piccadilly Line: ', '').replace('TfL Rail: ', '').replace('Victoria Line: ', '').replace('Waterloo & City Line: ', '');
 
     return formattedDetails;
+  },
+  minutesAgo: function minutesAgo(time) {
+    var then = new Date(time),
+        now = Date.now(),
+        timePassed = parseInt((now - then) / 6000) / 10;
+
+    if (timePassed < 0.5) {
+      return 'just now';
+    } else if (timePassed < 1) {
+      return '30s ago';
+    } else if (timePassed < 2) {
+      return '1 minute ago';
+    } else {
+      return parseInt(timePassed) + ' minutes ago';
+    }
   }
 };
 
@@ -19884,6 +19901,7 @@ var saveData = function saveData() {
 */
 function dataUpdated() {
   _response = _req.response;
+  _response[0].lastUpdated = Date.now();
   saveData();
   Actions.updateData();
   // TODO this action needs to be the chrome event too
@@ -19894,8 +19912,8 @@ function dataUpdated() {
 * API call
 */
 function getData() {
-  // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
-  var url = 'http://localhost:8000/data.json';
+  var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
+  // var url = 'http://localhost:8000/data.json';
   _req.open('GET', url, true);
   _req.onload = dataUpdated;
   _req.send(null);
@@ -20028,6 +20046,8 @@ function filterData() {
 
     // console.log(_response);
     _data.severity = 'good';
+
+    _data.updated = _response[0].lastUpdated;
 
     for (var i = 0, l = _response.length; i < l; i++) {
         _data[i].line = _response[i].name;

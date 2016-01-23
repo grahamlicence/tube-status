@@ -17,8 +17,8 @@ TubeStore.addChangeListener(updateIcon);
 Actions.get();
 var checker = setInterval(function() {
     Actions.get();
-}, 3000); //check every 5 minutes
-// }, 300000); //check every 5 minutes
+// }, 3000); //check every 5 minutes
+}, 300000); //check every 5 minutes
 
 // listener for popup active lines updates
 chrome.runtime.onMessage.addListener(
@@ -27,3 +27,5 @@ chrome.runtime.onMessage.addListener(
         Actions.updateLines();
     }
 });
+
+// TODO update data when waking up chrome

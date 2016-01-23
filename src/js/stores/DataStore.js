@@ -22,6 +22,7 @@ var saveData = function () {
 */
 function dataUpdated() {
     _response = _req.response;
+    _response[0].lastUpdated = Date.now();
     saveData();
     Actions.updateData();
     // TODO this action needs to be the chrome event too
@@ -32,8 +33,8 @@ function dataUpdated() {
 * API call
 */
 function getData() {
-    // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
-    var url = 'http://localhost:8000/data.json';
+    var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
+    // var url = 'http://localhost:8000/data.json';
     _req.open(
         'GET',
         url,

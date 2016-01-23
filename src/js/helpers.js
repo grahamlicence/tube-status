@@ -25,6 +25,21 @@ let helpers =  {
                                        .replace('Waterloo & City Line: ', '');
 
     return formattedDetails;
+  },
+  minutesAgo: function (time) {
+    var then = new Date(time),
+      now = Date.now(),
+      timePassed = parseInt((now - then) / 6000) / 10;
+
+    if (timePassed < 0.5) {
+      return 'just now';
+    } else if (timePassed < 1) {
+      return '30s ago';
+    } else if (timePassed < 2) {
+      return '1 minute ago';
+    } else {
+      return parseInt(timePassed) + ' minutes ago';
+    }
   }
 }
 

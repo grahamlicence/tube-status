@@ -85,6 +85,8 @@ function filterData() {
     // console.log(_response);
     _data.severity = 'good';
 
+    _data.updated = _response[0].lastUpdated;
+
     for (var i = 0, l = _response.length; i < l; i++) {
         _data[i].line = _response[i].name;
         _data[i].details = '';
@@ -173,7 +175,7 @@ AppDispatcher.register(function(action) {
     case Constants.SET:
         updateShown(action.id, action.active);
         break;
-        
+
   }
 });
 
