@@ -10,19 +10,33 @@ let helpers =  {
 
     // remove line name
     formattedDetails = formattedDetails.replace('Bakerloo Line: ', '')
+                                       .replace('BAKERLOO LINE: ', '')
                                        .replace('Central Line: ', '')
+                                       .replace('CENTRAL LINE: ', '')
                                        .replace('Circle Line: ', '')
+                                       .replace('CIRCLE LINE: ', '')
                                        .replace('District Line: ', '')
+                                       .replace('DISTRICT LINE: ', '')
                                        .replace('DLR Line: ', '')
+                                       .replace('DLR LINE: ', '')
                                        .replace('Hammersmith & City Line: ', '')
+                                       .replace('HAMMERSMITH & CITY LINE: ', '')
                                        .replace('Jubilee Line: ', '')
+                                       .replace('JUBILEE LINE: ', '')
                                        .replace('London Overground: ', '')
+                                       .replace('LONDON OVERGROUND: ', '')
                                        .replace('Metropolitan Line: ', '')
+                                       .replace('METROPOLITAN LINE: ', '')
                                        .replace('Northern Line: ', '')
+                                       .replace('NORTHERN LINE: ', '')
                                        .replace('Piccadilly Line: ', '')
+                                       .replace('PICCADILLY LINE: ', '')
                                        .replace('TfL Rail: ', '')
+                                       .replace('TFL RAIL: ', '')
                                        .replace('Victoria Line: ', '')
-                                       .replace('Waterloo & City Line: ', '');
+                                       .replace('VICTORIA LINE: ', '')
+                                       .replace('Waterloo & City Line: ', '')
+                                       .replace('WATERLOO & CITY LINE: ', '');
 
     return formattedDetails;
   },
