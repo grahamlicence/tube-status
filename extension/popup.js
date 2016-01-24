@@ -19827,6 +19827,11 @@ var LastUpdate = React.createClass({
         this.setState({
             updated: h.minutesAgo(this._time)
         });
+        if (parseInt(h.minutesAgo(this._time)) > 10 && h.minutesAgo(this._time) !== '30s ago') {
+            console.log('time has passed ' + h.minutesAgo(this._time));
+
+            chrome.runtime.sendMessage({ msg: 'dataoutofdate' });
+        }
     },
 
     _chk: function _chk() {
@@ -20049,7 +20054,7 @@ var helpers = {
     var formattedDetails = details.replace(/GOOD SERVICE/g, '\nGOOD SERVICE').replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS').replace(/MINOR DELAYS/g, '\nMINOR DELAYS').replace(/A Good Service/g, '\nA Good Service').replace(/Good Service/g, '\nGood Service').replace(/No service/g, '\nNo service');
 
     // remove line name
-    formattedDetails = formattedDetails.replace('Bakerloo Line: ', '').replace('Central Line: ', '').replace('Circle Line: ', '').replace('District Line: ', '').replace('DLR Line: ', '').replace('Hammersmith & City Line: ', '').replace('Jubilee Line: ', '').replace('London Overground: ', '').replace('Metropolitan Line: ', '').replace('Northern Line: ', '').replace('Piccadilly Line: ', '').replace('TfL Rail: ', '').replace('Victoria Line: ', '').replace('Waterloo & City Line: ', '');
+    formattedDetails = formattedDetails.replace('Bakerloo Line: ', '').replace('BAKERLOO LINE: ', '').replace('Central Line: ', '').replace('CENTRAL LINE: ', '').replace('Circle Line: ', '').replace('CIRCLE LINE: ', '').replace('District Line: ', '').replace('DISTRICT LINE: ', '').replace('DLR Line: ', '').replace('DLR LINE: ', '').replace('Hammersmith & City Line: ', '').replace('HAMMERSMITH & CITY LINE: ', '').replace('Jubilee Line: ', '').replace('JUBILEE LINE: ', '').replace('London Overground: ', '').replace('LONDON OVERGROUND: ', '').replace('Metropolitan Line: ', '').replace('METROPOLITAN LINE: ', '').replace('Northern Line: ', '').replace('NORTHERN LINE: ', '').replace('Piccadilly Line: ', '').replace('PICCADILLY LINE: ', '').replace('TfL Rail: ', '').replace('TFL RAIL: ', '').replace('Victoria Line: ', '').replace('VICTORIA LINE: ', '').replace('Waterloo & City Line: ', '').replace('WATERLOO & CITY LINE: ', '');
 
     return formattedDetails;
   },
@@ -20082,6 +20087,13 @@ var ReactDOM = require('react-dom');
 var Popup = require('./components/Popup');
 
 ReactDOM.render(React.createElement(Popup, null), document.getElementsByClassName('main')[0]);
+
+chrome.runtime.onSuspendCanceled.addListener(function () {
+    console.log('chrome woke up');
+});
+chrome.runtime.onSuspend.addListener(function () {
+    console.log('chrome suspend');
+});
 
 },{"./components/Popup":170,"react":164,"react-dom":8}],176:[function(require,module,exports){
 'use strict';
@@ -20200,6 +20212,7 @@ function filterData() {
 
                 case 'Special Service':
                 case 'Reduced Service':
+                case 'Part Closure':
                 case 'Bus Service':
                 case 'Minor Delays':
                     if (_data.severity !== 'bad') {
@@ -20211,7 +20224,8 @@ function filterData() {
 
         // nothing in the TfL docs suggests there are more than 1 but will check when updates happen
         if (_response[i].lineStatuses.length > 1) {
-            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].line);
+            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name);
+            console.log(_response[i].lineStatuses);
         }
     }
     TubeStore.emitChange();

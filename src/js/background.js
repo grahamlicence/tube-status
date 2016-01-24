@@ -25,7 +25,19 @@ chrome.runtime.onMessage.addListener(
     function(request) {
     if (request.msg === 'iconupdate') {
         Actions.updateLines();
+    } else if (request.msg === 'dataoutofdate') {
+        console.log(TubeStore.getData().updated)
+        console.log('out of date update')
+        Actions.get();
     }
 });
 
 // TODO update data when waking up chrome
+// 
+// 
+chrome.runtime.onSuspendCanceled.addListener(function() {
+    console.log('bg chrome woke up')
+})
+chrome.runtime.onSuspend.addListener(function() {
+    console.log('bg chrome suspend')
+})

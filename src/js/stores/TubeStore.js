@@ -111,6 +111,7 @@ function filterData() {
 
                 case 'Special Service':
                 case 'Reduced Service':
+                case 'Part Closure':
                 case 'Bus Service':
                 case 'Minor Delays':
                     if (_data.severity !== 'bad') {
@@ -122,7 +123,8 @@ function filterData() {
 
         // nothing in the TfL docs suggests there are more than 1 but will check when updates happen
         if (_response[i].lineStatuses.length > 1) {
-            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].line)
+            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name)
+            console.log(_response[i].lineStatuses)
         }
         
     }

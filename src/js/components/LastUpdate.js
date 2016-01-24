@@ -10,6 +10,11 @@ const LastUpdate = React.createClass({
         this.setState({
             updated: h.minutesAgo(this._time)
         });
+        if (parseInt(h.minutesAgo(this._time)) > 10 && h.minutesAgo(this._time) !== '30s ago') {
+            console.log('time has passed ' + h.minutesAgo(this._time))
+
+            chrome.runtime.sendMessage({msg: 'dataoutofdate'});
+        }
     },
 
     _chk: function () {
