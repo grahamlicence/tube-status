@@ -19791,7 +19791,7 @@ var Actions = {
 
 module.exports = Actions;
 
-},{"../constants/Constants":172,"../dispatcher/Dispatcher":173}],167:[function(require,module,exports){
+},{"../constants/Constants":173,"../dispatcher/Dispatcher":174}],167:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -19812,6 +19812,31 @@ var SaveBtn = React.createClass({
 module.exports = SaveBtn;
 
 },{"react":164}],168:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+var Details = React.createClass({
+    displayName: 'Details',
+
+    render: function render() {
+        return React.createElement(
+            'span',
+            { className: 'details-wrapper' },
+            this.props.item.split('\n').map(function (item, count) {
+                return React.createElement(
+                    'span',
+                    { key: count, className: 'details' },
+                    item
+                );
+            })
+        );
+    }
+});
+
+module.exports = Details;
+
+},{"react":164}],169:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19874,7 +19899,7 @@ var LastUpdate = React.createClass({
 
 module.exports = LastUpdate;
 
-},{"../helpers":174,"../stores/TubeStore":176,"react":164}],169:[function(require,module,exports){
+},{"../helpers":175,"../stores/TubeStore":177,"react":164}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19906,7 +19931,7 @@ var Lines = React.createClass({
 
 module.exports = Lines;
 
-},{"./LastUpdate":168,"./Toggle":171,"react":164}],170:[function(require,module,exports){
+},{"./LastUpdate":169,"./Toggle":172,"react":164}],171:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19975,56 +20000,51 @@ var Popup = React.createClass({
 
 module.exports = Popup;
 
-},{"../actions/Actions":166,"../stores/TubeStore":176,"./CloseBtn":167,"./Lines":169,"react":164,"react-dom":8}],171:[function(require,module,exports){
+},{"../actions/Actions":166,"../stores/TubeStore":177,"./CloseBtn":167,"./Lines":170,"react":164,"react-dom":8}],172:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var Actions = require('../actions/Actions');
+var Details = require('./Details');
 
 var Toggle = React.createClass({
-  displayName: 'Toggle',
+    displayName: 'Toggle',
 
-  _click: function _click() {
-    Actions.set(this.props.item.id, this.props.item.active);
-  },
+    _click: function _click() {
+        Actions.set(this.props.item.id, this.props.item.active);
+    },
 
-  render: function render() {
-    return React.createElement(
-      'button',
-      { type: 'button', onClick: this._click, className: "toggle-btn " + (this.props.item.active ? '' : 'off') },
-      React.createElement(
-        'span',
-        { className: 'line' },
-        this.props.item.line
-      ),
-      React.createElement(
-        'span',
-        { className: 'status' },
-        this.props.item.description
-      ),
-      React.createElement(
-        'span',
-        { className: 'message' },
-        'No updates set'
-      ),
-      React.createElement('span', { className: "toggle " + (this.props.item.active ? 'on' : 'off') }),
-      this.props.item.details.split('\n').map(function (item, count) {
-        if (item.length) {
-          return React.createElement(
-            'span',
-            { key: count, className: 'details' },
-            item
-          );
-        }
-      })
-    );
-  }
+    render: function render() {
+        return React.createElement(
+            'button',
+            { type: 'button', onClick: this._click, className: "toggle-btn " + (this.props.item.active ? '' : 'off') },
+            React.createElement(
+                'span',
+                { className: 'line' },
+                this.props.item.line
+            ),
+            React.createElement(
+                'span',
+                { className: 'status' },
+                this.props.item.description[this.props.item.description.length - 1]
+            ),
+            React.createElement(
+                'span',
+                { className: 'message' },
+                'No updates set'
+            ),
+            React.createElement('span', { className: "toggle " + (this.props.item.active ? 'on' : 'off') }),
+            this.props.item.details.map(function (item, count) {
+                return React.createElement(Details, { key: count, item: item });
+            })
+        );
+    }
 });
 
 module.exports = Toggle;
-/* Line name */ /* Line status */ /* only show details if available */
+/* Line name */ /* Line status */
 
-},{"../actions/Actions":166,"react":164}],172:[function(require,module,exports){
+},{"../actions/Actions":166,"./Details":168,"react":164}],173:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
@@ -20037,14 +20057,14 @@ module.exports = keyMirror({
   UPDATELINES: null
 });
 
-},{"keymirror":6}],173:[function(require,module,exports){
+},{"keymirror":6}],174:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":1}],174:[function(require,module,exports){
+},{"flux":1}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20078,7 +20098,7 @@ var helpers = {
 exports['default'] = helpers;
 module.exports = exports['default'];
 
-},{}],175:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -20095,7 +20115,7 @@ chrome.runtime.onSuspend.addListener(function () {
     console.log('chrome suspend');
 });
 
-},{"./components/Popup":170,"react":164,"react-dom":8}],176:[function(require,module,exports){
+},{"./components/Popup":171,"react":164,"react-dom":8}],177:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatcher/Dispatcher');
@@ -20177,6 +20197,9 @@ function updateShown(id, active) {
 */
 function filterData() {
 
+    var i = 0,
+        status = 0;
+
     // reset data based on active lines
     _data = setData();
 
@@ -20188,30 +20211,35 @@ function filterData() {
 
     _data.updated = _response[0].lastUpdated;
 
-    for (var i = 0, l = _response.length; i < l; i++) {
+    for (; i < _response.length; i++) {
         _data[i].line = _response[i].name;
-        _data[i].details = '';
+        _data[i].details = [];
+        _data[i].description = [];
 
         // only check active lines
         if (_data[i].active) {
-            _data[i].description = _response[i].lineStatuses[0].statusSeverityDescription;
 
-            if (_response[i].lineStatuses[0].reason) {
-                _data[i].details = h.formatDetails(_response[i].lineStatuses[0].reason);
+            // there can be more than one status update, eg part closed and delays on rest of line
+            for (status = 0; status < _response[i].lineStatuses.length; status++) {
+                _data[i].description.push(_response[i].lineStatuses[status].statusSeverityDescription);
+
+                if (_response[i].lineStatuses[status].reason) {
+                    _data[i].details.push(h.formatDetails(_response[i].lineStatuses[status].reason));
+                }
             }
 
-            // check severity of issue
-            switch (_data[i].description) {
+            // check severity of issue - use last in status updates
+            switch (_data[i].description[_response[i].lineStatuses.length - 1]) {
                 case 'Suspended':
                 case 'Part Suspended':
                 case 'Planned Closure':
-                case 'Service Closed':
                 case 'Severe Delays':
                     _data.severity = 'bad';
                     break;
 
                 case 'Special Service':
                 case 'Reduced Service':
+                case 'Service Closed':
                 case 'Part Closure':
                 case 'Bus Service':
                 case 'Minor Delays':
@@ -20282,4 +20310,4 @@ AppDispatcher.register(function (action) {
 
 module.exports = TubeStore;
 
-},{"../Config":165,"../actions/Actions":166,"../constants/Constants":172,"../dispatcher/Dispatcher":173,"../helpers":174,"events":4,"object-assign":7}]},{},[175]);
+},{"../Config":165,"../actions/Actions":166,"../constants/Constants":173,"../dispatcher/Dispatcher":174,"../helpers":175,"events":4,"object-assign":7}]},{},[176]);

@@ -76,6 +76,9 @@ function updateShown(id, active) {
 */
 function filterData() {
 
+    var i = 0,
+        status = 0;
+
     // reset data based on active lines
     _data = setData();
 
@@ -87,30 +90,36 @@ function filterData() {
 
     _data.updated = _response[0].lastUpdated;
 
-    for (var i = 0, l = _response.length; i < l; i++) {
+    for (; i < _response.length; i++) {
         _data[i].line = _response[i].name;
-        _data[i].details = '';
+        _data[i].details = [];
+        _data[i].description = [];
     
         // only check active lines
         if (_data[i].active) {
-            _data[i].description = _response[i].lineStatuses[0].statusSeverityDescription;
-            
-            if (_response[i].lineStatuses[0].reason) {
-                _data[i].details = h.formatDetails(_response[i].lineStatuses[0].reason);
-            }
 
-            // check severity of issue
-            switch (_data[i].description) {
+            // there can be more than one status update, eg part closed and delays on rest of line
+            for (status = 0; status < _response[i].lineStatuses.length; status++) {
+                _data[i].description.push(_response[i].lineStatuses[status].statusSeverityDescription);
+                
+                if (_response[i].lineStatuses[status].reason) {
+                    _data[i].details.push(h.formatDetails(_response[i].lineStatuses[status].reason));
+                }
+            }
+            
+
+            // check severity of issue - use last in status updates
+            switch (_data[i].description[_response[i].lineStatuses.length - 1]) {
                 case 'Suspended':
                 case 'Part Suspended':
                 case 'Planned Closure':
-                case 'Service Closed':
                 case 'Severe Delays':
                     _data.severity = 'bad';
                     break;
 
                 case 'Special Service':
                 case 'Reduced Service':
+                case 'Service Closed':
                 case 'Part Closure':
                 case 'Bus Service':
                 case 'Minor Delays':
