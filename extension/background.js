@@ -19795,6 +19795,7 @@ var React = require('react');
 var TubeStore = require('./stores/TubeStore');
 var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
+var h = require('./helpers');
 
 function updateIcon() {
     var data = TubeStore.getData(),
@@ -19832,7 +19833,27 @@ chrome.runtime.onSuspend.addListener(function () {
     console.log('bg chrome suspend');
 });
 
-},{"./actions/Actions":165,"./stores/DataStore":170,"./stores/TubeStore":171,"react":163}],167:[function(require,module,exports){
+chrome.runtime.onStartup.addListener(function () {
+    console.log('on start up');
+});
+
+chrome.runtime.onConnect.addListener(function () {
+    console.log('on connect');
+});
+
+chrome.alarms.create('arbitrary', {
+    when: 1000,
+    periodInMinutes: 5
+});
+
+chrome.alarms.onAlarm.addListener(function (alarm) {
+    var now = new Date();
+    var time = now.getHours() + ':' + now.getMinutes();
+    console.log('alarm called ' + time);
+    console.log(h.minutesAgo(TubeStore.getData().updated));
+});
+
+},{"./actions/Actions":165,"./helpers":169,"./stores/DataStore":170,"./stores/TubeStore":171,"react":163}],167:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
@@ -19872,13 +19893,25 @@ var helpers = {
         timePassed = parseInt((now - then) / 6000) / 10;
 
     if (timePassed < 0.5) {
-      return 'just now';
+      return {
+        text: 'just now',
+        time: 0
+      };
     } else if (timePassed < 1) {
-      return '30s ago';
+      return {
+        text: '30s ago',
+        time: 0.5
+      };
     } else if (timePassed < 2) {
-      return '1 minute ago';
+      return {
+        text: '1 minute ago',
+        time: 1
+      };
     } else {
-      return parseInt(timePassed) + ' minutes ago';
+      return {
+        text: parseInt(timePassed) + ' minutes ago',
+        time: parseInt(timePassed)
+      };
     }
   }
 };

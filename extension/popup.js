@@ -19849,22 +19849,28 @@ var LastUpdate = React.createClass({
     _time: 0,
 
     _lastUpdate: function _lastUpdate() {
+        var timepassed = h.minutesAgo(this._time);
+
         this.setState({
-            updated: h.minutesAgo(this._time)
+            updated: timepassed.text
         });
-        if (parseInt(h.minutesAgo(this._time)) > 10 && h.minutesAgo(this._time) !== '30s ago') {
+
+        // chrome inactive or too much time passed, force update
+        if (timepassed.time > 10) {
             console.log('time has passed ' + h.minutesAgo(this._time));
 
             chrome.runtime.sendMessage({ msg: 'dataoutofdate' });
         }
     },
 
-    _chk: function _chk() {
+    _set: function _set() {
         console.log('data updated');
         console.log(Store.getData().updated);
         this._time = Store.getData().updated;
         this._lastUpdate();
     },
+
+    _checker: {},
 
     getInitialState: function getInitialState() {
         return {
@@ -19873,16 +19879,17 @@ var LastUpdate = React.createClass({
     },
 
     componentWillMount: function componentWillMount() {
-        Store.addChangeListener(this._chk);
+        Store.addChangeListener(this._set);
     },
 
     componentWillUnmount: function componentWillUnmount() {
-        Store.removeChangeListener(this._chk);
+        Store.removeChangeListener(this._set);
+        clearInterval(this._checker);
     },
 
     componentDidMount: function componentDidMount() {
-        var _this = this,
-            checker = setInterval(function () {
+        var _this = this;
+        this._checker = setInterval(function () {
             _this._lastUpdate();
         }, 10000);
     },
@@ -20026,7 +20033,13 @@ var Toggle = React.createClass({
             React.createElement(
                 'span',
                 { className: 'status' },
-                this.props.item.description[this.props.item.description.length - 1]
+                this.props.item.description.map(function (item, count) {
+                    return React.createElement(
+                        'span',
+                        { key: count, className: 'status-item' },
+                        item
+                    );
+                })
             ),
             React.createElement(
                 'span',
@@ -20084,13 +20097,25 @@ var helpers = {
         timePassed = parseInt((now - then) / 6000) / 10;
 
     if (timePassed < 0.5) {
-      return 'just now';
+      return {
+        text: 'just now',
+        time: 0
+      };
     } else if (timePassed < 1) {
-      return '30s ago';
+      return {
+        text: '30s ago',
+        time: 0.5
+      };
     } else if (timePassed < 2) {
-      return '1 minute ago';
+      return {
+        text: '1 minute ago',
+        time: 1
+      };
     } else {
-      return parseInt(timePassed) + ' minutes ago';
+      return {
+        text: parseInt(timePassed) + ' minutes ago',
+        time: parseInt(timePassed)
+      };
     }
   }
 };

@@ -4,6 +4,7 @@ var React = require('react');
 var TubeStore = require('./stores/TubeStore');
 var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
+var h = require('./helpers');
 
 function updateIcon() {
     var data = TubeStore.getData(),
@@ -41,3 +42,23 @@ chrome.runtime.onSuspendCanceled.addListener(function() {
 chrome.runtime.onSuspend.addListener(function() {
     console.log('bg chrome suspend')
 })
+
+chrome.runtime.onStartup.addListener(function() {
+    console.log('on start up')
+})
+
+chrome.runtime.onConnect.addListener(function() {
+    console.log('on connect')
+})
+
+chrome.alarms.create('arbitrary', {
+    when: 1000,
+    periodInMinutes: 5
+})
+
+chrome.alarms.onAlarm.addListener(function (alarm) {
+    var now = new Date();
+    var time = now.getHours() + ':' + now.getMinutes();
+   console.log('alarm called ' + time);
+    console.log(h.minutesAgo(TubeStore.getData().updated))
+});
