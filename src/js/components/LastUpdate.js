@@ -15,15 +15,11 @@ const LastUpdate = React.createClass({
 
         // chrome inactive or too much time passed, force update
         if (timepassed.time > 10) {
-            console.log('time has passed ' + h.minutesAgo(this._time))
-
             chrome.runtime.sendMessage({msg: 'dataoutofdate'});
         }
     },
 
     _set: function () {
-        console.log('data updated');
-        console.log(Store.getData().updated)
         this._time = Store.getData().updated;
         this._lastUpdate();
     },

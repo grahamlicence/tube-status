@@ -19857,15 +19857,11 @@ var LastUpdate = React.createClass({
 
         // chrome inactive or too much time passed, force update
         if (timepassed.time > 10) {
-            console.log('time has passed ' + h.minutesAgo(this._time));
-
             chrome.runtime.sendMessage({ msg: 'dataoutofdate' });
         }
     },
 
     _set: function _set() {
-        console.log('data updated');
-        console.log(Store.getData().updated);
         this._time = Store.getData().updated;
         this._lastUpdate();
     },
@@ -20132,13 +20128,6 @@ var ReactDOM = require('react-dom');
 var Popup = require('./components/Popup');
 
 ReactDOM.render(React.createElement(Popup, null), document.getElementsByClassName('main')[0]);
-
-chrome.runtime.onSuspendCanceled.addListener(function () {
-    console.log('chrome woke up');
-});
-chrome.runtime.onSuspend.addListener(function () {
-    console.log('chrome suspend');
-});
 
 },{"./components/Popup":171,"react":164,"react-dom":8}],177:[function(require,module,exports){
 'use strict';
