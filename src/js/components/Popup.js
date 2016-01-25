@@ -39,8 +39,6 @@ const Popup = React.createClass({
     },
 
      componentDidMount: function() {
-        // Actions.get();
-        // 
         Actions.updateData();
 
         // listener for background data updates

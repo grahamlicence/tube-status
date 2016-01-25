@@ -7,16 +7,19 @@ const LastUpdate = React.createClass({
     _time: 0,
 
     _lastUpdate: function () {
-        var timepassed = h.minutesAgo(this._time);
-
-        this.setState({
-            updated: timepassed.text
-        });
+        var timepassed = h.minutesAgo(this._time).
+            stateText = timepassed.text;
 
         // chrome inactive or too much time passed, force update
         if (timepassed.time > 10) {
             chrome.runtime.sendMessage({msg: 'dataoutofdate'});
+            stateText = 'updating now';
         }
+
+        // update state
+        this.setState({
+            updated: stateText
+        });
     },
 
     _set: function () {
