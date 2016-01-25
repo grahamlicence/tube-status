@@ -3,3 +3,5 @@
 *.sublime-workspace
 node_modules
 src/js/Config.js
+extension/popup.js
+extension/background.js
