@@ -46,13 +46,25 @@ let helpers =  {
       timePassed = parseInt((now - then) / 6000) / 10;
 
     if (timePassed < 0.5) {
-      return 'just now';
+      return {
+        text: 'just now',
+        time: 0
+      };
     } else if (timePassed < 1) {
-      return '30s ago';
+      return {
+        text: '30s ago',
+        time: 0.5
+      };
     } else if (timePassed < 2) {
-      return '1 minute ago';
+      return {
+        text: '1 minute ago',
+        time: 1
+      };
     } else {
-      return parseInt(timePassed) + ' minutes ago';
+      return {
+        text: parseInt(timePassed) + ' minutes ago',
+        time: parseInt(timePassed)
+      };
     }
   }
 }
