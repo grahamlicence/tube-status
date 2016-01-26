@@ -6,6 +6,72 @@ var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
 
 /**
+  * Return lines with issues
+  * @return {string} 
+  */
+function lineIssue(lines, issueText, lastLine) {
+    var text = '',
+        divider = ', ',
+        dividerText = '';
+
+    if (!lines.length) {
+        return text;
+    }
+    text += issueText;
+
+    for (var i = 0; i < lines.length; i++) {
+        if (i === 0) {
+            dividerText = '';
+        } else if (i === lines.length - 1) {
+            dividerText = ' and ';
+        } else {
+            dividerText = divider;
+        }
+        text = text + dividerText + lines[i];
+    }
+
+    // add pluralisation of lines and new line 
+    text += ' line' + (lines.length > 1 ? 's' : '') + '\n';
+
+    return text;
+}
+
+/**
+  * Set title text
+  * @return {string} 
+  */
+function getTitle() {
+    var title = '',
+        divider = ', ',
+        issueType = [
+            'severe',
+            'minor',
+            'partClosure',
+            'noService'
+        ],
+        text = [
+            'Severe delays on ',
+            'Minor delays on ',
+            'Part Closure of ',
+            'No Service on ',
+            'Good service on all lines'
+        ],
+        issues = TubeStore.getIssues();
+
+    for (var i = 0; i < issueType.length; i++) {
+        title += lineIssue(issues[issueType[i]], text[i], (i === issueType.length - 1));
+    }
+
+    if (title.length) {
+        // remove last new line
+        return title.slice(0, -1);
+    } else {
+        return text[4];
+    }
+        
+}
+
+/**
  * Update extension icon
  */
 function updateIcon() {
@@ -13,7 +79,7 @@ function updateIcon() {
         icon = data.severity;
 
     chrome.browserAction.setIcon({path: 'images/' + icon + '.png'});
-    // TODO: set title
+    chrome.browserAction.setTitle({title: getTitle()});
 }
 
 // listen for user changes to update icon

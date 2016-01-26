@@ -38,6 +38,7 @@ let helpers =  {
                                            .replace('TFL RAIL: ', '')
                                            .replace('Victoria Line: ', '')
                                            .replace('VICTORIA LINE: ', '')
+                                           .replace('Waterloo and City Line: ', '')
                                            .replace('Waterloo & City Line: ', '')
                                            .replace('WATERLOO & CITY LINE: ', '');
 

@@ -57,7 +57,7 @@ const Popup = React.createClass({
                 <CloseBtn />
                 <Lines className="lines" items={this.state.items} />
 
-                // remove message for release 2.1
+                {/* remove message for release 2.1 */}
                 <Message id="3" msg="Extension update coming soon to use the new TfL API. There'll be a permissions update for the TfL url and a new Chrome API for checking the feed." />
             </div>
         );

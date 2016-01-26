@@ -8,6 +8,12 @@ var h = require('../helpers');
 
 // service data
 var _data = setData(),
+    _issues = {
+        severe: [],
+        minor: [],
+        partClosure: [],
+        noService: []
+    },
     _response = [],
     CHANGE_EVENT = 'change';
 
@@ -90,6 +96,12 @@ function filterData() {
     // save the time the data was updated
     _data.updated = _response[0].lastUpdated;
 
+    // clear down issues
+    _issues.severe.length = 0;
+    _issues.minor.length = 0;
+    _issues.noService.length = 0;
+    _issues.partClosure.length = 0;
+
     for (; i < _response.length; i++) {
         _data[i].line = _response[i].name;
         _data[i].details = [];
@@ -112,20 +124,24 @@ function filterData() {
             switch (_data[i].description[_response[i].lineStatuses.length - 1]) {
                 case 'Suspended':
                 case 'Part Suspended':
-                case 'Planned Closure':
                 case 'Severe Delays':
                     _data.severity = 'bad';
+                    _issues.severe.push(_response[i].name);
                     break;
 
+                case 'Minor Delays':
+                    _issues.minor.push(_response[i].name);
+                case 'Planned Closure':
+                case 'Service Closed':
+                    _issues.noService.push(_response[i].name);
                 case 'Special Service':
                 case 'Reduced Service':
-                case 'Service Closed':
                 case 'Part Closure':
                 case 'Bus Service':
-                case 'Minor Delays':
                     if (_data.severity !== 'bad') {
                         _data.severity = 'delay';
                     }
+                    _issues.partClosure.push(_response[i].name);
                     break;
             }
         }   
@@ -135,8 +151,9 @@ function filterData() {
             console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name)
             console.log(_response[i].lineStatuses)
         }
-        
+
     }
+        
     TubeStore.emitChange();
 }
 
@@ -149,6 +166,14 @@ const TubeStore = assign({}, EventEmitter.prototype, {
     */
     getData: function() {
         return _data;
+    },
+
+    /**
+    * List current issues.
+    * @return {object}
+    */
+    getIssues: function() {
+        return _issues;
     },
 
     emitChange: function() {
