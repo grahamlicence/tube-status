@@ -1,8 +1,9 @@
 {
-  "name": "Tube service status",
-  "version": "2.0.1",
+  "name": "London Underground status updates",
+  "short_name": "Tube status",
+  "version": "2.0.2",
   "manifest_version": 2,
-  "description": "Tube disruption alerts for the London Underground.",
+  "description": "London Underground disruption alerts for the Tube, Overground, TfL Rail & DLR.",
   "icons": {
     "16": "images/default.png",
     "48": "images/icon-48.png",
