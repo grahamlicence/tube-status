@@ -12,13 +12,10 @@ const Message = React.createClass({
     _showMessage: function (id) {
 
         if (!localStorage.messageShown) {
-            console.log('1')
             return true;
         } else if (localStorage.messageShown < id) {
-            console.log('2')
             return true;
         } else {
-            console.log('3')
             return false;
         }
     },
