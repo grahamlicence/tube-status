@@ -5,6 +5,7 @@ var Store = require('../stores/TubeStore');
 var Actions = require('../actions/Actions');
 var CloseBtn = require('./CloseBtn');
 var Lines = require('./Lines');
+var Message = require('./Message');
 
 /**
  * Retrieve the current data from the Store
@@ -47,6 +48,7 @@ const Popup = React.createClass({
             <div className="tube-status">
                 <CloseBtn />
                 <Lines className="lines" items={this.state.items} />
+                <Message id="3" msg="Extension update coming soon to use the new TfL API. There'll be a permissions update for the TfL url and a new Chrome API for checking the feed." />
             </div>
         );
     }

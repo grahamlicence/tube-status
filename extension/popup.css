@@ -137,6 +137,15 @@ strong {
 	background: url(images/tick.png) no-repeat 0 0;
 	background-size: contain;
 }
+.update-message button {
+	display: block;
+    margin: 5px 0;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.update-message.hidden {
+	display: none;
+}
 /* line colours */
 .bakerloo .line {
 	background-color: #B36305;
