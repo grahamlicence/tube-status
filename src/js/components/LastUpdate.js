@@ -7,7 +7,7 @@ const LastUpdate = React.createClass({
     _time: 0,
 
     _lastUpdate: function () {
-        var timepassed = h.minutesAgo(this._time).
+        var timepassed = h.minutesAgo(this._time),
             stateText = timepassed.text;
 
         // chrome inactive or too much time passed, force update
