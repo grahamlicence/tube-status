@@ -13,9 +13,12 @@ var CHANGE_EVENT = 'change';
 
 _req.responseType = 'json';
 
-var saveData = function () {
+/**
+ * Save the API data
+ */
+function saveData () {
     localStorage.data = JSON.stringify(_response);
-};
+}
 
 /**
 * Data has been updated
@@ -25,7 +28,7 @@ function dataUpdated() {
     _response[0].lastUpdated = Date.now();
     saveData();
     Actions.updateData();
-    // TODO this action needs to be the chrome event too
+    // send message to background and popup that data has been updated
     chrome.runtime.sendMessage({msg: 'dataupdate'});
 }
 

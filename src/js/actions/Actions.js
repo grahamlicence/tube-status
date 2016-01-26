@@ -40,6 +40,7 @@ var Actions = {
   },
 
   /**
+   * Set the active lines
    * @param id {Object} Line id
    * @param active {Boolean} Line status shown
    */

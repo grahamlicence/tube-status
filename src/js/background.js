@@ -5,15 +5,21 @@ var TubeStore = require('./stores/TubeStore');
 var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
 
+/**
+ * Update extension icon
+ */
 function updateIcon() {
     var data = TubeStore.getData(),
         icon = data.severity;
 
     chrome.browserAction.setIcon({path: 'images/' + icon + '.png'});
+    // TODO: set title
 }
 
+// listen for user changes to update icon
 TubeStore.addChangeListener(updateIcon);
     
+// initial API call on load
 Actions.get();
 
 //check API every 5 minutes

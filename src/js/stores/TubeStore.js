@@ -8,7 +8,6 @@ var h = require('../helpers');
 
 // service data
 var _data = setData(),
-    _req = new XMLHttpRequest(),
     _response = [],
     CHANGE_EVENT = 'change';
 
@@ -38,14 +37,14 @@ function setData() {
 /**
 * Store which lines are active.
 */
-var storeOptions = function () {
+function storeOptions () {
     var opt = [],
         i = 0;
     for (i; i < 14; i++) {
         opt[i] = _data[i].active === true ? 1 : 0;
     }
     localStorage.lines = JSON.stringify(opt);
-};
+}
 
 /**
 * Get the data saved from the api.
@@ -67,7 +66,7 @@ function updateShown(id, active) {
     storeOptions();
     filterData();
 
-    // update background
+    // update background for icon changes
     chrome.runtime.sendMessage({msg: 'iconupdate'});
 }
 
@@ -85,9 +84,10 @@ function filterData() {
     // load saved json
     _response = loadData();
 
-    // console.log(_response);
+    // good service unless specified
     _data.severity = 'good';
 
+    // save the time the data was updated
     _data.updated = _response[0].lastUpdated;
 
     for (; i < _response.length; i++) {
@@ -130,7 +130,7 @@ function filterData() {
             }
         }   
 
-        // nothing in the TfL docs suggests there are more than 1 but will check when updates happen
+        // checker for when more than one update, often this seems to be duplicate data
         if (_response[i].lineStatuses.length > 1) {
             console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name)
             console.log(_response[i].lineStatuses)

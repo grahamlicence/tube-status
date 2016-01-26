@@ -1,5 +1,6 @@
-// TfL API id and key here
-
+/**
+ * TfL API id and key here
+ */
 const Config = {
     id: '',
     key: ''

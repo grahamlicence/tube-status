@@ -39,7 +39,7 @@ const Popup = React.createClass({
         Store.removeChangeListener(this._onChange);
     },
 
-     componentDidMount: function() {
+    componentDidMount: function() {
         Actions.updateData();
 
         // listener for background data updates
@@ -56,6 +56,8 @@ const Popup = React.createClass({
             <div className="tube-status">
                 <CloseBtn />
                 <Lines className="lines" items={this.state.items} />
+
+                // remove message for release 2.1
                 <Message id="3" msg="Extension update coming soon to use the new TfL API. There'll be a permissions update for the TfL url and a new Chrome API for checking the feed." />
             </div>
         );

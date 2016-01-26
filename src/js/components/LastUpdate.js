@@ -4,8 +4,14 @@ var Store = require('../stores/TubeStore');
 
 const LastUpdate = React.createClass({
 
+    /**
+     * Time of last API call
+     */
     _time: 0,
 
+    /**
+     * Set text for "Last updated" and check for out of date updates
+     */
     _lastUpdate: function () {
         var timepassed = h.minutesAgo(this._time),
             stateText = timepassed.text;
@@ -22,11 +28,17 @@ const LastUpdate = React.createClass({
         });
     },
 
+    /**
+     * Update state when changed
+     */
     _set: function () {
         this._time = Store.getData().updated;
         this._lastUpdate();
     },
 
+    /**
+     * Interval for checking time
+     */
     _checker: {},
 
     getInitialState: function() {
