@@ -19761,7 +19761,7 @@ var Actions = {
 
 module.exports = Actions;
 
-},{"../constants/Constants":170,"../dispatcher/Dispatcher":171}],166:[function(require,module,exports){
+},{"../constants/Constants":171,"../dispatcher/Dispatcher":172}],166:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -19811,7 +19811,71 @@ var Lines = React.createClass({
 
 module.exports = Lines;
 
-},{"./Toggle":169,"react":164}],168:[function(require,module,exports){
+},{"./Toggle":170,"react":164}],168:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+var Message = React.createClass({
+    displayName: 'Message',
+
+    // Close the message when clicked
+    _click: function _click() {
+        this.setState({ className: 'update-message hidden' });
+
+        localStorage.messageShown = this.refs.id.value;
+    },
+
+    _showMessage: function _showMessage(id) {
+
+        if (!localStorage.messageShown) {
+            console.log('1');
+            return true;
+        } else if (localStorage.messageShown < id) {
+            console.log('2');
+            return true;
+        } else {
+            console.log('3');
+            return false;
+        }
+    },
+
+    getInitialState: function getInitialState() {
+        return {
+            className: 'update-message'
+        };
+    },
+
+    render: function render() {
+        var message;
+        if (this._showMessage(this.props.id)) {
+            message = React.createElement(
+                'p',
+                null,
+                React.createElement(
+                    'strong',
+                    null,
+                    'Update:'
+                ),
+                this.props.msg,
+                React.createElement(
+                    'button',
+                    { onClick: this._click, ref: 'id', value: this.props.id, className: 'msg-close' },
+                    'ok'
+                )
+            );
+        }
+        return React.createElement(
+            'div',
+            { className: this.state.className },
+            message
+        );
+    }
+});
+
+module.exports = Message;
+
+},{"react":164}],169:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19821,6 +19885,7 @@ var Store = require('../stores/TubeStore');
 var Actions = require('../actions/Actions');
 var CloseBtn = require('./CloseBtn');
 var Lines = require('./Lines');
+var Message = require('./Message');
 
 /**
  * Retrieve the current data from the Store
@@ -19864,14 +19929,15 @@ var Popup = React.createClass({
             'div',
             { className: 'tube-status' },
             React.createElement(CloseBtn, null),
-            React.createElement(Lines, { className: 'lines', items: this.state.items })
+            React.createElement(Lines, { className: 'lines', items: this.state.items }),
+            React.createElement(Message, { id: '3', msg: 'Extension update coming soon to use the new TfL API. There\'ll be a permissions update for the TfL url and a new Chrome API for checking the feed.' })
         );
     }
 });
 
 module.exports = Popup;
 
-},{"../actions/Actions":165,"../stores/TubeStore":173,"./CloseBtn":166,"./Lines":167,"react":164,"react-dom":8}],169:[function(require,module,exports){
+},{"../actions/Actions":165,"../stores/TubeStore":174,"./CloseBtn":166,"./Lines":167,"./Message":168,"react":164,"react-dom":8}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19920,7 +19986,7 @@ var Toggle = React.createClass({
 module.exports = Toggle;
 /* Line name */ /* Line status */ /* only show details if available */
 
-},{"../actions/Actions":165,"react":164}],170:[function(require,module,exports){
+},{"../actions/Actions":165,"react":164}],171:[function(require,module,exports){
 'use strict';
 
 var keyMirror = require('keymirror');
@@ -19931,14 +19997,14 @@ module.exports = keyMirror({
   UPDATE: null
 });
 
-},{"keymirror":6}],171:[function(require,module,exports){
+},{"keymirror":6}],172:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":1}],172:[function(require,module,exports){
+},{"flux":1}],173:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19948,7 +20014,7 @@ var Popup = require('./components/Popup');
 
 ReactDOM.render(React.createElement(Popup, null), document.getElementsByClassName('main')[0]);
 
-},{"./components/Popup":168,"react":164,"react-dom":8}],173:[function(require,module,exports){
+},{"./components/Popup":169,"react":164,"react-dom":8}],174:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatcher/Dispatcher');
@@ -20233,4 +20299,4 @@ AppDispatcher.register(function (action) {
 
 module.exports = TubeStore;
 
-},{"../actions/Actions":165,"../constants/Constants":170,"../dispatcher/Dispatcher":171,"events":4,"object-assign":7}]},{},[172]);
+},{"../actions/Actions":165,"../constants/Constants":171,"../dispatcher/Dispatcher":172,"events":4,"object-assign":7}]},{},[173]);
