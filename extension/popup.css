@@ -149,6 +149,10 @@ strong {
 .update-message.hidden {
 	display: none;
 }
+.last-update {
+	padding-bottom: 3px;
+    font-size: 10.5px;
+}
 /* line colours */
 .bakerloo .line {
 	background-color: #B36305;

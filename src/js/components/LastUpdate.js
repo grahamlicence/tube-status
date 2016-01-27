@@ -65,7 +65,7 @@ const LastUpdate = React.createClass({
 
     render: function() {
         return (
-            <li>Last updated: {this.state.updated}</li>
+            <li className="last-update">Last updated: {this.state.updated}</li>
         )  
     }
 });
