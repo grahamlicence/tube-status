@@ -165,10 +165,10 @@ function filterData() {
                     _issues.partClosure.push(_response[i].name);
                     break;
             }
-            console.log(_issues)
+            // console.log(_issues)
             }
         }   
-            console.log(_data)
+            // console.log(_data)
 
         // checker for when more than one update, often this seems to be duplicate data
         if (_response[i].lineStatuses.length > 1) {
