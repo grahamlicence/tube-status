@@ -82,7 +82,8 @@ function updateShown(id, active) {
 function filterData() {
 
     var i = 0,
-        status = 0;
+        status = 0,
+        details = 0;
 
     // reset data based on active lines
     _data = setData();
@@ -117,11 +118,21 @@ function filterData() {
                 if (_response[i].lineStatuses[status].reason) {
                     _data[i].details.push(h.formatDetails(_response[i].lineStatuses[status].reason));
                 }
-            }
+
+                // remove duplicates
+                for (details = 1; details < _data[i].details.length; details++) {
+                    if (_data[i].details[details] === _data[i].details[details - 1]) {
+                        console.log('snap')
+                        _data[i].details.splice(details, 1);
+                    }
+                }
             
 
             // check severity of issue - use last in status updates
-            switch (_data[i].description[_response[i].lineStatuses.length - 1]) {
+            
+            console.log(_response[i].lineStatuses[status].statusSeverityDescription)
+
+            switch (_response[i].lineStatuses[status].statusSeverityDescription) {
                 case 'Suspended':
                 case 'Part Suspended':
                 case 'Severe Delays':
@@ -130,10 +141,20 @@ function filterData() {
                     break;
 
                 case 'Minor Delays':
+                    if (_data.severity !== 'bad') {
+                        _data.severity = 'delay';
+                    }
                     _issues.minor.push(_response[i].name);
+                    break;
+
                 case 'Planned Closure':
                 case 'Service Closed':
+                    if (_data.severity !== 'bad') {
+                        _data.severity = 'delay';
+                    }
                     _issues.noService.push(_response[i].name);
+                    break;
+
                 case 'Special Service':
                 case 'Reduced Service':
                 case 'Part Closure':
@@ -144,7 +165,10 @@ function filterData() {
                     _issues.partClosure.push(_response[i].name);
                     break;
             }
+            console.log(_issues)
+            }
         }   
+            console.log(_data)
 
         // checker for when more than one update, often this seems to be duplicate data
         if (_response[i].lineStatuses.length > 1) {
