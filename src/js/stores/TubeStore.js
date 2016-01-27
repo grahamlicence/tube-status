@@ -139,7 +139,7 @@ function filterData() {
                     case 'Part Suspended':
                     case 'Severe Delays':
                         _data.severity = 'bad';
-                        console.log(_issues.severe.indexOf(_response[i].name) < 0);
+                        // Only add each line once
                         if (_issues.severe.indexOf(_response[i].name) < 0) {
                             _issues.severe.push(_response[i].name);
                         }
@@ -149,7 +149,9 @@ function filterData() {
                         if (_data.severity !== 'bad') {
                             _data.severity = 'delay';
                         }
-                        _issues.minor.push(_response[i].name);
+                        if (_issues.minor.indexOf(_response[i].name) < 0) {
+                            _issues.minor.push(_response[i].name);
+                        }
                         break;
 
                     case 'Planned Closure':
@@ -157,7 +159,9 @@ function filterData() {
                         if (_data.severity !== 'bad') {
                             _data.severity = 'delay';
                         }
-                        _issues.noService.push(_response[i].name);
+                        if (_issues.noService.indexOf(_response[i].name) < 0) {
+                            _issues.noService.push(_response[i].name);
+                        }
                         break;
 
                     case 'Special Service':
@@ -167,7 +171,9 @@ function filterData() {
                         if (_data.severity !== 'bad') {
                             _data.severity = 'delay';
                         }
-                        _issues.partClosure.push(_response[i].name);
+                        if (_issues.partClosure.indexOf(_response[i].name) < 0) {
+                            _issues.partClosure.push(_response[i].name);
+                        }
                         break;
                 }
             }
