@@ -5,10 +5,12 @@ let helpers =  {
     formatDetails :  function(details) {
         // Add new lines for different updates 
         var formattedDetails = details.replace(/GOOD SERVICE/g, '\nGOOD SERVICE')
-                                      .replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS')
-                                      .replace(/MINOR DELAYS/g, '\nMINOR DELAYS')
-                                      .replace(/A Good Service/g, '\nA Good Service')
                                       .replace(/Good Service/g, '\nGood Service')
+                                      .replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS')
+                                      .replace(/Severe delays/g, '\nsevere delays')
+                                      .replace(/MINOR DELAYS/g, '\nMINOR DELAYS')
+                                      .replace(/Minor delays/g, '\nMinor delays')
+                                      .replace(/A Good Service/g, '\nA Good Service')
                                       .replace(/No service/g, '\nNo service');
 
         // remove line name

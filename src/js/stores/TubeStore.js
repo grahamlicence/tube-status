@@ -98,11 +98,13 @@ function filterData() {
     _data.updated = _response[0].lastUpdated;
 
     // clear down issues
+    // TODO: refactor
     _issues.severe.length = 0;
     _issues.minor.length = 0;
     _issues.noService.length = 0;
     _issues.partClosure.length = 0;
 
+    // TODO: refactor into smaller blocks
     for (; i < _response.length; i++) {
         _data[i].line = _response[i].name;
         _data[i].details = [];
@@ -112,63 +114,64 @@ function filterData() {
         if (_data[i].active) {
 
             // there can be more than one status update, eg part closed and delays on rest of line
+            // lines can also have delays on different parts, eg Overground 2 severe delays and 1 minor delay
             for (status = 0; status < _response[i].lineStatuses.length; status++) {
-                _data[i].description.push(_response[i].lineStatuses[status].statusSeverityDescription);
+                if (_data[i].description.indexOf(_response[i].lineStatuses[status].statusSeverityDescription) < 0) {
+                    _data[i].description.push(_response[i].lineStatuses[status].statusSeverityDescription);
+                }
                 
+                // only add reasons if there
                 if (_response[i].lineStatuses[status].reason) {
                     _data[i].details.push(h.formatDetails(_response[i].lineStatuses[status].reason));
                 }
 
-                // remove duplicates
+                // remove duplicate details
                 for (details = 1; details < _data[i].details.length; details++) {
                     if (_data[i].details[details] === _data[i].details[details - 1]) {
-                        console.log('snap')
                         _data[i].details.splice(details, 1);
                     }
                 }
-            
 
-            // check severity of issue - use last in status updates
-            
-            console.log(_response[i].lineStatuses[status].statusSeverityDescription)
+                console.log(i + ' - ' + _response[i].lineStatuses[status].statusSeverityDescription)
 
-            switch (_response[i].lineStatuses[status].statusSeverityDescription) {
-                case 'Suspended':
-                case 'Part Suspended':
-                case 'Severe Delays':
-                    _data.severity = 'bad';
-                    _issues.severe.push(_response[i].name);
-                    break;
+                switch (_response[i].lineStatuses[status].statusSeverityDescription) {
+                    case 'Suspended':
+                    case 'Part Suspended':
+                    case 'Severe Delays':
+                        _data.severity = 'bad';
+                        console.log(_issues.severe.indexOf(_response[i].name) < 0);
+                        if (_issues.severe.indexOf(_response[i].name) < 0) {
+                            _issues.severe.push(_response[i].name);
+                        }
+                        break;
 
-                case 'Minor Delays':
-                    if (_data.severity !== 'bad') {
-                        _data.severity = 'delay';
-                    }
-                    _issues.minor.push(_response[i].name);
-                    break;
+                    case 'Minor Delays':
+                        if (_data.severity !== 'bad') {
+                            _data.severity = 'delay';
+                        }
+                        _issues.minor.push(_response[i].name);
+                        break;
 
-                case 'Planned Closure':
-                case 'Service Closed':
-                    if (_data.severity !== 'bad') {
-                        _data.severity = 'delay';
-                    }
-                    _issues.noService.push(_response[i].name);
-                    break;
+                    case 'Planned Closure':
+                    case 'Service Closed':
+                        if (_data.severity !== 'bad') {
+                            _data.severity = 'delay';
+                        }
+                        _issues.noService.push(_response[i].name);
+                        break;
 
-                case 'Special Service':
-                case 'Reduced Service':
-                case 'Part Closure':
-                case 'Bus Service':
-                    if (_data.severity !== 'bad') {
-                        _data.severity = 'delay';
-                    }
-                    _issues.partClosure.push(_response[i].name);
-                    break;
-            }
-            // console.log(_issues)
+                    case 'Special Service':
+                    case 'Reduced Service':
+                    case 'Part Closure':
+                    case 'Bus Service':
+                        if (_data.severity !== 'bad') {
+                            _data.severity = 'delay';
+                        }
+                        _issues.partClosure.push(_response[i].name);
+                        break;
+                }
             }
         }   
-            // console.log(_data)
 
         // checker for when more than one update, often this seems to be duplicate data
         if (_response[i].lineStatuses.length > 1) {
@@ -177,6 +180,8 @@ function filterData() {
         }
 
     }
+            console.log(_issues)
+            console.log(_data)
         
     TubeStore.emitChange();
 }

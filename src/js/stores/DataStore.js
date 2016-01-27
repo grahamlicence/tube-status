@@ -36,8 +36,8 @@ function dataUpdated() {
 * API call
 */
 function getData() {
-    var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
-    // var url = 'http://localhost:8000/data.json';
+    // var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
+    var url = 'http://localhost:8000/data.json';
     _req.open(
         'GET',
         url,
