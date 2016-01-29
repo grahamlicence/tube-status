@@ -92,8 +92,10 @@ Actions.get();
 
 window.addEventListener('online',  function () {
     localStorage.error = '';
-    Actions.get();
     console.log('online')
+    
+    // short delay after coming online before API call
+    setTimeout(Actions.get, 1000);
 });
 
 window.addEventListener('offline', function () {
@@ -105,7 +107,7 @@ window.addEventListener('offline', function () {
 chrome.alarms.create('apiChecker', {
     when: 1000,
     periodInMinutes: 4
-})
+});
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
     if (alarm.name === 'apiChecker') {

@@ -70,8 +70,12 @@ const LastUpdate = React.createClass({
     },
 
     render: function() {
+        var error = this.state.errormsg ? <span className="update-error">{this.state.errormsg}</span> : '';
         return (
-            <li className="last-update">Last updated: {this.state.updated} {this.state.errormsg}</li>
+            <li className="last-update">
+                Last updated: {this.state.updated} 
+                {error}
+            </li>
         )  
     }
 });
