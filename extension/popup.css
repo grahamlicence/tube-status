@@ -153,6 +153,10 @@ strong {
 	padding-bottom: 3px;
     font-size: 10.5px;
 }
+.update-error {
+	color: #f00;
+    display: block;
+}
 /* line colours */
 .bakerloo .line {
 	background-color: #B36305;
