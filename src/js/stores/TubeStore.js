@@ -15,6 +15,7 @@ var _data = setData(),
         noService: []
     },
     _response = [],
+    _error = '',
     CHANGE_EVENT = 'change';
 
 /**
@@ -96,6 +97,9 @@ function filterData() {
 
     // save the time the data was updated
     _data.updated = _response[0].lastUpdated;
+
+    // remove errors
+    _error = localStorage.error;
 
     // clear down issues
     // TODO: refactor
@@ -209,6 +213,14 @@ const TubeStore = assign({}, EventEmitter.prototype, {
     */
     getIssues: function() {
         return _issues;
+    },
+
+    /**
+    * List current issues.
+    * @return {object}
+    */
+    getErrors: function() {
+        return _error;
     },
 
     emitChange: function() {

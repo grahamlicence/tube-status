@@ -32,6 +32,11 @@ const LastUpdate = React.createClass({
      * Update state when changed
      */
     _set: function () {
+        console.log('_set called')
+        console.log(Store.getErrors())
+        this.setState({
+            errormsg: Store.getErrors()
+        });
         this._time = Store.getData().updated;
         this._lastUpdate();
     },
@@ -43,7 +48,8 @@ const LastUpdate = React.createClass({
 
     getInitialState: function() {
         return {
-            updated: 'updating now'
+            updated: 'updating now',
+            errormsg: ''
         }
     },
     
@@ -65,7 +71,7 @@ const LastUpdate = React.createClass({
 
     render: function() {
         return (
-            <li className="last-update">Last updated: {this.state.updated}</li>
+            <li className="last-update">Last updated: {this.state.updated} {this.state.errormsg}</li>
         )  
     }
 });

@@ -90,10 +90,21 @@ TubeStore.addChangeListener(updateIcon);
 // initial API call on load
 Actions.get();
 
+window.addEventListener('online',  function () {
+    localStorage.error = '';
+    Actions.get();
+    console.log('online')
+});
+
+window.addEventListener('offline', function () {
+    localStorage.error = 'Error: unable to connect to API, showing previous data update';
+    console.log('offline')
+});
+
 //check API every 5 minutes
 chrome.alarms.create('apiChecker', {
     when: 1000,
-    periodInMinutes: 5
+    periodInMinutes: 4
 })
 
 chrome.alarms.onAlarm.addListener(function (alarm) {

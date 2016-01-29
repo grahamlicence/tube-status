@@ -47,6 +47,8 @@ const Popup = React.createClass({
             function(request) {
             if (request.msg === 'dataupdate') {
                 Actions.updateData();
+            } else if (request.msg === 'dataupdateerror') {
+                Actions.updateData();                
             }
         });
     },

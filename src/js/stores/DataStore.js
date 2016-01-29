@@ -21,15 +21,35 @@ function saveData () {
 }
 
 /**
+ * Save the API error data
+ */
+function saveError (error) {
+    localStorage.error = error;
+}
+
+/**
 * Data has been updated
 */
 function dataUpdated() {
     _response = _req.response;
     _response[0].lastUpdated = Date.now();
     saveData();
+    saveError('');
     Actions.updateData();
     // send message to background and popup that data has been updated
     chrome.runtime.sendMessage({msg: 'dataupdate'});
+}
+
+/**
+ * Error getting data
+ */
+function errorGettingData() {
+    saveError('Error: unable to connect to API, showing previous data update');
+    // chrome.runtime.sendMessage({msg: 'dataerror'});
+    // console.log(_req)
+    // Actions.updateData();
+    // send message to background and popup that data has been updated
+    chrome.runtime.sendMessage({msg: 'dataupdateerror'});
 }
 
 /**
@@ -38,12 +58,18 @@ function dataUpdated() {
 function getData() {
     var url = 'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' + Config.appId + '&app_key=' + Config.appKey;
     // var url = 'http://localhost:8000/data.json';
-    _req.open(
-        'GET',
-        url,
-        true);
-    _req.onload = dataUpdated;
-    _req.send(null);
+    
+    // check if online before updating
+    if (navigator.onLine) {
+        _req.open(
+            'GET',
+            url,
+            true);
+        _req.onload = dataUpdated;
+        _req.send(null);
+    } else {
+        errorGettingData();
+    }
 }
 
 const DataStore = assign({}, EventEmitter.prototype, {
