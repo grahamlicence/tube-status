@@ -78,6 +78,7 @@ function updateIcon() {
     var data = TubeStore.getData(),
         icon = data.severity;
 
+    // TODO add offline - grey - icon if offline > 5 minutes
     chrome.browserAction.setIcon({path: 'images/' + icon + '.png'});
     chrome.browserAction.setTitle({title: getTitle()});
 

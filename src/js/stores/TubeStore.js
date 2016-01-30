@@ -102,13 +102,14 @@ function filterData() {
     _error = localStorage.error;
 
     // clear down issues
-    // TODO: refactor
+    // TODO: refactor using Object.keys(_issues)
     _issues.severe.length = 0;
     _issues.minor.length = 0;
     _issues.noService.length = 0;
     _issues.partClosure.length = 0;
 
     // TODO: refactor into smaller blocks
+    // might be better moved to DataStore and stored in localhost
     for (; i < _response.length; i++) {
         _data[i].line = _response[i].name;
         _data[i].details = [];
@@ -160,8 +161,8 @@ function filterData() {
 
                     case 'Planned Closure':
                     case 'Service Closed':
-                        if (_data.severity !== 'bad') {
-                            _data.severity = 'delay';
+                        if (_data.severity !== 'bad' && _data.severity !== 'delay') {
+                            _data.severity = 'closure';
                         }
                         if (_issues.noService.indexOf(_response[i].name) < 0) {
                             _issues.noService.push(_response[i].name);
@@ -172,8 +173,8 @@ function filterData() {
                     case 'Reduced Service':
                     case 'Part Closure':
                     case 'Bus Service':
-                        if (_data.severity !== 'bad') {
-                            _data.severity = 'delay';
+                        if (_data.severity !== 'bad' && _data.severity !== 'delay') {
+                            _data.severity = 'closure';
                         }
                         if (_issues.partClosure.indexOf(_response[i].name) < 0) {
                             _issues.partClosure.push(_response[i].name);
