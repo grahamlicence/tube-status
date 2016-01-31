@@ -191,8 +191,8 @@ function filterData() {
         }
 
     }
-            console.log(_issues)
-            console.log(_data)
+            // console.log(_issues)
+            // console.log(_data)
         
     TubeStore.emitChange();
 }

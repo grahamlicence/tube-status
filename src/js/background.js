@@ -82,7 +82,7 @@ function updateIcon() {
     chrome.browserAction.setIcon({path: 'images/' + icon + '.png'});
     chrome.browserAction.setTitle({title: getTitle()});
 
-    console.log(getTitle())
+    // console.log(getTitle())
 }
 
 // listen for user changes to update icon
