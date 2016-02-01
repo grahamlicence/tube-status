@@ -24,6 +24,7 @@ let helpers =  {
                                            .replace('DISTRICT LINE: ', '')
                                            .replace('DLR Line: ', '')
                                            .replace('DLR LINE: ', '')
+                                           .replace('Hammersmith and City Line: ', '')
                                            .replace('Hammersmith & City Line: ', '')
                                            .replace('HAMMERSMITH & CITY LINE: ', '')
                                            .replace('Jubilee Line: ', '')
