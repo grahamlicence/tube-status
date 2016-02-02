@@ -5,8 +5,6 @@
     
     input.checked = showLastUpdate;
 
-    console.log(showLastUpdate)
-
     input.addEventListener('change', function () {
         localStorage.showLastUpdate = input.checked;
     });
