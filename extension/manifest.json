@@ -23,8 +23,6 @@
   },
   "permissions": [
     "http://cloud.tfl.gov.uk/",
-    "http://localhost:8000/",
     "alarms"
-  ],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+  ]
 }
