@@ -32,8 +32,6 @@ const LastUpdate = React.createClass({
      * Update state when changed
      */
     _set: function () {
-        console.log('_set called')
-        console.log(Store.getErrors())
         this.setState({
             errormsg: Store.getErrors()
         });
