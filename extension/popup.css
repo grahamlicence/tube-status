@@ -100,6 +100,9 @@ strong {
     padding: 2px 5px 0;
     box-sizing: border-box;
 }
+.status-item {
+	display: block;
+}
 .message {
 	display: none;
 }
@@ -146,6 +149,14 @@ strong {
 .update-message.hidden {
 	display: none;
 }
+.last-update {
+	padding-bottom: 3px;
+    font-size: 10.5px;
+}
+.update-error {
+	color: #f00;
+    display: block;
+}
 /* line colours */
 .bakerloo .line {
 	background-color: #B36305;
@@ -191,7 +202,7 @@ strong {
 	background-color: #95CDBA;
 	color: #113B92;
 }
-.overground .line {
+.london-overground .line {
 	background-color: #EE7C0E;
 	color: #fff;
 }

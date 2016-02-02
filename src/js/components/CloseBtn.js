@@ -2,12 +2,14 @@ var React = require('react');
 
 const SaveBtn = React.createClass({
 
-    // Close the popup when clicked
+    /**
+     * Close the popup when clicked
+     */
     _click: function () {
         window.close();
     },
 
-    render: function(){
+    render: function() {
         return (
             <button onClick={this._click} className="popupclosebtn" title="close popup"></button>
         )  

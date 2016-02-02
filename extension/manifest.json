@@ -15,9 +15,14 @@
   },
   "background": {
     "scripts": ["background.js"]
-  }, 
+  },
+  "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
   "permissions": [
-    "http://cloud.tfl.gov.uk/"
-  ],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+    "http://cloud.tfl.gov.uk/",
+    "alarms"
+  ]
 }

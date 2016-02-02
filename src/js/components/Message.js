@@ -2,13 +2,18 @@ var React = require('react');
 
 const Message = React.createClass({
 
-    // Close the message when clicked
+    /**
+     * Hide message when closed and store Id so not shown again
+     */
     _click: function () {
         this.setState({className: 'update-message hidden'});
 
         localStorage.messageShown = this.refs.id.value;
     },
 
+    /**
+     * Check if message has been previously closed
+     */
     _showMessage: function (id) {
 
         if (!localStorage.messageShown) {

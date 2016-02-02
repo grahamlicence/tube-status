@@ -4,11 +4,29 @@ var Constants = require('../constants/Constants');
 var Actions = {
 
   /**
-   * update the data shown
+   * remove this
    */
   update: function() {
     AppDispatcher.dispatch({
       actionType: Constants.UPDATE
+    });
+  },
+
+  /**
+   * data has been updated
+   */
+  updateData: function() {
+    AppDispatcher.dispatch({
+      actionType: Constants.UPDATEDATA
+    });
+  },
+
+  /**
+   * lines shown has been updated
+   */
+  updateLines: function() {
+    AppDispatcher.dispatch({
+      actionType: Constants.UPDATELINES
     });
   },
 
@@ -22,6 +40,7 @@ var Actions = {
   },
 
   /**
+   * Set the active lines
    * @param id {Object} Line id
    * @param active {Boolean} Line status shown
    */
