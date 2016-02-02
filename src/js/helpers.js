@@ -22,6 +22,7 @@ let helpers =  {
                                            .replace('CIRCLE LINE: ', '')
                                            .replace('District Line: ', '')
                                            .replace('DISTRICT LINE: ', '')
+                                           .replace('Docklands Light Railway: ', '')
                                            .replace('DLR Line: ', '')
                                            .replace('DLR LINE: ', '')
                                            .replace('Hammersmith and City Line: ', '')
