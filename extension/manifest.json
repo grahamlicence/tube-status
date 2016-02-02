@@ -17,6 +17,10 @@
     "scripts": ["background.js"]
   },
   "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
   "permissions": [
     "http://cloud.tfl.gov.uk/",
     "http://localhost:8000/",
