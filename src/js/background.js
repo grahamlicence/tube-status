@@ -76,13 +76,18 @@ function getTitle() {
  */
 function updateIcon() {
     var data = TubeStore.getData(),
-        icon = data.severity;
+        icon = data.severity,
+        titleText = getTitle();
 
-    // TODO add offline - grey - icon if offline > 5 minutes
+    if (data.severity === 'offline') {
+        titleText = 'Unable to connect to API';
+    }
+
     chrome.browserAction.setIcon({path: 'images/' + icon + '.png'});
-    chrome.browserAction.setTitle({title: getTitle()});
+    chrome.browserAction.setTitle({title: titleText});
 
-    // console.log(getTitle())
+    console.log(titleText)
+    console.log(data)
 }
 
 // listen for user changes to update icon
@@ -93,15 +98,15 @@ Actions.get();
 
 window.addEventListener('online',  function () {
     localStorage.error = '';
-    console.log('online')
     
     // short delay after coming online before API call
     setTimeout(Actions.get, 1000);
 });
 
 window.addEventListener('offline', function () {
-    localStorage.error = 'Error: unable to connect to API, showing previous data update';
-    console.log('offline')
+    localStorage.error = 'Unable to connect to API, showing previous data update';
+
+    // no update until the next scheduled update as data will not be out of date for a few minutes
 });
 
 //check API every 5 minutes
@@ -118,9 +123,16 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
 
 // listener for popup active lines updates
 chrome.runtime.onMessage.addListener(function (request) {
-    if (request.msg === 'iconupdate') {
+    switch(request.msg) {
+
+    case 'iconupdate':
         Actions.updateLines();
-    } else if (request.msg === 'dataoutofdate') {
+        break;
+    case 'dataoutofdate':
         Actions.get();
+        break;
+    case 'dataupdateerror':
+        updateIcon();
+        break;
     }
 });

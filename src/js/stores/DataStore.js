@@ -36,6 +36,7 @@ function dataUpdated() {
     saveData();
     saveError('');
     Actions.updateData();
+    
     // send message to background and popup that data has been updated
     chrome.runtime.sendMessage({msg: 'dataupdate'});
 }
@@ -44,10 +45,8 @@ function dataUpdated() {
  * Error getting data
  */
 function errorGettingData() {
-    saveError('Error: unable to connect to API, showing previous data update');
-    // chrome.runtime.sendMessage({msg: 'dataerror'});
-    // console.log(_req)
-    // Actions.updateData();
+    saveError('Unable to connect to API, showing previous data update');
+
     // send message to background and popup that data has been updated
     chrome.runtime.sendMessage({msg: 'dataupdateerror'});
 }

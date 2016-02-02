@@ -38,6 +38,7 @@ function setData() {
             data.push({active: true, id: i});
         }
     }
+    data.severity = 'offline';
     return data;
 }
 
@@ -137,8 +138,6 @@ function filterData() {
                     }
                 }
 
-                console.log(i + ' - ' + _response[i].lineStatuses[status].statusSeverityDescription)
-
                 switch (_response[i].lineStatuses[status].statusSeverityDescription) {
                     case 'Suspended':
                     case 'Part Suspended':
@@ -191,8 +190,6 @@ function filterData() {
         }
 
     }
-            // console.log(_issues)
-            // console.log(_data)
         
     TubeStore.emitChange();
 }
