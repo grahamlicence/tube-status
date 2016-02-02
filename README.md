@@ -7,6 +7,8 @@ Chrome London Underground status extension
 
 ### Release notes
 
+Release 2.1.0 Migration to new TfL API, icon updates, offline status, data tidy
+
 Release 2.0.2 Messaging added for release 2.1.0 changes
 
 Release 2.0.1 Minor bug fix
