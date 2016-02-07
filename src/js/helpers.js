@@ -39,7 +39,7 @@ let helpers =  {
                                            .replace('Piccadilly Line: ', '')
                                            .replace('PICCADILLY LINE: ', '')
                                            .replace('TfL Rail: ', '')
-                                           .replace('TFL RAIL: ', '')
+                                           .replace('TfL RAIL: ', '')
                                            .replace('Victoria Line: ', '')
                                            .replace('VICTORIA LINE: ', '')
                                            .replace('Waterloo and City Line: ', '')
