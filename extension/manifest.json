@@ -23,6 +23,7 @@
   },
   "permissions": [
     "http://cloud.tfl.gov.uk/",
+    "http://api.tfl.gov.uk/",
     "alarms"
   ]
 }
