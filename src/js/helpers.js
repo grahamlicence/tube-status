@@ -56,30 +56,26 @@ let helpers =  {
             now = Date.now(),
 
             // for the 30s update we want the minutes to the nearest half
-            timePassed = parseInt((now - then) / 6000) / 10;
+            minutesAgo = Math.floor((now - then) / 60000),
+            secondsAgo = Math.floor((now - then) / 1000);
 
-        if (timePassed < 0.5) {
+        if (secondsAgo < 1) {
             return {
                 text: 'just now',
-                time: 0
+                minutesAgo: minutesAgo
             };
-        } else if (timePassed < 1) {
+        } else if (minutesAgo < 1) {
             return {
-                text: '30s ago',
-                time: 0.5
-            };
-        } else if (timePassed < 2) {
-            return {
-                text: '1 minute ago',
-                time: 1
+                text: secondsAgo + 's ago',
+                minutesAgo: minutesAgo
             };
         } else {
             return {
-                text: parseInt(timePassed) + ' minutes ago',
-                time: parseInt(timePassed)
+                text: minutesAgo + ' minute' + (minutesAgo > 1 ? 's' : '') + ' ago',
+                minutesAgo: minutesAgo
             };
         }
     }
-}
+};
 
 export default helpers;

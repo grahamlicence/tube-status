@@ -17,7 +17,7 @@ const LastUpdate = React.createClass({
             stateText = timepassed.text;
 
         // chrome inactive or too much time passed, force update
-        if (timepassed.time > 10) {
+        if (timepassed.minutesAgo > 10) {
             chrome.runtime.sendMessage({msg: 'dataoutofdate'});
             stateText = 'updating now';
         }
@@ -64,7 +64,7 @@ const LastUpdate = React.createClass({
         var _this = this;
         this._checker = setInterval(function () {
             _this._lastUpdate();
-        }, 10000);
+        }, 1000);
     },
 
     render: function() {
