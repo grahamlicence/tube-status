@@ -66,7 +66,9 @@ let helpers =  {
             };
         } else if (minutesAgo < 1) {
             return {
-                text: secondsAgo + 's ago',
+
+                // add space before numbers less than 10
+                text: (secondsAgo < 10 ? String.fromCharCode(8192) : '') + secondsAgo + 's ago',
                 minutesAgo: minutesAgo
             };
         } else {
