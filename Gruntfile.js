@@ -38,6 +38,20 @@ module.exports = function(grunt) {
             }
         },
 
+        jshint: {
+            options: {
+                esversion: 6
+            },
+            dev: {
+                src: [
+                    './src/js/**/*.js'
+                ],
+                options: {
+                    reporter: require('jshint-stylish') // Makes terminal output much more readable
+                }
+            }
+        },
+
         // Minifies JS files from the JS folder into deploy folder
         uglify: {
             options: {
