@@ -6,6 +6,7 @@ const Lines = React.createClass({
 
   render: function() {
     return (
+      /* jshint ignore:start */
       <ul className={this.props.className}>
       <LastUpdate updated={this.props.items.updated} />
       {
@@ -20,7 +21,8 @@ const Lines = React.createClass({
         })
        }
       </ul>
-    )  
+      /* jshint ignore:end */
+    );
   }
 });
 

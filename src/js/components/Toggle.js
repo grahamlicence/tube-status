@@ -13,6 +13,7 @@ const Toggle = React.createClass({
 
     render: function(){
         return (
+            /* jshint ignore:start */
             <button type="button" onClick={this._click} className={"toggle-btn " + (this.props.item.active ? '' : 'off')}>
                 
                 {/* Line name */}
@@ -36,7 +37,8 @@ const Toggle = React.createClass({
                     )
                 })}
             </button>
-        )  
+            /* jshint ignore:end */
+        );
     }
 });
 

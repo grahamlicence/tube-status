@@ -28,10 +28,11 @@ const Message = React.createClass({
     getInitialState: function() {
         return {
             className: 'update-message'
-        }
+        };
     },
 
     render: function() {
+        /* jshint ignore:start */
         var message;
         if (this._showMessage(this.props.id)) {
             message = (
@@ -43,6 +44,7 @@ const Message = React.createClass({
             )
         }
         return <div className={this.state.className}>{message}</div>
+        /* jshint ignore:end */
     }
 });
 

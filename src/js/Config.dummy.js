@@ -4,6 +4,6 @@
 const Config = {
     id: '',
     key: ''
-}
+};
 
 module.exports = Config;

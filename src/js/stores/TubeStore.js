@@ -185,8 +185,8 @@ function filterData() {
 
         // checker for when more than one update, often this seems to be duplicate data
         if (_response[i].lineStatuses.length > 1) {
-            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name)
-            console.log(_response[i].lineStatuses)
+            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name);
+            console.log(_response[i].lineStatuses);
         }
 
     }
