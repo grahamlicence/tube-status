@@ -47,7 +47,8 @@ module.exports = function(grunt) {
                     './src/js/**/*.js'
                 ],
                 options: {
-                    reporter: require('jshint-stylish') // Makes terminal output much more readable
+                    // Makes terminal output much more readable
+                    reporter: require('jshint-stylish')
                 }
             }
         },
@@ -78,13 +79,13 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/**/*.js'],
-                tasks: ['browserify']
+                tasks: ['jshint', 'browserify']
             }
         }
 
     });
 
-    grunt.registerTask('release', ['clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
+    grunt.registerTask('release', ['jshint', 'clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
 
     grunt.registerTask('dev', ['browserify', 'watch']);
 
