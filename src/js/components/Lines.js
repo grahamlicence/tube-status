@@ -5,7 +5,7 @@ var LastUpdate = require('./LastUpdate');
 const Lines = React.createClass({
 
     propTypes: {
-        items: React.PropTypes.object,
+        items: React.PropTypes.array,
         className: React.PropTypes.string
     },
 

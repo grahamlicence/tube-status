@@ -1,7 +1,9 @@
-/*globals chrome */
-// background
+/*eslint no-unused-vars: 0*/
+/*globals chrome, React, DataStore */
 
+var React = require('react');
 var TubeStore = require('./stores/TubeStore');
+var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
 
 /**
