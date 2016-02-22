@@ -54,7 +54,6 @@ const Popup = React.createClass({
     },
 
     render: function(){
-        /* jshint ignore:start */
         return (
             <div className="tube-status">
                 <CloseBtn />
@@ -66,7 +65,6 @@ const Popup = React.createClass({
                 */}
             </div>
         );
-        /* jshint ignore:end */
     }
 });
 

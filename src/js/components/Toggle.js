@@ -17,7 +17,6 @@ const Toggle = React.createClass({
 
     render: function(){
         return (
-            /* jshint ignore:start */
             <button 
                 type="button" 
                 onClick={this._click} 
@@ -46,7 +45,6 @@ const Toggle = React.createClass({
                     )
                 })}
             </button>
-            /* jshint ignore:end */
         );
     }
 });

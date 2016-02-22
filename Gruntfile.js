@@ -38,26 +38,16 @@ module.exports = function(grunt) {
             }
         },
 
-        // TODO: replace with eslint
-        jshint: {
-            options: {
-                esversion: 6
-            },
-            dev: {
-                src: [
-                    './src/js/**/*.js'
-                ],
-                options: {
-                    // Makes terminal output much more readable
-                    reporter: require('jshint-stylish')
-                }
-            }
-        },
-
         eslint: {
             target: [
                 'src/js/**/*.js'
             ]
+        },
+
+        shell: {
+            test: {
+                command: 'npm test'
+            }
         },
 
         // Minifies JS files from the JS folder into deploy folder
@@ -86,8 +76,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/**/*.js'],
-                // tasks: ['jshint', 'browserify']
-                tasks: ['browserify']
+                tasks: ['eslint', 'browserify']
             }
         }
 
@@ -95,7 +84,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('release', ['jshint', 'clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
 
-    grunt.registerTask('dev', ['browserify', 'watch']);
+    grunt.registerTask('dev', ['eslint', 'browserify', 'watch']);
 
     grunt.registerTask('lint', ['eslint']);
 

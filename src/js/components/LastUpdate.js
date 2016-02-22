@@ -69,14 +69,12 @@ const LastUpdate = React.createClass({
     _checker: {},
 
     render: function() {
-        /* jshint ignore:start */
         var error = this.state.errormsg ? <span className="update-error"><strong>Error:</strong> {this.state.errormsg}</span> : '',
             showLastUpdate = JSON.parse(localStorage.showLastUpdate || true),
             lastUpdate = showLastUpdate ? 'Last updated: ' + this.state.updated : '';
         return (
             <li className="last-update">{lastUpdate} {error}</li>
-        )  
-        /* jshint ignore:end */
+        )
     }
 });
 

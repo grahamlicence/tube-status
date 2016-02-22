@@ -11,9 +11,7 @@ const CloseBtn = React.createClass({
 
     render: function() {
         return (
-            /* jshint ignore:start */
             <button onClick={this._click} className="popupclosebtn" title="close popup"></button>
-            /* jshint ignore:end */
         );
     }
 });
