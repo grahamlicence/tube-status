@@ -1,6 +1,6 @@
 var React = require('react');
 
-const SaveBtn = React.createClass({
+const CloseBtn = React.createClass({
 
     /**
      * Close the popup when clicked
@@ -18,4 +18,4 @@ const SaveBtn = React.createClass({
     }
 });
 
-module.exports = SaveBtn;
+module.exports = CloseBtn;

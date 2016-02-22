@@ -1,3 +1,4 @@
+/*globals chrome */
 var React = require('react');
 var h = require('../helpers');
 var Store = require('../stores/TubeStore');

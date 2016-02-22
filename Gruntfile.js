@@ -38,6 +38,7 @@ module.exports = function(grunt) {
             }
         },
 
+        // TODO: replace with eslint
         jshint: {
             options: {
                 esversion: 6
@@ -51,6 +52,12 @@ module.exports = function(grunt) {
                     reporter: require('jshint-stylish')
                 }
             }
+        },
+
+        eslint: {
+            target: [
+                'src/js/**/*.js'
+            ]
         },
 
         // Minifies JS files from the JS folder into deploy folder
@@ -88,5 +95,7 @@ module.exports = function(grunt) {
     grunt.registerTask('release', ['jshint', 'clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
 
     grunt.registerTask('dev', ['browserify', 'watch']);
+
+    grunt.registerTask('lint', ['eslint']);
 
 };
