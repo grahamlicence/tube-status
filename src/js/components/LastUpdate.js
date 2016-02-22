@@ -5,6 +5,29 @@ var Store = require('../stores/TubeStore');
 
 const LastUpdate = React.createClass({
 
+    getInitialState: function() {
+        return {
+            updated: 'updating now',
+            errormsg: ''
+        };
+    },
+    
+    componentWillMount: function(){
+        Store.addChangeListener(this._set);
+    },
+
+    componentDidMount: function() {
+        var _this = this;
+        this._checker = setInterval(function () {
+            _this._lastUpdate();
+        }, 1000);
+    },
+
+    componentWillUnmount: function() {
+        Store.removeChangeListener(this._set);
+        clearInterval(this._checker);
+    },
+
     /**
      * Time of last API call
      */
@@ -44,29 +67,6 @@ const LastUpdate = React.createClass({
      * Interval for checking time
      */
     _checker: {},
-
-    getInitialState: function() {
-        return {
-            updated: 'updating now',
-            errormsg: ''
-        };
-    },
-    
-    componentWillMount: function(){
-        Store.addChangeListener(this._set);
-    },
-
-    componentWillUnmount: function() {
-        Store.removeChangeListener(this._set);
-        clearInterval(this._checker);
-    },
-
-    componentDidMount: function() {
-        var _this = this;
-        this._checker = setInterval(function () {
-            _this._lastUpdate();
-        }, 1000);
-    },
 
     render: function() {
         /* jshint ignore:start */

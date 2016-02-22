@@ -2,6 +2,10 @@ var React = require('react');
 
 const Details = React.createClass({
 
+    propTypes: {
+        item: React.PropTypes.object
+    },
+
     render: function() {
         var details = this.props.item.split('\n').map(function(item, count) {
             if (item.length) {

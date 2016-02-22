@@ -28,10 +28,6 @@ const Popup = React.createClass({
         Store.addChangeListener(this._onChange);
     },
 
-    componentWillUnmount: function() {
-        Store.removeChangeListener(this._onChange);
-    },
-
     componentDidMount: function() {
         Actions.updateData();
 
@@ -44,6 +40,10 @@ const Popup = React.createClass({
                 Actions.updateData();                
             }
         });
+    },
+
+    componentWillUnmount: function() {
+        Store.removeChangeListener(this._onChange);
     },
   
     /**
