@@ -2,7 +2,7 @@ let helpers =  {
     /**
      * Split out different updates into new lines and strip out line name
      */
-    formatDetails :  function(details) {
+    formatDetails: function(details) {
         // Add new lines for different updates 
         var formattedDetails = details.replace(/GOOD SERVICE/g, '\nGOOD SERVICE')
                                       .replace(/Good Service/g, '\nGood service')
@@ -80,4 +80,4 @@ let helpers =  {
     }
 };
 
-export default helpers;
+module.exports = helpers;
