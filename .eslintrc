@@ -1,6 +1,7 @@
 {
   "extends": "eslint:recommended",
   "rules": {
+    no-console: 0,
     react/display-name: 1,
     react/jsx-boolean-value: 1,
     react/jsx-curly-spacing: 1,

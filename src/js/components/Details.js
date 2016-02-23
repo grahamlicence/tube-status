@@ -3,7 +3,7 @@ var React = require('react');
 const Details = React.createClass({
 
     propTypes: {
-        item: React.PropTypes.object
+        item: React.PropTypes.string
     },
 
     render: function() {

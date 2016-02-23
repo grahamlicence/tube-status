@@ -76,7 +76,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/**/*.js'],
-                tasks: ['eslint', 'browserify']
+                tasks: ['browserify']
             }
         }
 

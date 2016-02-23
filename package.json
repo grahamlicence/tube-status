@@ -4,12 +4,12 @@
   "main": "Gruntfile.js",
   "description": "Tube updates for London travel",
   "dependencies": {
-    "react": "~0.14.7",
-    "react-dom": "~0.14.3"
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7"
   },
   "devDependencies": {
     "babel-eslint": "^5.0.0",
-    "babel-jest": "*",
+    "babel-jest": "^6.0.1",
     "babel-preset-es2015": "6.1.2",
     "babel-preset-react": "*",
     "babelify": "^6.1.0",
@@ -27,13 +27,13 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^18.0.0",
     "grunt-shell": "^1.1.2",
-    "jest-cli": "*",
+    "jest-cli": "^0.8.2",
     "keymirror": "~0.1.0",
     "load-grunt-tasks": "^0.6.0",
     "object-assign": "^1.0.0",
     "react": "^0.14.7",
-    "react-addons-test-utils": "~0.14.0",
-    "react-dom": "^0.14.3"
+    "react-addons-test-utils": "^0.14.7",
+    "react-dom": "^0.14.7"
   },
   "license": "MIT",
   "repository": {
@@ -50,9 +50,6 @@
       "<rootDir>/node_modules/react-dom",
       "<rootDir>/node_modules/react-addons-test-utils",
       "<rootDir>/node_modules/fbjs"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/node_modules/"
     ]
   }
 }
