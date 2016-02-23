@@ -8,11 +8,9 @@ module.exports = function(grunt) {
 
         browserify: {
             options: {
-                sourceMap: true,
+                // sourceMap: true,
                 transform: [
-                    ['babelify', {
-                        loose: 'all'
-                    }]
+                    ['babelify']
                 ]
             },
             background: {
