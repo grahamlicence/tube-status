@@ -84,7 +84,8 @@ function filterData() {
 
     var i = 0,
         status = 0,
-        details = 0;
+        details = 0,
+        timepassed;
 
     // reset data based on active lines
     _data = setData();
@@ -188,6 +189,14 @@ function filterData() {
             // console.log(_response[i].lineStatuses);
         // }
 
+    }
+
+
+    // chrome inactive or too much time passed, force update
+    timepassed = h.minutesAgo(_data.updated);
+    if (timepassed.minutesAgo > 10) {
+        chrome.runtime.sendMessage({msg: 'dataoutofdate'});
+        _data.severity = 'offline';
     }
         
     TubeStore.emitChange();

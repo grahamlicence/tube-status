@@ -16,6 +16,7 @@
     "babelify": "^7.2.0",
     "eslint": "^2.2.0",
     "eslint-plugin-react": "^4.0.0",
+    "expect": "^1.14.0",
     "fbjs": "^0.7.2",
     "flux": "^2.1.1",
     "grunt": "^0.4.5",
