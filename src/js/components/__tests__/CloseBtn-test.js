@@ -1,24 +1,28 @@
-jest.dontMock('../CloseBtn');
-
+ /*
+  * Lines Test
+  */
+ 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
+import jsdom from 'mocha-jsdom';
+import expect from 'expect';
 
-const CloseBtn = require('../CloseBtn');
+import CloseBtn from '../CloseBtn';
 
 describe('CloseBtn', () => {
 
-  it('changes the text after click', () => {
+    jsdom();
 
-    // Render a closeBtn in the document
-    var closeBtn = TestUtils.renderIntoDocument(
-      <CloseBtn />
-    );
+    it('Changes the text after click', () => {
+       var closeBtn = TestUtils.renderIntoDocument(
+          <CloseBtn />
+        );
 
-    var closeBtnNode = ReactDOM.findDOMNode(closeBtn);
+        var closeBtnNode = ReactDOM.findDOMNode(closeBtn);
 
-    TestUtils.Simulate.click(closeBtnNode);
-    expect(window.close).toBeCalled;
-  });
+        TestUtils.Simulate.click(closeBtnNode);
+        expect(window.close).toBeCalled;
+    });
 
 });
