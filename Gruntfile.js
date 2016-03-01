@@ -8,11 +8,9 @@ module.exports = function(grunt) {
 
         browserify: {
             options: {
-                sourceMap: true,
+                // sourceMap: true,
                 transform: [
-                    ['babelify', {
-                        loose: 'all'
-                    }]
+                    ['babelify']
                 ]
             },
             background: {
@@ -35,6 +33,18 @@ module.exports = function(grunt) {
                 src: '**/*',
                 dest: 'production',
                 expand: true
+            }
+        },
+
+        eslint: {
+            target: [
+                'src/js/**/*.js'
+            ]
+        },
+
+        shell: {
+            test: {
+                command: 'npm test'
             }
         },
 
@@ -70,8 +80,10 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.registerTask('release', ['clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
+    grunt.registerTask('release', ['shell:test', 'eslint', 'clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
 
-    grunt.registerTask('dev', ['browserify', 'watch']);
+    grunt.registerTask('dev', ['eslint', 'browserify', 'watch']);
+
+    grunt.registerTask('lint', ['eslint']);
 
 };

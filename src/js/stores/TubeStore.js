@@ -1,9 +1,8 @@
+/*globals chrome */
 var AppDispatcher = require('../dispatcher/Dispatcher');
 var EventEmitter = require('events').EventEmitter;
 var Constants = require('../constants/Constants');
 var assign = require('object-assign');
-var Actions = require('../actions/Actions');
-var Config = require('../Config');
 var h = require('../helpers');
 
 // service data
@@ -85,7 +84,8 @@ function filterData() {
 
     var i = 0,
         status = 0,
-        details = 0;
+        details = 0,
+        timepassed;
 
     // reset data based on active lines
     _data = setData();
@@ -184,11 +184,19 @@ function filterData() {
         }   
 
         // checker for when more than one update, often this seems to be duplicate data
-        if (_response[i].lineStatuses.length > 1) {
-            console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name)
-            console.log(_response[i].lineStatuses)
-        }
+        // if (_response[i].lineStatuses.length > 1) {
+            // console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name);
+            // console.log(_response[i].lineStatuses);
+        // }
 
+    }
+
+
+    // chrome inactive or too much time passed, force update
+    timepassed = h.minutesAgo(_data.updated);
+    if (timepassed.minutesAgo > 10) {
+        chrome.runtime.sendMessage({msg: 'dataoutofdate'});
+        _data.severity = 'offline';
     }
         
     TubeStore.emitChange();

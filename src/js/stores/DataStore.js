@@ -1,3 +1,4 @@
+/*globals chrome */
 var AppDispatcher = require('../dispatcher/Dispatcher');
 var EventEmitter = require('events').EventEmitter;
 var Constants = require('../constants/Constants');

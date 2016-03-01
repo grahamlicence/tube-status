@@ -1,6 +1,7 @@
-// background
-var React = require('react');
+/*eslint no-unused-vars: 0*/
+/*globals chrome, React, DataStore */
 
+var React = require('react');
 var TubeStore = require('./stores/TubeStore');
 var DataStore = require('./stores/DataStore');
 var Actions = require('./actions/Actions');
@@ -9,7 +10,7 @@ var Actions = require('./actions/Actions');
   * Return lines with issues
   * @return {string} 
   */
-function lineIssue(lines, issueText, lastLine) {
+function lineIssue(lines, issueText) {
     var text = '',
         divider = ', ',
         dividerText = '';
@@ -42,7 +43,6 @@ function lineIssue(lines, issueText, lastLine) {
   */
 function getTitle() {
     var title = '',
-        divider = ', ',
         issueType = [
             'severe',
             'minor',

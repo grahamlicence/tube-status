@@ -4,6 +4,10 @@ var Details = require('./Details');
 
 const Toggle = React.createClass({
 
+    propTypes: {
+        item: React.PropTypes.object
+    },
+
     /**
      * Update saved lines
      */
@@ -13,7 +17,10 @@ const Toggle = React.createClass({
 
     render: function(){
         return (
-            <button type="button" onClick={this._click} className={"toggle-btn " + (this.props.item.active ? '' : 'off')}>
+            <button 
+                type="button" 
+                onClick={this._click} 
+                className={"toggle-btn " + (this.props.item.active ? '' : 'off')}>
                 
                 {/* Line name */}
                 <span className="line">{this.props.item.line}</span>
@@ -22,7 +29,8 @@ const Toggle = React.createClass({
                 <span className="status">
                     {this.props.item.description.map(function(item, count) {
                       return (
-                            <span key={count} className="status-item">{item}</span>
+                            <span key={count} 
+                                className="status-item">{item}</span>
                         )
                     })}
                 </span>
@@ -32,11 +40,12 @@ const Toggle = React.createClass({
                 
                 {this.props.item.details.map(function(item, count) {
                   return (
-                        <Details key={count} item={item} />
+                        <Details key={count} 
+                            item={item} />
                     )
                 })}
             </button>
-        )  
+        );
     }
 });
 

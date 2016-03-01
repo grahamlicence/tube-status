@@ -2,6 +2,10 @@ var React = require('react');
 
 const Details = React.createClass({
 
+    propTypes: {
+        item: React.PropTypes.string
+    },
+
     render: function() {
         var details = this.props.item.split('\n').map(function(item, count) {
             if (item.length) {
@@ -9,7 +13,7 @@ const Details = React.createClass({
                     <span key={count} className="details">
                         {item}
                     </span>
-                )
+                );
             }
         });
 
@@ -17,7 +21,7 @@ const Details = React.createClass({
             <span className="details-wrapper">
                 {details}
             </span>
-        )  
+        );
     }
 });
 

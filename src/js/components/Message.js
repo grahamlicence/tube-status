@@ -2,6 +2,17 @@ var React = require('react');
 
 const Message = React.createClass({
 
+    propTypes: {
+        id: React.PropTypes.string,
+        msg: React.PropTypes.string
+    },
+
+    getInitialState: function() {
+        return {
+            className: 'update-message'
+        };
+    },
+
     /**
      * Hide message when closed and store Id so not shown again
      */
@@ -22,12 +33,6 @@ const Message = React.createClass({
             return true;
         } else {
             return false;
-        }
-    },
-
-    getInitialState: function() {
-        return {
-            className: 'update-message'
         }
     },
 

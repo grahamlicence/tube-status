@@ -1,6 +1,6 @@
 var React = require('react');
 
-const SaveBtn = React.createClass({
+const CloseBtn = React.createClass({
 
     /**
      * Close the popup when clicked
@@ -12,8 +12,8 @@ const SaveBtn = React.createClass({
     render: function() {
         return (
             <button onClick={this._click} className="popupclosebtn" title="close popup"></button>
-        )  
+        );
     }
 });
 
-module.exports = SaveBtn;
+module.exports = CloseBtn;

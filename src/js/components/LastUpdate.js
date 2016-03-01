@@ -1,8 +1,32 @@
+/*globals chrome */
 var React = require('react');
 var h = require('../helpers');
 var Store = require('../stores/TubeStore');
 
 const LastUpdate = React.createClass({
+
+    getInitialState: function() {
+        return {
+            updated: 'updating now',
+            errormsg: ''
+        };
+    },
+    
+    componentWillMount: function(){
+        Store.addChangeListener(this._set);
+    },
+
+    componentDidMount: function() {
+        var _this = this;
+        this._checker = setInterval(function () {
+            _this._lastUpdate();
+        }, 1000);
+    },
+
+    componentWillUnmount: function() {
+        Store.removeChangeListener(this._set);
+        clearInterval(this._checker);
+    },
 
     /**
      * Time of last API call
@@ -17,7 +41,7 @@ const LastUpdate = React.createClass({
             stateText = timepassed.text;
 
         // chrome inactive or too much time passed, force update
-        if (timepassed.time > 10) {
+        if (timepassed.minutesAgo > 10) {
             chrome.runtime.sendMessage({msg: 'dataoutofdate'});
             stateText = 'updating now';
         }
@@ -44,36 +68,13 @@ const LastUpdate = React.createClass({
      */
     _checker: {},
 
-    getInitialState: function() {
-        return {
-            updated: 'updating now',
-            errormsg: ''
-        }
-    },
-    
-    componentWillMount: function(){
-        Store.addChangeListener(this._set);
-    },
-
-    componentWillUnmount: function() {
-        Store.removeChangeListener(this._set);
-        clearInterval(this._checker);
-    },
-
-    componentDidMount: function() {
-        var _this = this;
-        this._checker = setInterval(function () {
-            _this._lastUpdate();
-        }, 10000);
-    },
-
     render: function() {
         var error = this.state.errormsg ? <span className="update-error"><strong>Error:</strong> {this.state.errormsg}</span> : '',
             showLastUpdate = JSON.parse(localStorage.showLastUpdate || true),
             lastUpdate = showLastUpdate ? 'Last updated: ' + this.state.updated : '';
         return (
             <li className="last-update">{lastUpdate} {error}</li>
-        )  
+        )
     }
 });
 
