@@ -14,7 +14,7 @@ describe('Details', () => {
 
     jsdom();
 
-    it('Changes the text after click', () => {
+    it('Displays the content correctly', () => {
        var details = TestUtils.renderIntoDocument(
             <Details key='1' item='Severe delays due to earlier emergency engineering work.'/>
         );

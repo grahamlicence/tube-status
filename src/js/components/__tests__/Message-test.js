@@ -25,30 +25,49 @@ describe('Message', () => {
 
     jsdom();
 
-    before(function() {
-        message = TestUtils.renderIntoDocument(
-            <Message id="3" msg="Extension message" />
-        );
+    describe('Message actions', () => {
 
-        buttonNode = TestUtils.findRenderedDOMComponentWithTag(
-           message, 'button'
-        );
-        
+        before(function() {
+            message = TestUtils.renderIntoDocument(
+                <Message id="3" msg="Extension message" />
+            );
+
+            buttonNode = TestUtils.findRenderedDOMComponentWithTag(
+               message, 'button'
+            );
+            
+        });
+
+        it('Saves the latest message id after click', () => {
+            
+            // set previous message shown
+            localStorage.messageShown = 2;
+
+            TestUtils.Simulate.click(buttonNode);
+            expect(localStorage.messageShown).toBe('3');
+        });
+
+        it('Hides the message after click', () => {
+            expect(ReactDOM.findDOMNode(message).className).toBe('update-message hidden');
+        });
+
     });
 
-    it('Saves the latest message id after click', () => {
-        
-        // set previous message shown
-        localStorage.messageShown = 2;
+    describe('Message not shown', () => {
 
-        TestUtils.Simulate.click(buttonNode);
-        expect(localStorage.messageShown).toBe('3');
-    });
+        it('Doesn\'t show if already shown/clicked', () => {
 
-    
-    it('hides the message after click', () => {
-        expect(ReactDOM.findDOMNode(message).className).toBe('update-message hidden');
+            let renderer = createRenderer();
+            localStorage.messageShown = 4;
+            renderer.render(<Message id="3" msg="Extension message" />);
+
+            let actualElement = renderer.getRenderOutput();
+            let expectedElement = (<div className="update-message" />);
+            expect(actualElement).toEqualJSX(expectedElement);
+
+        });
+
+
     });
 
 });
-
