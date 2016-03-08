@@ -5,6 +5,10 @@ var Store = require('../stores/TubeStore');
 
 const LastUpdate = React.createClass({
 
+    propTypes: {
+        updated: React.PropTypes.number
+    },
+
     getInitialState: function() {
         return {
             updated: 'updating now',
@@ -14,10 +18,15 @@ const LastUpdate = React.createClass({
     
     componentWillMount: function(){
         Store.addChangeListener(this._set);
+
+        // pass in the initial time 
+        this._time = this.props.updated;
+        this._lastUpdate();
     },
 
     componentDidMount: function() {
         var _this = this;
+
         this._checker = setInterval(function () {
             _this._lastUpdate();
         }, 1000);
@@ -72,6 +81,7 @@ const LastUpdate = React.createClass({
         var error = this.state.errormsg ? <span className="update-error"><strong>Error:</strong> {this.state.errormsg}</span> : '',
             showLastUpdate = JSON.parse(localStorage.showLastUpdate || true),
             lastUpdate = showLastUpdate ? 'Last updated: ' + this.state.updated : '';
+
         return (
             <li className="last-update">{lastUpdate} {error}</li>
         )
