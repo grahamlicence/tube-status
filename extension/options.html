@@ -3,22 +3,28 @@
     <head>
         <title>Tube status</title>
     </head>
+    <style type="text/css">
+        footer p {
+            font-size: 10px;
+            line-height: 1;
+        }
+    </style>
     <body>
         <header>
             <p>Get updates on underground lines</p>
-            <p>You can disable updates for a line by clicking on it in the dropdown</p>
+            <p>You can disable updates for a line by clicking on it in the popup</p>
         </header>
         <main class="main">
             <form>
                 <input type="checkbox" checked="checked" id="showLastUpdate" />
-                <label for="showLastUpdate">Show last updated</label>
+                <label for="showLastUpdate">Show last updated message (<code>Last updated: 30s ago</code>)</label>
             </form>
         </main>
         <footer>
             <p>
-                Developer details: <br />
+                <strong>Developer details:</strong> <br />
                 Version 2.1.1 <br />
-                Built by Graham Licence
+                Built with React by Graham Licence <br />
             </p>
             <p><a href="https://github.com/grahamlicence/tube-status">github.com/grahamlicence/tube-status</a></p>
         </footer>
