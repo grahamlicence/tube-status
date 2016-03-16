@@ -29,6 +29,7 @@ const Popup = React.createClass({
     },
 
     componentDidMount: function() {
+        var self = this;
         Actions.updateData();
 
         // listener for background data updates
@@ -37,7 +38,15 @@ const Popup = React.createClass({
             if (request.msg === 'dataupdate') {
                 Actions.updateData();
             } else if (request.msg === 'dataupdateerror') {
-                Actions.updateData();                
+                if (!self._updateError) {
+                    self._updateError = true;
+                    Actions.updateData();
+
+                    // add a delay to prevent multiple update requests
+                    setTimeout(function () {
+                        self._updateError = false;
+                    }, 30000);
+                }
             }
         });
     },
@@ -45,6 +54,8 @@ const Popup = React.createClass({
     componentWillUnmount: function() {
         Store.removeChangeListener(this._onChange);
     },
+
+    _updateError: false,
   
     /**
      * Update state when changed

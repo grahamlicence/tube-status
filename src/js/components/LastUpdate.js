@@ -43,16 +43,29 @@ const LastUpdate = React.createClass({
     _time: 0,
 
     /**
+     * Requested update
+     */
+    _requestedUpdate: false,
+
+    /**
      * Set text for "Last updated" and check for out of date updates
      */
     _lastUpdate: function () {
-        var timepassed = h.minutesAgo(this._time),
+        var self = this,
+            timepassed = h.minutesAgo(this._time),
             stateText = timepassed.text;
 
         // chrome inactive or too much time passed, force update
-        if (timepassed.minutesAgo > 10) {
+        if (timepassed.minutesAgo > 10 && !this._requestedUpdate) {
+            this._requestedUpdate = true;
             chrome.runtime.sendMessage({msg: 'dataoutofdate'});
             stateText = 'updating now';
+
+            // only send request every 60s
+            // there's a listener for coming online if currently offline
+            setTimeout(function () {
+                self._requestedUpdate = false;
+            }, 60000);
         }
 
         // update state
