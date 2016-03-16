@@ -54,29 +54,28 @@ let helpers =  {
     minutesAgo: function (time) {
         var then = new Date(time),
             now = Date.now(),
+            text = '',
 
             // for the 30s update we want the minutes to the nearest half
+            hoursAgo = Math.floor((now - then) / 3600000),
             minutesAgo = Math.floor((now - then) / 60000),
             secondsAgo = Math.floor((now - then) / 1000);
 
         if (secondsAgo < 1) {
-            return {
-                text: 'just now',
-                minutesAgo: minutesAgo
-            };
+            text = 'just now'
         } else if (minutesAgo < 1) {
-            return {
-
-                // add space before numbers less than 10
-                text: (secondsAgo < 10 ? String.fromCharCode(8192) : '') + secondsAgo + 's ago',
-                minutesAgo: minutesAgo
-            };
+            // add space before numbers less than 10
+            text = (secondsAgo < 10 ? String.fromCharCode(8192) : '') + secondsAgo + 's ago'
+        } else if (minutesAgo > 60) {
+            text = hoursAgo + ' hours ago'
         } else {
-            return {
-                text: minutesAgo + ' minute' + (minutesAgo > 1 ? 's' : '') + ' ago',
-                minutesAgo: minutesAgo
-            };
+            text = minutesAgo + ' minute' + (minutesAgo > 1 ? 's' : '') + ' ago'
         }
+
+        return {
+            text: text,
+            minutesAgo: minutesAgo
+        };
     }
 };
 
