@@ -1,5 +1,7 @@
 ### Release notes
 
+Release 2.1.2 Bug fix for offline update checks
+
 Release 2.1.1 Permissions update for new API
 
 Release 2.1.0 Migration to new TfL API, icon updates, offline status, data tidy
