@@ -8,6 +8,7 @@ var h = require('../helpers');
 // service data
 var _data = setData(),
     _issues = {
+        suspended: [],
         severe: [],
         minor: [],
         partClosure: [],
@@ -104,13 +105,14 @@ function filterData() {
 
     // clear down issues
     // TODO: refactor using Object.keys(_issues)
+    _issues.suspended.length = 0;
     _issues.severe.length = 0;
     _issues.minor.length = 0;
     _issues.noService.length = 0;
     _issues.partClosure.length = 0;
 
     // TODO: refactor into smaller blocks
-    // might be better moved to DataStore and stored in localhost
+    // might be better moved to DataStore and stored in localhost, so all done in background.js
     for (; i < _response.length; i++) {
         _data[i].line = _response[i].name;
         _data[i].details = [];
@@ -133,17 +135,24 @@ function filterData() {
 
                 // remove duplicate details
                 for (details = 1; details < _data[i].details.length; details++) {
-                    if (_data[i].details[details] === _data[i].details[details - 1]) {
+
+                    // remove spaces when checking as sometimes has trailing space in details
+                    if (_data[i].details[details].replace(/\s+/g, '') === _data[i].details[details - 1].replace(/\s+/g, '')) {
                         _data[i].details.splice(details, 1);
                     }
                 }
 
                 switch (_response[i].lineStatuses[status].statusSeverityDescription) {
                     case 'Suspended':
+                        _data.severity = 'bad';
+                        // Only add each line once
+                        if (_issues.suspended.indexOf(_response[i].name) < 0) {
+                            _issues.suspended.push(_response[i].name);
+                        }
+                        break;
                     case 'Part Suspended':
                     case 'Severe Delays':
                         _data.severity = 'bad';
-                        // Only add each line once
                         if (_issues.severe.indexOf(_response[i].name) < 0) {
                             _issues.severe.push(_response[i].name);
                         }

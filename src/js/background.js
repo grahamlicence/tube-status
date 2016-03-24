@@ -44,12 +44,14 @@ function lineIssue(lines, issueText) {
 function getTitle() {
     var title = '',
         issueType = [
+            'suspended',
             'severe',
             'minor',
             'partClosure',
             'noService'
         ],
         text = [
+            'Suspended service on ',
             'Severe delays on ',
             'Minor delays on ',
             'Part Closure of ',
