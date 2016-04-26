@@ -4,8 +4,8 @@
   "main": "Gruntfile.js",
   "description": "Tube updates for London travel",
   "dependencies": {
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7"
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -39,9 +39,9 @@
     "mocha-jsdom": "^1.1.0",
     "mock-local-storage": "^1.0.2",
     "object-assign": "^4.0.1",
-    "react": "^0.14.7",
-    "react-addons-test-utils": "^0.14.7",
-    "react-dom": "^0.14.7",
+    "react": "^15.0.1",
+    "react-addons-test-utils": "^15.0.1",
+    "react-dom": "^15.0.1",
     "sinon-chrome": "^1.1.2"
   },
   "license": "MIT",
