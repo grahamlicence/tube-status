@@ -1,5 +1,7 @@
 ### Release notes
 
+Release 2.1.4 Updgrade React to 15.3.1
+
 Release 2.1.3 Updates for tube strike data
 
 Release 2.1.2 Bug fix for offline update checks
