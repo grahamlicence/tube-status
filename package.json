@@ -1,6 +1,6 @@
 {
   "name": "tube-service-status",
-  "version": "2.1.4",
+  "version": "2.1.6",
   "main": "Gruntfile.js",
   "description": "Tube updates for London travel",
   "dependencies": {
@@ -47,7 +47,9 @@
   },
   "scripts": {
     "test": "mocha --opts mocha.opts",
-    "test:watch": "mocha --opts mocha.opts --watch --reporter min"
+    "test:watch": "mocha --opts mocha.opts --watch --reporter min",
+    "start": "grunt dev",
+    "build": "NODE_ENV=production grunt release"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
