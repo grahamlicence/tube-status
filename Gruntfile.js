@@ -80,7 +80,7 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.registerTask('release', ['shell:test', 'eslint', 'clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
+    grunt.registerTask('release', ['eslint', 'clean', 'browserify', 'copy:prod', 'cssmin', 'uglify']);
 
     grunt.registerTask('dev', ['eslint', 'browserify', 'watch']);
 
