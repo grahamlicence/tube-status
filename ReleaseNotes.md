@@ -2,7 +2,7 @@
 
 Release 2.1.5 Minor updates for html markup in line status
 
-Release 2.1.4 Minor bug fixes
+Release 2.1.4 Updgrade React to 15.3.1
 
 Release 2.1.3 Updates for tube strike data
 

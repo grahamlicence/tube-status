@@ -5,13 +5,15 @@ let helpers =  {
     formatDetails: function(details) {
         // Add new lines for different updates 
         var formattedDetails = details.replace(/GOOD SERVICE/g, '\nGOOD SERVICE')
-                                      .replace(/Good Service/g, '\nGood service')
+                                      .replace(/Good Service/g, '\nGOOD SERVICE')
                                       .replace(/SEVERE DELAYS/g, '\nSEVERE DELAYS')
-                                      .replace(/Severe delays/g, '\nSevere delays')
+                                      .replace(/Severe Delays/g, '\nSEVERE DELAYS')
+                                      .replace(/Severe delays/g, '\nSEVERE DELAYS')
                                       .replace(/MINOR DELAYS/g, '\nMINOR DELAYS')
-                                      .replace(/Minor delays/g, '\nMinor delays')
+                                      .replace(/Minor Delays/g, '\nMINOR DELAYS')
+                                      .replace(/Minor delays/g, '\nMINOR DELAYS')
                                       .replace(/A Good Service/g, '\nA Good Service')
-                                      .replace(/No service/g, '\nNo service');
+                                      .replace(/No service/g, '\nNO SERVICE');
 
         // remove line name
         formattedDetails = formattedDetails.replace('Bakerloo Line: ', '')
