@@ -1,6 +1,6 @@
 {
   "name": "tube-service-status",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "main": "Gruntfile.js",
   "description": "Tube updates for London travel",
   "dependencies": {
