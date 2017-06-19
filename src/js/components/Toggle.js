@@ -39,6 +39,7 @@ const Toggle = React.createClass({
                 <span className={"toggle " + (this.props.item.active ? 'on' : 'off')}></span>
                 
                 {this.props.item.details.map(function(item, count) {
+                    console.log(item)
                   return (
                         <Details key={count} 
                             item={item} />

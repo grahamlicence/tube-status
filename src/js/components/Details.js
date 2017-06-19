@@ -7,6 +7,17 @@ const Details = React.createClass({
     },
 
     render: function() {
+        const hasHtml = this.props.item.indexOf('<P>') > -1;
+
+        if (hasHtml) {
+            console.log('HAS HTML')
+            return (
+                <span className="details-wrapper">
+                    <span className="details" dangerouslySetInnerHTML={{__html: this.props.item}} />
+                </span>
+            )
+        }
+
         var details = this.props.item.split('\n').map(function(item, count) {
             if (item.length) {
                 return (
