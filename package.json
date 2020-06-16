@@ -28,7 +28,7 @@
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0",
-    "grunt-shell": "^1.1.2",
+    "grunt-shell": "^3.0.1",
     "jest-cli": "^15.1.1",
     "jsdom": "^9.5.0",
     "keymirror": "^0.1.1",
