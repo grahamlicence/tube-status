@@ -33,7 +33,7 @@
     "jsdom": "^9.5.0",
     "keymirror": "^0.1.1",
     "load-grunt-tasks": "^3.4.0",
-    "mocha": "^3.0.2",
+    "mocha": "^8.0.1",
     "mocha-jsdom": "^1.1.0",
     "mock-local-storage": "^1.0.2",
     "object-assign": "^4.0.1",
