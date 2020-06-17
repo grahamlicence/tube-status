@@ -32,7 +32,7 @@
     "jest-cli": "^15.1.1",
     "jsdom": "^9.5.0",
     "keymirror": "^0.1.1",
-    "load-grunt-tasks": "^3.4.0",
+    "load-grunt-tasks": "^5.1.0",
     "mocha": "^3.0.2",
     "mocha-jsdom": "^1.1.0",
     "mock-local-storage": "^1.0.2",
