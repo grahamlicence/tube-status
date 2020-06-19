@@ -30,7 +30,7 @@
     "grunt-eslint": "^19.0.0",
     "grunt-shell": "^1.1.2",
     "jest-cli": "^15.1.1",
-    "jsdom": "^9.5.0",
+    "jsdom": "^16.2.2",
     "keymirror": "^0.1.1",
     "load-grunt-tasks": "^3.4.0",
     "mocha": "^3.0.2",
