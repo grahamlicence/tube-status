@@ -4,7 +4,7 @@
   "main": "Gruntfile.js",
   "description": "Tube updates for London travel",
   "dependencies": {
-    "react": "^15.3.1",
+    "react": "^16.13.1",
     "react-dom": "^15.3.1"
   },
   "devDependencies": {
