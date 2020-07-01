@@ -1,11 +1,20 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Tube events</title>
-		<link rel="stylesheet" href="popup.css" />
-	</head>
-	<body>
-        <main class="main"></main>
-		<script src="popup.js"></script>
-	</body>
+  <head>
+    <title>Tube events</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="main">
+      <div className="tube-status">
+        <button class="popupclosebtn" title="close popup"></button>
+
+        <ul class="lines">
+          <li className="last-update">Last updated: <span class="last-updated"></span></li>
+        </ul>
+      </div>
+    </main>
+    <script src="helpers.js"></script>
+    <script src="popup.js"></script>
+  </body>
 </html>
