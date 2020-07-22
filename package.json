@@ -13,7 +13,7 @@
     "babel-jest": "^15.0.0",
     "babel-preset-es2015": "^6.5.0",
     "babelify": "^7.2.0",
-    "eslint": "^3.5.0",
+    "eslint": "^7.5.0",
     "eslint-plugin-react": "^6.2.2",
     "expect": "^1.14.0",
     "expect-jsx": "^2.3.0",
