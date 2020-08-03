@@ -12,7 +12,7 @@ const _issues = {
 };
 
 /**
- * Set the data for the lines shown and save to localhost
+ * Set the data for which lines shown
  * @return {object} data - array of lines
  */
 function setData() {
@@ -164,11 +164,13 @@ function filterData() {
   console.log('data parsed', _data);
   // TubeStore.emitChange();
 
-  console.log(JSON.stringify(_data));
+  // console.log(JSON.stringify(_data));
 
   localStorage.lineData = JSON.stringify(_data);
 
   updateIcon();
+
+  chrome.runtime.sendMessage({ msg: 'dataupdate' });
 }
 
 /**
@@ -267,6 +269,7 @@ const dataUpdated = () => {
   _response = _req.response;
   _response[0].lastUpdated = Date.now();
   console.log('data', _response);
+  console.log('>>>dataupdated<<<');
   saveData();
   filterData();
   // saveError('');
@@ -276,12 +279,12 @@ const dataUpdated = () => {
  * API call
  */
 const getData = () => {
-  // var url =
-  //   'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' +
-  //   config.appId +
-  //   '&app_key=' +
-  //   config.appKey;
-  var url = 'http://localhost:8080/data.json';
+  var url =
+    'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' +
+    config.appId +
+    '&app_key=' +
+    config.appKey;
+  // var url = 'http://localhost:8080/data.json';
 
   // check if online before updating
   if (navigator.onLine) {
@@ -301,6 +304,7 @@ const init = () => {
   //check API every 5 minutes
   chrome.alarms.create('apiChecker', {
     when: 1000,
+    // periodInMinutes: 0.1,
     periodInMinutes: 4,
   });
 
