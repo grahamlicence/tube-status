@@ -27,7 +27,7 @@ const popup = {
           return `<span class="details">${detail}</span>`;
         }
       })
-      .join(' ');
+      .join('');
   },
 
   populateLines: () => {
@@ -54,7 +54,7 @@ const popup = {
         <span class="message">No updates set</span>
         <span class="toggle ${item.active ? 'on' : 'off'}"></span>
 
-        <span class="details-wrapper">${item.details.map(popup.renderDetails)}</span>
+        <span class="details-wrapper">${item.details.map(popup.renderDetails).join('')}</span>
       `;
       lineButton.className = `toggle-btn ${item.active ? '' : 'off'}`;
     });
@@ -72,17 +72,26 @@ const popup = {
 
   listenToToggle: () => {
     const lines = document.querySelectorAll('.lines button');
-    console.log(lines);
 
-    [].map.call(lines, (line) => {
-      console.log(line);
+    [].map.call(lines, (line, ind) => {
       line.addEventListener('click', (e) => {
-        console.log('clicked on', line.getAttribute('data-type'));
+        popup.saveSettings(ind, !this.data[ind].active);
       });
     });
   },
 
+  saveSettings: (index, state) => {
+    const settings = JSON.parse(localStorage.getItem('lines'));
+    settings[index] = state ? 1 : 0;
+    localStorage.setItem('lines', JSON.stringify(settings));
+    chrome.runtime.sendMessage({ msg: 'settingsupdate' });
+  },
+
   initPopup: () => {
+    if (!localStorage.lines) {
+      localStorage.lines;
+    }
+
     popup.updateWithData();
     popup.listenToToggle();
 

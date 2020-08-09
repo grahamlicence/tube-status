@@ -20,13 +20,15 @@ function setData() {
     i = 0,
     LINES = 14, // number of TfL managed lines
     data = [];
+  const lines = localStorage.getItem('lines');
 
-  if (localStorage.lines) {
-    opt = JSON.parse(localStorage.lines);
+  if (lines) {
+    opt = JSON.parse(lines);
     for (i; i < LINES; i++) {
       data.push({ active: opt[i] === 1, id: i });
     }
   } else {
+    localStorage.setItem('lines', JSON.stringify([...Array(14).fill(1)]));
     for (i; i < LINES; i++) {
       data.push({ active: true, id: i });
     }
@@ -146,25 +148,7 @@ function filterData() {
         }
       }
     }
-
-    // checker for when more than one update, often this seems to be duplicate data
-    // if (_response[i].lineStatuses.length > 1) {
-    // console.log('Statuses: ' + _response[i].lineStatuses.length + ', ' + _response[i].name);
-    // console.log(_response[i].lineStatuses);
-    // }
   }
-
-  // chrome inactive or too much time passed, force update
-  // timepassed = helpers.minutesAgo(_data.updated);
-  // if (timepassed.minutesAgo > 10) {
-  //     chrome.runtime.sendMessage({msg: 'dataoutofdate'});
-  //     _data.severity = 'offline';
-  // }
-
-  console.log('data parsed', _data);
-  // TubeStore.emitChange();
-
-  // console.log(JSON.stringify(_data));
 
   localStorage.lineData = JSON.stringify(_data);
 
@@ -268,11 +252,8 @@ function saveError(error) {
 const dataUpdated = () => {
   _response = _req.response;
   _response[0].lastUpdated = Date.now();
-  console.log('data', _response);
-  console.log('>>>dataupdated<<<');
   saveData();
   filterData();
-  // saveError('');
 };
 
 /**
@@ -297,20 +278,23 @@ const getData = () => {
 };
 
 const init = () => {
-  console.log('init background');
-
   getData();
 
   //check API every 5 minutes
   chrome.alarms.create('apiChecker', {
     when: 1000,
-    // periodInMinutes: 0.1,
     periodInMinutes: 4,
   });
 
   chrome.alarms.onAlarm.addListener(function (alarm) {
     if (alarm.name === 'apiChecker') {
       getData();
+    }
+  });
+
+  chrome.runtime.onMessage.addListener((request) => {
+    if (request.msg === 'settingsupdate') {
+      filterData();
     }
   });
 };

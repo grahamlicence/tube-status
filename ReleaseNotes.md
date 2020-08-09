@@ -1,6 +1,6 @@
 ### Release notes
 
-Release 3.0.0 App refactor to simplify JS
+Release 3.0.0 App refactor to simplify JS, removes react
 
 Release 2.1.6 Minor bug fix
 

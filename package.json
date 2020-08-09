@@ -4,8 +4,8 @@
   "author": "Graham Licence",
   "description": "Tube updates for London travel",
   "devDependencies": {
+    "@babel/core": "^7.11.1",
     "@babel/preset-env": "7.9.5",
-    "@condenast/cn-brands": "10.1.2",
     "babel-jest": "25.4.0",
     "http-server": "^0.12.3",
     "jest": "25.4.0",
