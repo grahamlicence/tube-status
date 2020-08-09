@@ -1,5 +1,7 @@
 ### Release notes
 
+Release 3.0.0 App refactor to simplify JS, removes react
+
 Release 2.1.6 Minor bug fix
 
 Release 2.1.5 Minor updates for html markup in line status
