@@ -44,11 +44,13 @@ const popup = {
         <span class="line">${item.line}</span>
 
         <span class="status">
-            ${item.description.map((desc) => {
-              return `
+            ${item.description
+              .map((desc) => {
+                return `
                     <span class="status-item">${desc}</span>
                 `;
-            })}
+              })
+              .join('')}
         </span>
 
         <span class="message">No updates set</span>
