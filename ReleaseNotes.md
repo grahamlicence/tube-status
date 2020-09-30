@@ -1,5 +1,7 @@
 ### Release notes
 
+Release 3.1.0 Adds trams
+
 Release 3.0.1 Fix issue with commas
 
 Release 3.0.0 App refactor to simplify JS, removes react
