@@ -18,7 +18,7 @@ const _issues = {
 function setData() {
   var opt = [],
     i = 0,
-    LINES = 14, // number of TfL managed lines
+    LINES = 15, // number of TfL managed lines
     data = [];
   const lines = localStorage.getItem('lines');
 
@@ -28,7 +28,7 @@ function setData() {
       data.push({ active: opt[i] === 1, id: i });
     }
   } else {
-    localStorage.setItem('lines', JSON.stringify([...Array(14).fill(1)]));
+    localStorage.setItem('lines', JSON.stringify([...Array(15).fill(1)]));
     for (i; i < LINES; i++) {
       data.push({ active: true, id: i });
     }
@@ -261,7 +261,7 @@ const dataUpdated = () => {
  */
 const getData = () => {
   var url =
-    'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' +
+    'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail,tram/Status?detail=True&app_id=' +
     config.appId +
     '&app_key=' +
     config.appKey;
