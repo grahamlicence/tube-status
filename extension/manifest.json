@@ -1,9 +1,9 @@
 {
   "name": "London Underground status updates",
   "short_name": "Tube status",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "manifest_version": 2,
-  "description": "London Underground disruption alerts for the Tube, Overground, TfL Rail & DLR.",
+  "description": "London Underground disruption alerts for the Tube, Overground, TfL Rail, DLR & Tram.",
   "icons": {
     "16": "images/default.png",
     "48": "images/icon-48.png",
@@ -16,5 +16,5 @@
   "background": {
     "scripts": ["config.js", "helpers.js", "background.js"]
   },
-  "permissions": ["http://cloud.tfl.gov.uk/", "http://api.tfl.gov.uk/", "alarms"]
+  "permissions": ["https://api.tfl.gov.uk/", "alarms"]
 }
