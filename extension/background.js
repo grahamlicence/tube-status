@@ -251,9 +251,30 @@ function saveError(error) {
  */
 const dataUpdated = () => {
   _response = _req.response;
-  _response[0].lastUpdated = Date.now();
+  if (_response[0] && _response[0].lastUpdated) {
+    _response[0].lastUpdated = Date.now();
+  }
   saveData();
   filterData();
+};
+
+const parseData = () => {
+  const response = _req.response;
+  console.log('d', response);
+
+  const data = response.map((line) => ({
+    id: line.id,
+    name: line.name,
+    lineStatuses: line.lineStatuses,
+  }));
+  console.log('data', data);
+
+  const rawData = {
+    data,
+    lastUpdated: Date.now(),
+  };
+
+  localStorage.setItem('rawData', rawData);
 };
 
 /**
@@ -261,7 +282,7 @@ const dataUpdated = () => {
  */
 const getData = () => {
   var url =
-    'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,tflrail/Status?detail=True&app_id=' +
+    'https://api.tfl.gov.uk/Line/Mode/tube,dlr,overground,elizabeth-line/Status?detail=True&app_id=' +
     config.appId +
     '&app_key=' +
     config.appKey;
@@ -271,6 +292,7 @@ const getData = () => {
   if (navigator.onLine) {
     _req.open('GET', url, true);
     _req.onload = dataUpdated;
+    // _req.onload = parseData;
     _req.send(null);
   } else {
     console.log('failed to get data');
